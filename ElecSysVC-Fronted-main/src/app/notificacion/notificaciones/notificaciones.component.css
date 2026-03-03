@@ -1,0 +1,133 @@
+:host {
+    --primary: #a00d0d;
+    --background: #f6f7fb;
+    --card: #ffffff;
+    --border: #dcdcdc;
+    --text-light: #666;
+}
+
+.layout {
+    display: flex;
+    margin-top: 100px;
+}
+
+.contenido {
+    width: 100%;
+    margin: 40px auto;
+    background: var(--card);
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+    margin-left: 260px;
+}
+
+h1 {
+    color: var(--primary);
+    font-size: 38px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.filters {
+    display: flex;
+    gap: 20px;
+}
+
+.opcion {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.opcion label {
+    font-weight: 600;
+    font-size: 13px;
+    color: #444;
+}
+
+.opcion input, .opcion select {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-width: 200px;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Estilos de Tabla y Badges */
+.card {
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    overflow: hidden;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    background: #f8f9fa;
+    padding: 15px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+}
+
+td {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.badge {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+}
+
+.badge.activo { background: #10b981; }
+.badge.inactivo { background: #64748b; }
+
+.tipo-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: #eef2ff;
+    color: #4338ca;
+}
+
+.tipo-tag.RECURRENTE {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+/* Botones de acción */
+.action-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    margin-right: 5px;
+}
+
+.action-btn.deactivate { background: #fef3c7; color: #92400e; }
+.action-btn.delete { background: #fee2e2; color: #b91c1c; }

@@ -1,0 +1,106 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido" *ngIf="orden">
+        <form #ordenForm="ngForm">
+            <h1><i class="fas fa-file-invoice"></i> Gestión de Orden de Trabajo</h1>
+            <p>Visualice y gestione los detalles técnicos, estados y reportes de la orden.</p>
+
+            <div class="estado-cotizacion">
+                <div>
+                    <p class="titulo">Orden de Trabajo</p>
+                    <h1 class="codigo">#{{ idOrden }}</h1>
+                </div>
+
+                <div class="selector-wrapper">
+                    <label class="label-estado">Estado del Trabajo</label>
+                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden">
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="EN_PROCESO">EN PROCESO</option>
+                        <option value="REALIZADA">REALIZADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-section grid-2">
+                <div class="info-block">
+                    <h3><i class="fas fa-user-tie"></i> Información del Cliente</h3>
+                    <div class="fila"><label>Nombre:</label><span>{{cliente?.nombre}}</span></div>
+                    <div class="fila"><label>Identificador:</label><span>{{cliente?.id_cliente}}</span></div>
+                    <div class="fila"><label>Correo:</label><span>{{cliente?.correo}}</span></div>
+                </div>
+                <div class="info-block">
+                    <h3><i class="fas fa-map-marker-alt"></i> Sede de Ejecución</h3>
+                    <div class="fila"><label>ID Lugar:</label><span>{{orden.id_lugar}}</span></div>
+                    <div class="fila"><label>Fecha Prog:</label><span>{{orden.fecha_realizacion}}</span></div>
+                </div>
+            </div>
+
+            <div class="card-section detalle-proyecto">
+                <h2><i class="fas fa-tasks"></i> Labores Técnicas Detalladas</h2>
+                
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Descripción de la Labor</th>
+                            <th>Observaciones/Materiales</th>
+                            <th style="width: 120px;">Duración</th>
+                            <th style="width: 100px; text-align: center;">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let d of editDetalles; let i = index">
+                            <td>
+                                <input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando" 
+                                       [name]="'act'+i" class="input-table" placeholder="Actividad...">
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando" 
+                                       [name]="'obs'+i" class="input-table" placeholder="Notas...">
+                            </td>
+                            <td>
+                                <input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando" 
+                                       [name]="'dur'+i" class="input-table" placeholder="0h 00m">
+                            </td>
+                            <td class="acciones-celda">
+                                <ng-container *ngIf="!d.editando">
+                                    <button type="button" class="btn-edit-row" (click)="editarFila(d)" title="Editar fila">✏️</button>
+                                    <button type="button" class="btn-delete-row" (click)="eliminarFila(d, i)" title="Eliminar fila">🗑️</button>
+                                </ng-container>
+                                <ng-container *ngIf="d.editando">
+                                    <button type="button" class="btn-save-row" (click)="guardarFila(d)" title="Guardar">💾</button>
+                                    <button type="button" class="btn-cancel-row" (click)="cancelarFila(d, i)" title="Cancelar">❌</button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn-add" type="button" (click)="agregarFila()">
+                    <i class="fas fa-plus"></i> Añadir Nueva Labor
+                </button>
+            </div>
+
+            <div class="card-section">
+                <div class="opciones-document">
+                    <button class="btn-footer crear" type="button" (click)="actualizarOrden()"> 
+                        <i class="fas fa-save"></i> Actualizar Orden 
+                    </button>
+                    
+                    <button class="btn-footer enviar" type="button" (click)="enviarEmail()"> 
+                        <i class="fas fa-envelope"></i> Enviar Reporte 
+                    </button>
+
+                    <button class="btn-footer descargar placeholder-btn" type="button" title="Módulo en desarrollo"> 
+                        <i class="fas fa-file-pdf"></i> Generar PDF 
+                    </button>
+
+                    <button class="btn-footer borrar" type="button" (click)="borrarOrden()"> 
+                        <i class="fas fa-trash-alt"></i> Borrar Orden 
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

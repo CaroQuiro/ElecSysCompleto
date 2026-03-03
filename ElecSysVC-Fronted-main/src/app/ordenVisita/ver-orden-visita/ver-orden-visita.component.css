@@ -1,0 +1,356 @@
+/* IMPORTACIÓN DE ESTILOS BASE Y VARIABLES */
+@import '../../cotizaciones/cotizaciones.component.css';
+
+:host {
+    --primary-red: #a00d0d;
+    --secondary-blue: #07457b;
+    --success-green: #22c55e;
+    --danger-red: #ef4444;
+    --warning-yellow: #facc15;
+    --bg-gray: #f8fafc;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+}
+
+.layout {
+    display: flex;
+    background-color: var(--bg-gray);
+    min-height: 100vh;
+}
+
+.contenido {
+    flex: 1;
+    margin-left: 260px; /* Alineación con menú vertical */
+    margin-top: 100px;  /* Alineación con header fijo */
+    padding: 40px;
+    max-width: 1300px;
+    margin-right: auto;
+}
+
+/* CABECERA Y TÍTULOS */
+.header-view {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px 30px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+}
+
+h1 {
+    color: var(--primary-red);
+    font-size: 32px;
+    font-weight: 800;
+    margin: 0;
+}
+
+/* RESUMEN DE ESTADO (Tile superior) */
+.estado-cotizacion {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 25px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 30px;
+    border-left: 5px solid var(--secondary-blue);
+}
+
+.estado-cotizacion .titulo {
+    font-size: 14px;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* PANEL DE ESTADO SUPERIOR */
+.estado-cotizacion {
+    background: #ffffff;
+    padding: 25px 40px;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: space-between; /* Separa el ID del Selector */
+    align-items: center;
+    border-left: 8px solid var(--secondary-blue);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Efecto decorativo de fondo */
+.estado-cotizacion::after {
+    content: "";
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    background: rgba(7, 69, 123, 0.03);
+    border-radius: 50%;
+}
+
+.estado-cotizacion .titulo {
+    font-size: 13px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.estado-cotizacion .codigo {
+    font-size: 42px; /* Más grande para dar jerarquía */
+    color: var(--secondary-blue);
+    font-weight: 900;
+    margin: 0;
+    line-height: 1;
+}
+
+/* CONTENEDOR DEL SELECTOR */
+.selector-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end; /* Alinea etiqueta y select a la derecha */
+}
+
+.label-estado {
+    font-size: 14px;
+    font-weight: 700;
+    color: #475569;
+    margin-bottom: 8px;
+    margin-top: 0; /* Quita el margen superior excesivo */
+}
+
+/* ESTILIZACIÓN DEL SELECT (DROPDOWN) */
+.select-estado {
+    appearance: none; /* Quita el estilo por defecto del navegador */
+    background-color: #f8fafc;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2307457b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='C19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 18px;
+    border: 2.5px solid var(--border-color);
+    border-radius: 12px;
+    padding: 12px 45px 12px 20px;
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--secondary-blue);
+    cursor: pointer;
+    min-width: 220px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.select-estado:hover {
+    border-color: var(--secondary-blue);
+    background-color: #fff;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-sm);
+}
+
+.select-estado:focus {
+    outline: none;
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 4px rgba(7, 69, 123, 0.15);
+}
+/* BADGES DE ESTADO DINÁMICOS */
+.badge-big {
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 700;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.badge-big.PENDIENTE { background: #fef9c3; color: #854d0e; }
+.badge-big.PROGRAMADA { background: #dbeafe; color: #1e40af; }
+.badge-big.REALIZADA { background: #dcfce7; color: #166534; }
+.badge-big.CANCELADA { background: #fee2e2; color: #991b1b; }
+
+/* SECCIONES Y TARJETAS */
+.card-section {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 25px;
+    border: 1px solid var(--border-color);
+}
+
+h2, h3 {
+    color: var(--secondary-blue);
+    font-weight: 700;
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+.info-block {
+    background: #f1f5f9;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.fila {
+    display: flex;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.fila:last-child { border: none; }
+
+.fila label {
+    font-weight: 700;
+    width: 120px;
+    color: #475569;
+}
+
+/* FORMULARIOS E INPUTS */
+.input-full {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: all 0.2s;
+    background-color: #fff;
+}
+
+.input-full:focus {
+    outline: none;
+    border-color: var(--secondary-blue);
+    box-shadow: 0 0 0 3px rgba(7, 69, 123, 0.1);
+}
+
+.input-full:disabled {
+    background-color: #f8fafc;
+    border-color: transparent;
+    color: #1e293b;
+    cursor: default;
+}
+
+/* TABLA DE ACTIVIDADES EDITABLE */
+.tabla-detalle {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+}
+
+.tabla-detalle th {
+    background: var(--primary-red);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.tabla-detalle th:first-child { border-radius: 8px 0 0 0; }
+.tabla-detalle th:last-child { border-radius: 0 8px 0 0; }
+
+.tabla-detalle td {
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tabla-detalle tr:hover { background-color: #f8fafc; }
+
+/* BOTONES DE LA TABLA */
+.tabla-detalle button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+    margin-right: 5px;
+}
+
+.btn-delete { background: var(--danger-red); color: white; }
+.btn-delete:hover { background: #dc2626; transform: scale(1.1); }
+
+/* BOTONES DE ACCIÓN INFERIOR (Los 4 Botones) */
+.opciones-document {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.opciones-document button {
+    height: 50px;
+    border-radius: 12px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.crear { background: var(--success-green); }
+.crear:hover { background: #16a34a; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(22, 163, 74, 0.2); }
+
+.enviar { background: var(--warning-yellow); color: #854d0e; }
+.enviar:hover { background: #eab308; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(234, 179, 8, 0.2); }
+
+.descargar { background: var(--danger-red); }
+.descargar:hover { background: #dc2626; transform: translateY(-2px); box-shadow: 0 6px 12px rgba(220, 38, 38, 0.2); }
+
+/* Estilo para botón PDF no funcional */
+.descargar[style*="grayscale"] {
+    background: #94a3b8 !important;
+    filter: none !important; /* Quitar escala de grises fea */
+    opacity: 0.7;
+}
+
+.btn-add {
+    margin-top: 20px;
+    background: var(--secondary-blue);
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-add:hover { background: #0c4a6e; }
+
+.btn-add-task {
+    background: white;
+    color: var(#0c4a6e);
+    border: 2px dashed var(#0c4a6e);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    margin-top: 15px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-add-task:hover {
+    background: var(#0c4a6e);
+    color: white;
+}

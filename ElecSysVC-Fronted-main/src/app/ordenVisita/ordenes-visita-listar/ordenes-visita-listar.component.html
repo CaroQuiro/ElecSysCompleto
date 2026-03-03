@@ -1,0 +1,81 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Órdenes de Visita</h1>
+        
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID Visita</label>
+                    <input type="text" placeholder="Ej: 101" 
+                           [(ngModel)]="filtroId" (input)="aplicarFiltros()" />
+                </div>
+
+                <div class="opcion">
+                    <label>Cliente</label>
+                    <input type="text" placeholder="Nombre del cliente" 
+                           [(ngModel)]="filtroCliente" (input)="aplicarFiltros()" />
+                </div>
+
+                <div class="opcion">
+                    <label>Fecha</label>
+                    <input type="date" 
+                           [(ngModel)]="filtroFecha" (change)="aplicarFiltros()" />
+                </div>
+
+                <div class="opcion">
+                    <label>Estado</label>
+                    <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="PROGRAMADA">PROGRAMADA</option>
+                        <option value="REALIZADA">REALIZADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-primary" (click)="crearOrden()">Crear Nueva Orden de Visita</button>
+        </div>
+
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID Visita</th>
+                        <th>Cliente</th>
+                        <th>Lugar</th>
+                        <th>Fecha Realización</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (orden of ordenesFiltradas; track orden.idVisita) {
+                        <tr>
+                            <td>{{ orden.idVisita }}</td>
+                            <td>{{ clientesMap.get(orden.idCliente)?.nombre || 'Cargando...' }}</td>
+                            <td>{{ lugaresMap.get(orden.idLugar)?.nombreLugar || 'Cargando...' }}</td>
+                            <td>{{ orden.fechaRealizacion }}</td>
+                            <td class="text-truncate">{{ orden.descripcion }}</td>
+                            <td>
+                                <span [ngClass]="evaluarEstado(orden.estado)">{{ orden.estado }}</span>
+                            </td>
+                            <td>
+                                <button class="action-btn view" (click)="verOrden(orden.idVisita)">
+                                    Ver Detalles
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,198 @@
+/* VARIABLES Y BASE CORPORATIVA VC ELÉCTRICOS */
+@import '../../cotizaciones/cotizaciones.component.css';
+
+:host {
+    --primary-red: #a00d0d;
+    --secondary-blue: #07457b;
+    --success-emerald: #065f46; /* Verde Esmeralda */
+    --danger-garnet: #7f1d1d;  /* Rojo Granate */
+    --pending-yellow: #854d0e; 
+    --process-blue: #1e40af;
+    --bg-gray: #f6f7fb;
+    --border-soft: #e2e8f0;
+}
+
+/* 1. ESTRUCTURA Y LAYOUT */
+.layout {
+    display: flex;
+    background-color: var(--bg-gray);
+    min-height: 100vh;
+}
+
+.contenido {
+    flex: 1;
+    margin-left: 260px; /* Margen para menú lateral */
+    margin-top: 100px;  /* Margen para header fijo */
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: var(--primary-red);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 25px;
+}
+
+/* 2. ACCIONES SUPERIORES Y FILTROS */
+.top-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+    border: 1px solid var(--border-soft);
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.opcion {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.opcion label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.opcion input, .opcion select {
+    padding: 10px 15px;
+    border: 2px solid var(--border-soft);
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+    color: #334155;
+    transition: border-color 0.3s;
+}
+
+.opcion input:focus, .opcion select:focus {
+    border-color: var(--secondary-blue);
+}
+
+.btn-primary {
+    background: var(--secondary-blue);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    align-self: flex-start;
+}
+
+.btn-primary:hover {
+    background: #05355e;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(7, 69, 123, 0.2);
+}
+
+/* 3. TABLA Y TARJETA CONTENEDORA */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-soft);
+    overflow-x: auto;
+}
+
+.cot-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cot-table th {
+    background: var(--primary-red);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.cot-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+    font-size: 14px;
+}
+
+.cot-table tr:hover {
+    background-color: #f8fafc;
+}
+
+/* Utilidad para la descripción */
+.text-truncate {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* 4. BADGES DE ESTADO (Colores Corporativos) */
+/* Estas clases deben ser retornadas por evaluarEstado() en tu .ts */
+.pendiente, .programada, .realizada, .cancelada {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+.pendiente { 
+    background: #fef9c3; 
+    color: var(--pending-yellow); 
+    border: 1px solid #fde047;
+}
+
+.programada { 
+    background: #dbeafe; 
+    color: var(--process-blue); 
+    border: 1px solid #bfdbfe;
+}
+
+.realizada { 
+    background: #d1fae5; 
+    color: var(--success-emerald); 
+    border: 1px solid #10b981;
+}
+
+.cancelada { 
+    background: #fee2e2; 
+    color: var(--danger-garnet); 
+    border: 1px solid #ef4444;
+}
+
+/* 5. BOTONES DE ACCIÓN EN FILAS */
+.action-btn.view {
+    background: var(--secondary-blue);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.action-btn.view:hover {
+    background: #0b5fa8;
+    transform: scale(1.05);
+}

@@ -1,0 +1,488 @@
+.layout{
+    display: flex;
+    margin-top: 100px;
+}
+
+.contenido {
+    width: calc(100% - 260px); /* resto del espacio */
+    max-width: 1400px;
+    margin-left: 260px;        /* empuja el contenido */
+    margin-right: auto;
+    margin-top: 40px;
+    background: #fff;
+    border-radius: 14px;
+    padding: 30px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
+}
+
+
+h1 {
+    color: #a00d0d;
+    font-size: 45px;
+    font-weight: 700;
+    margin: 15px auto;
+}
+
+p {
+    margin-top: 0;
+    margin-bottom: 25px;
+    color: var(--text-light);
+}
+
+.card-section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 10px 3px 10px rgb(231, 225, 225);
+    margin: 10px 0px;
+}
+
+h2{
+    color: #830d0d;
+    font-size: 30px;
+    border-bottom: black 2px solid;
+    margin-bottom: 5px;
+}
+
+.barra{
+    cursor: pointer;
+    padding: 10px 20px;
+    background: #fff;
+    border-radius: 30px;
+    align-items: center;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+    border: black 1px solid;
+}
+
+.barra:hover input{
+    width: 400px;
+}
+
+.barra input{
+    width: 100px;
+    outline: none;
+    border: none;
+    font-weight: 500px;
+    transition: 2s;
+    background: transparent;
+}
+
+.barra a .fas{
+    color: #a3620d;
+    font-size: 18px;
+}
+ 
+/*chat*/
+
+/* CARD CONTENEDOR */
+.card-cliente{
+    display: grid;
+    grid-template-columns: 70% 30%;
+    gap: 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+}
+
+
+/* COLUMNA IZQUIERDA */
+.cliente-left{
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 25px;
+}
+
+.tabla-resultados {
+  width: 100%;
+  margin-top: 10px;
+  border-collapse: collapse;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.tabla-resultados th {
+  background-color: #a40000;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+  font-weight: 500;
+}
+
+.tabla-resultados td {
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.tabla-resultados tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.tabla-resultados tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+
+/* COLUMNA DERECHA */
+.probabilidad-right{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* centra vertical */
+    align-items: center;      /* centra horizontal */
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+
+.probabilidad-right h3{
+    margin-top: 0;
+    color: #07457b;
+}
+
+/* Barra verde de probabilidad */
+.donut-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.donut{
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    background: conic-gradient(
+        #f4a31a calc(var(--p) * 1%),
+        #0b2e4f 0
+    );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Círculo blanco interno */
+.donut::before{
+    content: "";
+    width: 95px;
+    height: 95px;
+    background: white;
+    border-radius: 50%;
+    position: absolute;
+}
+
+/* Texto cental */
+.porcentaje{
+    position: absolute;
+    font-size: 22px;
+    font-weight: 700;
+    color: #0b2e4f;
+}
+
+
+/* Buscar + botón */
+.opciones{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    align-items: center;
+}
+
+
+
+/* Botón crear */
+.boton-crear{
+    background: #07457b;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.boton-crear:hover{
+    background: #0c5fa8;
+    width: 250px;
+}
+
+/* FICHA DE INFORMACIÓN DEL CLIENTE */
+.tabla-cliente{
+    margin-top: 20px;
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid #ccc;
+}
+
+.info{
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+/* Estilo tipo tabla */
+.fila{
+    display: grid;
+    grid-template-columns: 150px auto;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.fila:last-child{
+    border-bottom: none;
+}
+
+.fila label{
+    font-weight: 600;
+    color: #444;
+}
+
+.valor{
+    font-size: 15px;
+    color: #333;
+}
+
+/* ESTILO PARA LUGAR Y CONFIGURACION*/
+.grid-2{
+    display: grid;
+    grid-template-columns: 65% 35%;
+    gap: 30px;
+    background: white;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    margin-bottom: 30px;
+}
+
+/* LUGAR (IZQUIERDA) */
+.lugar-left{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* CONFIG (DERECHA) */
+.config-right{
+    background: #fafafa;
+    border: 1px solid #ccc;
+    padding: 25px;
+    border-radius: 12px;
+}
+
+.config-right h3{
+    color: #07457b;
+    margin-bottom: 15px;
+}
+
+/* FICHA DEL LUGAR */
+.tabla-lugar{
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #ccc;
+}
+
+.fila{
+    display: grid;
+    grid-template-columns: 150px auto;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+.fila:last-child{
+    border-bottom: none;
+}
+
+/* AIU CONFIG */
+.checkbox-aiu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.porcentajes{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+}
+
+.porcentajes input{
+    height: 35px;
+    border: 1px solid #bbb;
+    border-radius: 8px;
+    padding-left: 10px;
+}
+
+/*Seccion detalle cotizacion*/
+
+.ref-group{
+    margin: 20px auto;
+}
+
+.ref-group input{
+    width: 350px;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding-left: 10px;
+    margin-left: 20px;
+}
+
+/* --- TABLA --- */
+.tabla-detalle{
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.textarea-descripcion {
+  width: 100%;
+  resize: none;           /* el usuario no la redimensiona manual */
+  overflow: hidden;       /* evita scroll interno */
+  min-height: 32px;
+  font-family: inherit;
+  font-size: 14px;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+
+.tabla-detalle th{
+    background: #a40f0f;
+    color: white;
+    padding: 12px;
+    font-weight: 600;
+    text-align: left;
+}
+
+.tabla-detalle td{
+    padding: 10px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.tabla-detalle input{
+    width: 100%;
+    height: 35px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding-left: 8px;
+}
+
+/* --- BOTONES --- */
+.btn-add{
+    margin-top: 15px;
+    background: #07457b;
+    color: white;
+    padding: 10px 18px;
+    border-radius: 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    transition: .2s;
+}
+
+.btn-add:hover{
+    background: #0b5fa8;
+}
+
+.btn-delete{
+    background: #c62828;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.btn-delete:hover{
+    background: #a31616;
+}
+
+/* --- TOTALES --- */
+
+.totales-card{
+    margin-top: 25px;
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    width: 400px;
+}
+
+.fila-tot{
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.fila-tot:last-child{
+    border-bottom: none;
+}
+
+.total-final span{
+    font-weight: 700;
+    color: #a40f0f;
+}
+
+.total-final label{
+    font-weight: 700;
+    color: #07457b;
+}
+
+/*opciones de creacion*/
+
+.opciones-document{
+    padding-left: 250px;
+}
+
+.opciones-document button{
+    margin: auto 50px;
+    width: 200px;
+    height: 35px;
+    border-radius: 20px;
+    border: none;
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.crear{
+    background: green;
+}
+
+.enviar{
+    background: rgba(149, 149, 12, 0.757);
+}
+
+.descargar{
+    background: red;
+}
+
+.crear:hover{
+    width: 250px;
+    background: rgb(62, 169, 62);
+    font-weight: 800;
+}
+
+.enviar:hover{
+    width: 250px;
+    background: rgba(171, 171, 90, 0.888);
+    font-weight: 800;
+}
+
+.descargar:hover{
+    width: 250px;
+    background: rgb(145, 43, 43);
+    font-weight: 800;
+}
+

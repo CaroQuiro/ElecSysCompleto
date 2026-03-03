@@ -1,0 +1,77 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Centro de Notificaciones</h1>
+        <p>Historial de comunicaciones y programaciones automáticas</p>
+
+        <div class="top-actions">
+            <div class="filters">
+                <div class="opcion">
+                    <label>Filtrar por Título</label>
+                    <input type="text" placeholder="Escriba para buscar..." />
+                </div>
+                <div class="opcion">
+                    <label>Tipo</label>
+                    <select>
+                        <option value="">Todos los tipos</option>
+                        <option value="UNICA">Única vez</option>
+                        <option value="RECURRENTE">Recurrente</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-primary" (click)="irACrear()">+ Programar Notificación</button>
+        </div>
+
+        <div class="card">
+            <table class="notif-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Mensaje (Previa)</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th>Fecha Creación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let n of notificaciones">
+                        <td><strong>#{{n.idNotificacion}}</strong></td>
+                        <td>{{n.titulo}}</td>
+                        <td class="text-muted">{{formatearMensaje(n.mensaje)}}</td>
+                        <td>
+                            <span class="tipo-tag" [ngClass]="n.tipo">{{n.tipo}}</span>
+                        </td>
+                        <td>
+                            <span [ngClass]="n.estado === 'ACTIVA' ? 'badge activo' : 'badge inactivo'">
+                                {{n.estado}}
+                            </span>
+                        </td>
+                        <td>{{n.fechaCreacion | date:'dd/MM/yyyy'}}</td>
+                        <td class="actions-cell">
+                            <button *ngIf="n.estado === 'ACTIVA'" 
+                                    class="action-btn deactivate" 
+                                    (click)="desactivar(n.idNotificacion)">
+                                Pausar
+                            </button>
+                            <button class="action-btn delete" 
+                                    (click)="eliminar(n.idNotificacion)">
+                                Borrar
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="notificaciones.length === 0">
+                        <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
+                            No hay notificaciones registradas.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

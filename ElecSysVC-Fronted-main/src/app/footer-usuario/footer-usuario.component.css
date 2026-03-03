@@ -1,0 +1,38 @@
+footer{
+    background-color: #b80000;
+    color: white;
+    margin-top: 0;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+footer img{
+    width: 150px;
+}
+
+footer .redes {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+footer .redes h3 {
+  margin-right: 20px;
+  font-size: 1.5rem;
+}
+
+footer .redes i {
+  font-size: 35px;
+  padding: 10px;
+  border: 2px solid white;
+  border-radius: 50%;
+  transition: 0.3s ease;
+  cursor: pointer;
+}
+
+footer .redes i:hover {
+  background-color: white;
+  color: #b80000;
+}

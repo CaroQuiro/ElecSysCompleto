@@ -1,0 +1,31 @@
+/* Reutilizamos los estilos de cotizaciones */
+@import '../cotizaciones/cotizaciones.component.css';
+
+/* Ajustes específicos para visitas */
+.text-truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Nuevos colores de badges para visitas */
+.badge.programada {
+    background: #4b6cfb;
+    color: white;
+}
+
+.badge.pendiente {
+    background: #facc15;
+    color: #78350f;
+}
+
+.badge.completado {
+    background: #22c55e;
+    color: #14532d;
+}
+
+.badge.cancelado {
+    background: #ef4444;
+    color: white;
+}

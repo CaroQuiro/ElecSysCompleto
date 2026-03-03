@@ -1,0 +1,329 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <form>
+            <h1>Visualizacion de la Cotizacion</h1>
+            <p>Ha continuacion se mostrara toda la informacion pertinente a la cotizacion Creada</p>
+            <div class="estado-cotizacion">
+                <p class="titulo">Cotización actual</p>
+                <h1 class="codigo">#{{ cotizacion.id_cotizacion }}</h1>
+
+                <label class="label-estado">Estado de la cotización</label>
+                <select class="select-estado" [(ngModel)]="cotizacionEditable.estado" name="estadoCotizacion">
+                    <option value="ACTIVO">ACTIVO</option>
+                    <option value="PENDIENTE">PENDIENTE</option>
+                    <option value="RECHAZADO">RECHAZADO</option>
+                </select>
+            </div>
+
+
+            <div class="card-section">
+                <h2>Cliente <button type="button" (click)="editarCliente()"> ✏️ </button></h2>
+
+                <div class="card-cliente">
+                    <div class="cliente-left">
+                        <div *ngIf="editCliente">
+                            <div class="opciones">
+                                <div class="barra">
+                                    <input type="text" name="buscarCliente" placeholder="Buscar Cliente"
+                                        [(ngModel)]="textoBusquedaCliente" (input)="buscarCliente()">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                                <button class="boton-crear" disabled>Crear Cliente</button>
+                            </div>
+
+                            <table class="tabla-resultados" *ngIf="clientes.length > 0">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let c of clientes" (click)="seleccionarCliente(c)">
+                                        <td>{{ c.nombre }}</td>
+                                        <td>{{ c.correo }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                            <div class="tabla-cliente" *ngIf="clienteSeleccionado">
+                                <p class="info">Cliente seleccionado:</p>
+
+                                <div class="fila">
+                                    <label>ID:</label>
+                                    <span class="valor">{{ clienteSeleccionado.id_cliente }}</span>
+                                </div>
+                                <div class="fila">
+                                    <label>Nombre:</label>
+                                    <span class="valor">{{ clienteSeleccionado.nombre }}</span>
+                                </div>
+                                <div class="fila">
+                                    <label>Correo:</label>
+                                    <span class="valor">{{ clienteSeleccionado.correo }}</span>
+                                </div>
+                            </div>
+
+                            <div class="acciones" *ngIf="clienteCambio()">
+                                <button type="button" class="btn-guardar" (click)="guardarCliente()">
+                                    Actualizar Cliente
+                                </button>
+
+                                <button type="button" class="btn-cancelar" (click)="cancelarCliente()">
+                                    Cancelar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="tabla-cliente" *ngIf="!editCliente">
+                            <p class="info">Información del Cliente:</p>
+                            <div>
+                                <div class="fila">
+                                    <label>Identificador:</label>
+                                    <span class="valor">{{cliente.id_cliente}}</span>
+                                </div>
+                                <div class="fila">
+                                    <label>Nombre:</label>
+                                    <span class="valor">{{cliente.nombre}}</span>
+                                </div>
+                                <div class="fila">
+                                    <label>Correo:</label>
+                                    <span class="valor">{{ cliente.correo}}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="probabilidad-right">
+                        <h3>Probabilidad Calculada</h3>
+                        <div class="donut-container">
+                            <div class="donut" [style.--p]="probabilidadCalculada">
+                                <span class="porcentaje">{{ probabilidadCalculada }}%</span>
+                            </div>
+                        </div>
+                        <p style="text-align: center; font-size: 0.8rem; color: #666; margin-top: 10px;">
+                            Basado en el historial de cotizaciones de la empresa
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section grid-2">
+                <div class="lugar-left">
+                    <h2>Lugar <button type="button" (click)="editarLugar()"> ✏️ </button></h2>
+                    <div *ngIf="editLugar">
+                        <div class="opciones">
+                            <div class="barra">
+                                <input type="text" name="buscarLugar" placeholder="Buscar Lugar"
+                                    [(ngModel)]="textoBusquedaLugar" (input)="buscarLugar()">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <button class="boton-crear">Crear Lugar</button>
+                        </div>
+
+                        <table class="tabla-resultados" *ngIf="lugares.length > 0">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Dirección</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let l of lugares" (click)="seleccionarLugar(l)">
+                                    <td>{{ l.nombreLugar }}</td>
+                                    <td>{{ l.direccion }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                        <div class="tabla-lugar" *ngIf="lugarSeleccionado">
+                            <p class="info">Lugar seleccionado:</p>
+
+                            <div class="fila">
+                                <label>ID:</label>
+                                <span class="valor">{{ lugarSeleccionado.idLugar }}</span>
+                            </div>
+
+                            <div class="fila">
+                                <label>Nombre:</label>
+                                <span class="valor">{{ lugarSeleccionado.nombreLugar }}</span>
+                            </div>
+
+                            <div class="fila">
+                                <label>Dirección:</label>
+                                <span class="valor">{{ lugarSeleccionado.direccion }}</span>
+                            </div>
+                        </div>
+
+                        <div class="acciones" *ngIf="lugarCambio()">
+                            <button class="btn-guardar" (click)="guardarLugar()">
+                                Guardar Lugar
+                            </button>
+
+                            <button class="btn-cancelar" (click)="cancelarLugar()">
+                                Cancelar
+                            </button>
+                        </div>
+                    </div>
+                    <div class="tabla-lugar" *ngIf="!editLugar">
+                        <p class="info">Información seleccionada del lugar:</p>
+                        <div>
+                            <div class="fila">
+                                <label>Nombre:</label>
+                                <span class="valor">{{lugar.nombreLugar}}</span>
+                            </div>
+                            <div class="fila">
+                                <label>Dirección:</label>
+                                <span class="valor">{{lugar.direccion}}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="config-right">
+                    <h3>Configuración de Cotización</h3>
+                    <div class="checkbox-aiu">
+                        <label>La cotización tiene IVA directo:</label>
+                        <input type="checkbox" name="existIva" [(ngModel)]="existIva">
+                    </div>
+                    <div class="porcentajes" *ngIf="!existIva">
+                        <label>% Administración</label>
+                        <input type="number" step="0.01" min="0" max="1" [(ngModel)]="aiuForm.administracion"
+                            name="administracion">
+
+                        <label>% Imprevistos</label>
+                        <input type="number" step="0.01" min="0" [(ngModel)]="aiuForm.imprevistos" name="imprevistos">
+
+                        <label>% Utilidad</label>
+                        <input type="number" step="0.01" min="0" [(ngModel)]="aiuForm.utilidad" name="utilidad">
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="card-section detalle-proyecto">
+                <h2>Detalle Proyecto</h2>
+                <div class="ref-group">
+                    <label>Referencia:</label>
+                    <input type="text" [value]="cotizacion.referencia" disabled>
+                </div>
+
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Cantidad</th>
+                            <th>Valor Unitario</th>
+                            <th>Total</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr *ngFor="let d of editdetallecotizacion; let i = index;">
+                            <td>
+                                <textarea class="textarea-descripcion" [(ngModel)]="d.descripcion"
+                                    [disabled]="!d.editando" name="descripcion{{i}}">
+                                  </textarea>
+                            </td>
+
+                            <td>
+                                <input type="number" [(ngModel)]="d.cantidad" [disabled]="!d.editando"
+                                    name="cantidad{{i}}">
+                            </td>
+
+                            <td>
+                                <input type="number" [(ngModel)]="d.valor_unitario" [disabled]="!d.editando"
+                                    name="valor{{i}}">
+                            </td>
+
+                            <td>{{ d.cantidad * d.valor_unitario | currency:'COP' }}</td>
+
+                            <td>
+                                <ng-container *ngIf="!d.editando">
+                                    <button type="button" (click)="editarFila(d)">✏️</button>
+                                    <button type="button" class="btn-delete" (click)="eliminarFila(d, i)">🗑️</button>
+                                </ng-container>
+
+                                <ng-container *ngIf="d.editando">
+                                    <button type="button" class="btn-guardar" (click)="guardarFila(d)">💾</button>
+                                    <button type="button" class="btn-cancelar" (click)="cancelarFila(d, i)">❌</button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button id="add" class="btn-add" type="button" (click)="agregarFila()">+ Agregar fila</button>
+
+
+                <div class="confi-totales">
+                    <div class="totales-card">
+                        <div class="fila-tot"><span>Subtotal:</span><label>{{subtotal | currency:'COP'}}</label></div>
+
+                        <div class="fila-tot" *ngIf="!existIva">
+                            <span>Administración:</span><label>{{ administracion | currency:'COP'}}</label>
+                        </div>
+                        <div class="fila-tot" *ngIf="!existIva">
+                            <span>Imprevistos:</span><label>{{ imprevistos|
+                                currency:'COP'}}</label>
+                        </div>
+
+                        <div class="fila-tot" *ngIf="!existIva">
+                            <span>Utilidades:</span><label>{{utilidad |
+                                currency:'COP'}}</label>
+                        </div>
+
+                        <div class="fila-tot" *ngIf="!existIva">
+                            <span>Iva sobre utilidades:</span><label>{{ivaSobreUtilidad
+                                | currency:'COP'}}</label>
+                        </div>
+
+                        <div class="fila-tot total-final" *ngIf="!existIva">
+                            <span>Total:</span><label>{{totalAIU | currency:'COP'}}</label>
+                        </div>
+
+                        <div class="fila-tot total-final" *ngIf="existIva">
+                            <span>IVA 19%: </span><label>{{ivaDirecto
+                                | currency:'COP'}}</label>
+                        </div>
+
+                        <div class="fila-tot total-final" *ngIf="existIva">
+                            <span>Total A Pagar:</span><label>
+                                {{TotalconIva | currency:'COP'}}</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h2>Notas</h2>
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items">
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <Input type="text" placeholder="Ingrese las Notas">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button id="add" class="btn-add">+ Agregar fila</button>
+
+            </div>
+
+            <div class="card-section">
+                <div class="opciones-document">
+                    <button class="crear" type="button" (click)="actualizarCotizacion()"> Actualizar Cotizacion </button>
+                    <button class="enviar" type="button" (click)="enviarEmail()">Enviar Email</button>
+                    <button class="descargar">Descargar PDF</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,159 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Clientes
+            <button class="btn-primary" (click)="mostrarFormulario()">Crear Cliente</button>
+        </h1>
+        <p>A continuacion se mostraran los clientes creados</p>
+
+        <!-- FILTROS -->
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID del Cliente</label>
+                    <input type="text" placeholder="Buscar ID" />
+                </div>
+
+                <div class="opcion">
+                    <label>Nombre del Cliente</label>
+                    <input type="text" placeholder="Buscar por cliente" />
+                </div>
+            </div>
+
+            <div *ngIf="mostrarFormularioCrear" class="form-card form-card-cliente">
+                <form (ngSubmit)="crearCliente()" #form="ngForm">
+                    <div class="form-header">
+                        <h2>Crear Cliente</h2>
+                        <p>Completa la información del cliente</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>NIT / CC</label>
+                            <input type="number" [(ngModel)]="clienteCrear.id_cliente" name="id_cliente" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre del Cliente</label>
+                            <input type="text" [(ngModel)]="clienteCrear.nombre" name="nombre" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" [(ngModel)]="clienteCrear.telefono" name="telefono" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" [(ngModel)]="clienteCrear.direccion" name="direccion" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="email" [(ngModel)]="clienteCrear.correo" name="correo" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-success-cliente" [disabled]="form.invalid">Guardar Cliente</button>
+                        <button type="button" class="btn-cancel"
+                            (click)="mostrarFormularioCrear = false">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- TABLA -->
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID Cliente</th>
+                        <th>Nombre</th>
+                        <th>Telefono</th>
+                        <th>Direccion</th>
+                        <th>Correo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (cliente of clientes; track cliente.id_cliente) {
+                    <tr>
+                        <td>{{cliente.id_cliente}}</td>
+                        <td>{{cliente.nombre}}</td>
+                        <td>{{cliente.telefono}}</td>
+                        <td>{{cliente.direccion}}</td>
+                        <td>{{cliente.correo }}</td>
+                        <td><span [ngClass]="evaluarEstado(cliente.estado)">{{cliente.estado}}</span></td>
+                        <td>
+                            <button class="action-btn view"
+                                (click)="buscarClienteID(cliente.id_cliente)">Editar</button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="idEditando === cliente.id_cliente" class="fila-edicion">
+                        <td colspan="6">
+                            <form (ngSubmit)="actualizarCliente()" class="form-inline">
+                                <div class="form-header">
+                                    <h2>Actualizar Cliente</h2>
+                                    <p>Modifica la información del cliente</p>
+                                </div>
+
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label>Nombre del Cliente</label>
+                                        <input type="text" [(ngModel)]="clienteEditar.nombre" name="editNombre"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Teléfono</label>
+                                        <input type="text" [(ngModel)]="clienteEditar.telefono" name="editTelefono"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Dirección</label>
+                                        <input type="text" [(ngModel)]="clienteEditar.direccion" name="editDireccion"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Correo</label>
+                                        <input type="email" [(ngModel)]="clienteEditar.correo" name="editCorreo"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Estado del Cliente</label>
+                                        <select [(ngModel)]="clienteEditar.estado" name="editEstado"
+                                            class="select-estilizado">
+                                            <option value=""></option>
+                                            <option value="ACTIVO">ACTIVO</option>
+                                            <option value="INACTIVO">INACTIVO</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-success-cliente">Actualizar</button>
+                                    <button type="button" class="btn-cancel"
+                                        (click)="cancelarEdicion()">Cancelar</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

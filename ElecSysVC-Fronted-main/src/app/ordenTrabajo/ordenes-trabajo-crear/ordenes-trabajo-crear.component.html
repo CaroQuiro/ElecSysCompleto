@@ -1,0 +1,122 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1 class="main-title"><i class="fas fa-tools"></i> Crear Orden de Trabajo</h1>
+
+        <div class="card-section reference-card">
+            <h2><i class="fas fa-link"></i> Referencia de Visita</h2>
+            <p class="instruction">Si este trabajo deriva de una visita técnica previa, selecciónela a continuación.</p>
+            <select class="select-custom" [(ngModel)]="ordenForm.id_orden_visita" (change)="onVisitaChange()">
+                <option [ngValue]="null">--- Registro Manual (Sin visita previa) ---</option>
+                <option *ngFor="let v of ordenesVisita" [value]="v.idVisita">
+                    Visita Técnica #{{v.idVisita}} - {{v.fechaRealizacion}}
+                </option>
+            </select>
+        </div>
+
+        <div class="card-section">
+            <h2><i class="fas fa-user-tie"></i> Información del Cliente</h2>
+            <div class="search-container">
+                <div class="search-box">
+                    <div class="barra">
+                        <i class="fas fa-search"></i>
+                        <input type="text" [(ngModel)]="textoBusquedaCliente" (input)="buscarCliente()" placeholder="Escriba el nombre del cliente...">
+                    </div>
+                    
+                    <table class="tabla-resultados" *ngIf="clientes.length > 0">
+                        <tbody>
+                            <tr *ngFor="let c of clientes" (click)="seleccionarCliente(c)">
+                                <td><strong>{{c.nombre}}</strong></td>
+                                <td>{{c.id_cliente}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="selection-display" *ngIf="clienteSeleccionado">
+                        <span class="badge-selection">Cliente Seleccionado:</span>
+                        <div class="info-row">
+                            <strong class="name">{{clienteSeleccionado.nombre}}</strong>
+                            <small class="id">NIT/CC: {{clienteSeleccionado.id_cliente}}</small>
+                        </div>
+                    </div>
+                </div>
+                <button class="boton-crear" (click)="navegarCliente()">+ Nuevo Cliente</button>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card-section">
+                <h2><i class="fas fa-map-marker-alt"></i> Sede del Trabajo</h2>
+                <div class="barra full-width">
+                    <input type="text" [(ngModel)]="textoBusquedaLugar" (input)="buscarLugar()" placeholder="Buscar ubicación...">
+                </div>
+
+                <table class="tabla-resultados" *ngIf="lugares.length > 0">
+                    <tbody>
+                        <tr *ngFor="let l of lugares" (click)="seleccionarLugar(l)">
+                            <td>{{l.nombreLugar}}</td>
+                            <td><small>{{l.direccion}}</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="selection-display" *ngIf="lugarSeleccionado">
+                    <strong class="location-name">{{lugarSeleccionado.nombreLugar}}</strong>
+                    <span class="location-address">{{lugarSeleccionado.direccion}}</span>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h2><i class="fas fa-calendar-alt"></i> Programación</h2>
+                <div class="form-group">
+                    <label>Fecha de Ejecución</label>
+                    <input type="date" [(ngModel)]="ordenForm.fecha_realizacion" class="input-date">
+                </div>
+                <div class="form-group">
+                    <label>Estado Inicial</label>
+                    <select [(ngModel)]="ordenForm.estado" class="select-simple">
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="EN_PROCESO">EN PROCESO</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-section">
+            <h2><i class="fas fa-clipboard-list"></i> Labores Técnicas a Realizar</h2>
+            <table class="tabla-detalle">
+                <thead>
+                    <tr>
+                        <th>Descripción de la Labor</th>
+                        <th>Observaciones</th>
+                        <th style="width: 150px;">Tiempo Est.</th>
+                        <th style="width: 50px;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let d of detalles; let i = index">
+                        <td><input type="text" [(ngModel)]="d.actividad" placeholder="Ej: Mantenimiento de transformador"></td>
+                        <td><input type="text" [(ngModel)]="d.observaciones" placeholder="Materiales o notas..."></td>
+                        <td><input type="text" [(ngModel)]="d.duracion" placeholder="0h 00m"></td>
+                        <td class="text-center">
+                            <button (click)="eliminarDetalle(i)" class="btn-icon-delete" title="Eliminar labor">
+                                <i class="fas fa-minus-circle"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <button class="btn-add-task" (click)="agregarDetalle()">
+                <i class="fas fa-plus-circle"></i> Añadir Nueva Labor
+            </button>
+        </div>
+
+        <div class="actions-footer">
+            <button class="btn-save" (click)="guardarOrden()">
+                <i class="fas fa-check-double"></i> GUARDAR ORDEN DE TRABAJO
+            </button>
+        </div>
+    </div>
+</div>

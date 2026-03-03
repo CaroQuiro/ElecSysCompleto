@@ -1,0 +1,71 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+    
+    <div class="contenido">
+        <h1><i class="fas fa-clipboard-list"></i> Gestión de Órdenes de Trabajo</h1>
+        <p>Listado de ejecución de labores técnicas en ElecSys VC</p>
+
+        <div class="top-actions">
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID Orden</label>
+                    <input type="text" [(ngModel)]="filtroId" (input)="aplicarFiltros()" placeholder="Ej: 101" />
+                </div>
+                <div class="opcion">
+                    <label>Cliente</label>
+                    <input type="text" [(ngModel)]="filtroCliente" (input)="aplicarFiltros()" placeholder="Nombre del cliente" />
+                </div>
+                <div class="opcion">
+                    <label>Estado</label>
+                    <select [(ngModel)]="filtroEstado" (change)="aplicarFiltros()">
+                        <option value="">Todos los estados</option>
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="EN_PROCESO">EN PROCESO</option>
+                        <option value="REALIZADA">REALIZADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-primary" (click)="crearOrden()">
+                <i class="fas fa-plus"></i> Nueva Orden de Trabajo
+            </button>
+        </div>
+
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Visita Ref.</th>
+                        <th>Cliente</th>
+                        <th>Fecha Ejecución</th>
+                        <th>Estado Actual</th>
+                        <th style="text-align: center;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let orden of ordenesFiltradas">
+                        <td><strong>#{{ orden.id_orden }}</strong></td>
+                        <td>
+                            <span *ngIf="orden.id_orden_visita" class="text-secondary">Visita #{{ orden.id_orden_visita }}</span>
+                            <span *ngIf="!orden.id_orden_visita" class="text-muted">Manual</span>
+                        </td>
+                        <td>{{ clientesMap.get(orden.id_cliente)?.nombre || 'Cargando...' }}</td>
+                        <td>{{ orden.fecha_realizacion }}</td>
+                        <td>
+                            <span class="badge" [ngClass]="evaluarEstado(orden.estado)">
+                                {{ orden.estado }}
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="view" (click)="verOrden(orden.id_orden)">
+                                <i class="fas fa-eye"></i> Detalles
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

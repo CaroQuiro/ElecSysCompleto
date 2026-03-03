@@ -1,0 +1,97 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Cotizaciones</h1>
+        <p>Se mostrarán a continuación todas las cotizaciones registradas</p>
+
+        <!-- FILTROS -->
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID</label>
+                    <input type="text" placeholder="Buscar ID" />
+                </div>
+
+                <div class="opcion">
+                    <label>Cliente</label>
+                    <input type="text" placeholder="Buscar por cliente" />
+                </div>
+
+                <div class="opcion">
+                    <label>Fecha</label>
+                    <input type="date" />
+                </div>
+
+                <div class="opcion">
+                    <label>Estado</label>
+                    <select>
+                        <option>Completado</option>
+                        <option>Pendiente</option>
+                        <option>Cancelado</option>
+                    </select>
+                </div>
+            </div>
+
+            <button class="btn-primary" (click)="crearCotizacion()">Crear Nueva Cotización</button>
+        </div>
+
+        <!-- TABLA -->
+        <div class="card">
+                <table class="cot-table">
+                    <thead>
+                        <tr>
+                            <th>ID Cotización</th>
+                            <th>Cliente</th>
+                            <th>Lugar</th>
+                            <th>Fecha</th>
+                            <th>Referencia</th>
+                            <th>Estado</th>
+                            <th>Administración</th>
+                            <th>Imprevistos</th>
+                            <th>Utilidades</th>
+                            <th>IVA</th>
+                            <th>Total a pagar</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                    @for (cotizacion of cotizaciones; track cotizacion.id_cotizacion) {
+                        <tr>
+                            <td>{{cotizacion.id_cotizacion}}</td>
+                            <td>{{clietesMap.get(cotizacion.id_cliente)?.nombre}}</td>
+                            <td>{{lugaresMap.get(cotizacion.id_lugar)?.nombreLugar}}</td>
+                            <td>{{cotizacion.fecha_realizacion}}</td>
+                            <td class="wrap">{{cotizacion.referencia}}</td>
+                            <td><span [ngClass]="evaluarEstado(cotizacion.estado)">{{cotizacion.estado}}</span></td>
+                            <td>{{cotizacion.administracion | currency:'COP':'symbol':'1.0-0'}}</td>
+                            <td>{{cotizacion.imprevistos | currency:'COP':'symbol':'1.0-0'}}</td>
+                            <td>{{cotizacion.utilidad | currency:'COP':'symbol':'1.0-0'}}</td>
+                            <td>{{cotizacion.iva | currency:'COP':'symbol':'1.0-0'}}</td>
+                            <td>{{cotizacion.total_pagar | currency:'COP':'symbol':'1.0-0'}}</td>
+                            <td>
+                                <button class="action-btn view" 
+                                    (click)="verCotizacion(cotizacion.id_cotizacion)">Ver
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+        </div>
+
+        <!-- TOTAL -->
+        <div class="totales" style="display:flex; justify-content: space-between; gap:20px;">
+            <div>Administración:<strong >{{ calcularTotal('administracion') | currency:'COP'}}</strong></div>
+            <div>Imprevistos: <strong>{{calcularTotal('imprevistos') | currency:'COP'}}</strong></div>
+            <div>Utilidades: <strong>{{calcularTotal('utilidad') | currency:'COP'}}</strong></div>
+            <div>IVA: <strong>{{calcularTotal('iva') | currency:'COP'}}</strong></div>
+            <div>Total: <strong>{{calcularTotal('total_pagar') | currency:'COP'}}</strong></div>
+        </div>
+    </div>
+</div>

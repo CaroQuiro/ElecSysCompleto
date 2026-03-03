@@ -1,0 +1,84 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <div class="header-section">
+            <h1>Programar Notificación</h1>
+            <p>Configure el contenido y la frecuencia de los envíos automáticos</p>
+        </div>
+
+        <div class="card form-container">
+            <div class="form-section">
+                <h3>1. Información del Mensaje</h3>
+                <div class="field">
+                    <label>Título / Asunto</label>
+                    <input type="text" [(ngModel)]="request.notificacion.titulo" placeholder="Ej: Recordatorio de Mantenimiento">
+                </div>
+                <div class="field">
+                    <label>Mensaje</label>
+                    <textarea [(ngModel)]="request.notificacion.mensaje" rows="5" placeholder="Escriba el contenido del correo..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>2. Configuración de Envío</h3>
+                <div class="grid-inputs">
+                    <div class="field">
+                        <label>Tipo de Notificación</label>
+                        <select [(ngModel)]="request.notificacion.tipo">
+                            <option value="UNICA">Envío Único</option>
+                            <option value="RECURRENTE">Programación Recurrente</option>
+                        </select>
+                    </div>
+
+                    <div class="field" *ngIf="request.notificacion.tipo === 'RECURRENTE'">
+                        <label>Frecuencia</label>
+                        <select [(ngModel)]="request.frecuencia">
+                            <option value="DIARIA">Diaria</option>
+                            <option value="SEMANAL">Semanal</option>
+                            <option value="MENSUAL">Mensual</option>
+                            <option value="SEMESTRAL">Semestral</option>
+                            <option value="ANUAL">Anual</option>
+                        </select>
+                    </div>
+
+                    <div class="field">
+                        <label>Fecha de Inicio</label>
+                        <input type="datetime-local" [(ngModel)]="request.fechaInicio">
+                    </div>
+
+                    <div class="field" *ngIf="request.notificacion.tipo === 'RECURRENTE'">
+                        <label>Fecha de Finalización (Opcional)</label>
+                        <input type="date" [(ngModel)]="request.fechaFin">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>3. Destinatarios</h3>
+                <div class="field">
+                    <label>Enviar a:</label>
+                    <div class="toggle-group">
+                        <button [class.active]="request.tipoDestinatario === 'CLIENTE'" (click)="request.tipoDestinatario = 'CLIENTE'">Clientes</button>
+                        <button [class.active]="request.tipoDestinatario === 'TRABAJADOR'" (click)="request.tipoDestinatario = 'TRABAJADOR'">Trabajadores</button>
+                    </div>
+                </div>
+
+                <div class="destinatarios-box">
+                    <div class="destinatario-item" *ngFor="let c of clientes">
+                        <input type="checkbox" [id]="'c' + c.id_cliente" (change)="toggleDestinatario(c.id_cliente)">
+                        <label [for]="'c' + c.id_cliente">{{c.nombre}} ({{c.correo}})</label>
+                    </div>
+                </div>
+                <small>{{request.idsDestinatarios.length}} seleccionados</small>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
+                <button class="btn-save" (click)="guardar()">Guardar y Activar</button>
+            </div>
+        </div>
+    </div>
+</div>

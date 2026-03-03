@@ -1,0 +1,43 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Crear Cliente</h1>
+        <p>Completa la información del cliente</p>
+
+        <form (ngSubmit)="crearCliente()" #form="ngForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>NIT / CC</label>
+                            <input type="number" [(ngModel)]="cliente.id_cliente" name="id_cliente" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre del Cliente</label>
+                            <input type="text" [(ngModel)]="cliente.nombre" name="nombre" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Teléfono</label>
+                            <input type="text" [(ngModel)]="cliente.telefono" name="telefono" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" [(ngModel)]="cliente.direccion" name="direccion" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Correo</label>
+                            <input type="email" [(ngModel)]="cliente.correo" name="correo" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-success-cliente" [disabled]="form.invalid">Guardar Cliente</button>
+                        <button type="button" class="btn-cancel" (click)="irGestionclientes()">Cancelar</button>
+                    </div>
+                </form>
+    </div>
+</div>

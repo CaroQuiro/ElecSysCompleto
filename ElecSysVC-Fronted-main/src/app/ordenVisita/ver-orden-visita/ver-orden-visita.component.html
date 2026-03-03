@@ -1,0 +1,98 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido" *ngIf="orden">
+        <form>
+            <h1>Visualización de la Orden de Visita</h1>
+            <p>A continuación se muestra la información de la visita técnica programada.</p>
+
+            <div class="estado-cotizacion">
+                <div>
+                    <p class="titulo">Orden de Visita</p>
+                    <h1 class="codigo">#{{ idOrden }}</h1>
+                </div>
+
+                <div class="selector-wrapper">
+                    <label class="label-estado">Estado de la visita</label>
+                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden">
+                        <option value="PENDIENTE">PENDIENTE</option>
+                        <option value="PROGRAMADA">PROGRAMADA</option>
+                        <option value="REALIZADA">REALIZADA</option>
+                        <option value="CANCELADA">CANCELADA</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="card-section grid-2">
+                <div class="info-block">
+                    <h3>Información del Cliente</h3>
+                    <div class="fila"><label>Nombre:</label><span>{{cliente?.nombre}}</span></div>
+                    <div class="fila"><label>Identificador:</label><span>{{cliente?.id_cliente}}</span></div>
+                </div>
+                <div class="info-block">
+                    <h3>Ubicación de Visita</h3>
+                    <div class="fila"><label>Lugar:</label><span>{{lugar?.nombreLugar}}</span></div>
+                    <div class="fila"><label>Dirección:</label><span>{{lugar?.direccion}}</span></div>
+                </div>
+            </div>
+
+            <div class="card-section detalle-proyecto">
+                <h2>Actividades a Realizar</h2>
+                <div class="ref-group">
+                    <label>Descripción General:</label>
+                    <textarea class="input-full" [(ngModel)]="orden.descripcion" name="descripcionG"></textarea>
+                </div>
+
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Actividad</th>
+                            <th>Observaciones</th>
+                            <th>Duración</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let d of editDetalles; let i = index">
+                            <td><input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando" name="act{{i}}"></td>
+                            <td><input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando" name="obs{{i}}"></td>
+                            <td><input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando" name="dur{{i}}"></td>
+                            <td>
+                                <ng-container *ngIf="!d.editando">
+                                    <button type="button" (click)="editarFila(d)">✏️</button>
+                                    <button type="button" class="btn-delete" (click)="eliminarFila(d, i)">🗑️</button>
+                                </ng-container>
+                                <ng-container *ngIf="d.editando">
+                                    <button type="button" (click)="guardarFila(d)">💾</button>
+                                    <button type="button" (click)="cancelarFila(d, i)">❌</button>
+                                </ng-container>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button class="btn-add-task" type="button" (click)="agregarFila()">+ Agregar Actividad</button>
+            </div>
+
+            <div class="card-section">
+                <div class="opciones-document">
+                    <button class="crear" type="button" (click)="actualizarOrdenCompleta()"> 
+                        Actualizar Orden 
+                    </button>
+                    
+                    <button class="enviar" type="button" (click)="enviarEmail()"> 
+                        Enviar Email 
+                    </button>
+
+                    <button class="descargar" type="button" style="filter: grayscale(0.5); cursor: help;"> 
+                        Descargar PDF 
+                    </button>
+
+                    <button class="descargar" type="button" (click)="borrarOrdenTotal()"> 
+                        Borrar Orden 
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

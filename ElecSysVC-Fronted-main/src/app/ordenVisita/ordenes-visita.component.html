@@ -1,0 +1,71 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Órdenes de Visita</h1>
+        <p>Listado de visitas técnicas y comerciales programadas en ElecSys</p>
+
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID Visita</label>
+                    <input type="text" placeholder="Buscar ID" />
+                </div>
+                <div class="opcion">
+                    <label>Cliente</label>
+                    <input type="text" placeholder="Buscar por cliente" />
+                </div>
+                <div class="opcion">
+                    <label>Fecha</label>
+                    <input type="date" />
+                </div>
+                <div class="opcion">
+                    <label>Estado</label>
+                    <select>
+                        <option>PENDIENTE</option>
+                        <option>PROGRAMADA</option>
+                        <option>REALIZADA</option>
+                        <option>CANCELADA</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn-primary" (click)="crearOrden()">Crear Nueva Visita</button>
+        </div>
+
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Cliente</th>
+                        <th>Lugar</th>
+                        <th>Fecha</th>
+                        <th>Descripción</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (orden of ordenes; track orden.idVisita) {
+                    <tr>
+                        <td>{{orden.idVisita}}</td>
+                        <td>{{clientesMap.get(orden.idCliente)?.nombre || 'Cargando...'}}</td>
+                        <td>{{lugaresMap.get(orden.idLugar)?.nombreLugar || 'Cargando...'}}</td>
+                        <td>{{orden.fechaRealizacion}}</td>
+                        <td class="text-truncate">{{orden.descripcion}}</td>
+                        <td>
+                            <span [ngClass]="evaluarEstado(orden.estado)">{{orden.estado}}</span>
+                        </td>
+                        <td>
+                            <button class="action-btn view" (click)="verOrden(orden.idVisita)">Ver</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

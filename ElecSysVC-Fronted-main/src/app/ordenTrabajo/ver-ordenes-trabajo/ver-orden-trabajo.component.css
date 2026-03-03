@@ -1,0 +1,188 @@
+/* VARIABLES CORPORATIVAS VC ELÉCTRICOS */
+:host {
+    --primary: #a00d0d;
+    --primary-dark: #7d0a0a;
+    --action: #07457b;
+    --background: #f6f7fb;
+    --card: #ffffff;
+    --border: #dcdcdc;
+    --text-dark: #222;
+    --text-light: #666;
+    --success: #22c55e;
+    --warning: #facc15;
+    --danger: #ef4444;
+}
+
+/* ESTRUCTURA Y MÁRGENES (Coherencia con Layout) */
+.layout {
+    display: flex;
+    background-color: var(--background);
+    min-height: 100vh;
+}
+
+.contenido {
+    flex: 1;
+    margin-left: 260px; /* Ancho menú lateral */
+    margin-top: 100px;  /* Altura header */
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+/* TÍTULOS */
+h1 {
+    color: var(--primary);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+h2 {
+    color: var(--action);
+    font-size: 22px;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+/* PANEL SUPERIOR DE ESTADO */
+.estado-cotizacion {
+    background: #ffffff;
+    padding: 25px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 8px solid var(--action);
+}
+
+.estado-cotizacion .titulo {
+    font-size: 13px;
+    color: #94a3b8;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.estado-cotizacion .codigo {
+    font-size: 42px;
+    color: var(--action);
+    font-weight: 900;
+    margin: 0;
+}
+
+/* SELECTOR DE ESTADO */
+.selector-wrapper { display: flex; flex-direction: column; align-items: flex-end; }
+.label-estado { font-weight: 700; color: #475569; margin-bottom: 8px; }
+
+.select-estado {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 700;
+    color: var(--action);
+    cursor: pointer;
+    min-width: 200px;
+}
+
+/* CARDS E INFO */
+.card-section {
+    background: var(--card);
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+    border: 1px solid var(--border);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+
+.info-block { background: #f1f5f9; padding: 20px; border-radius: 10px; }
+.fila { display: flex; padding: 8px 0; border-bottom: 1px solid #e2e8f0; }
+.fila label { font-weight: 700; width: 120px; color: #475569; }
+
+/* TABLA DE ACTIVIDADES (Cabecera Roja) */
+.tabla-detalle { width: 100%; border-collapse: collapse; margin-top: 15px; }
+.tabla-detalle th {
+    background: var(--primary);
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+.tabla-detalle td { padding: 10px; border-bottom: 1px solid #eee; }
+
+.input-table {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    background: transparent;
+}
+
+.input-table:focus:not(:disabled) {
+    border-color: var(--action);
+    background: white;
+    outline: none;
+}
+
+.input-table:disabled { color: var(--text-dark); opacity: 1; }
+
+/* BOTONES DE FILA */
+.acciones-celda { text-align: center; white-space: nowrap; }
+.acciones-celda button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin: 0 4px;
+    transition: transform 0.2s;
+}
+.acciones-celda button:hover { transform: scale(1.2); }
+
+/* BOTÓN AGREGAR */
+.btn-add {
+    margin-top: 15px;
+    background: white;
+    color: var(--action);
+    border: 2px dashed var(--action);
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.btn-add:hover { background: var(--action); color: white; }
+
+/* FOOTER - LOS 4 BOTONES */
+.opciones-document {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.btn-footer {
+    height: 50px;
+    border-radius: 30px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.crear { background: var(--success); }
+.enviar { background: var(--warning); color: #854d0e; }
+.descargar.placeholder-btn { background: #94a3b8; cursor: help; }
+.borrar { background: var(--danger); }
+
+.btn-footer:hover:not(.placeholder-btn) {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    filter: brightness(1.1);
+}

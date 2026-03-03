@@ -1,0 +1,162 @@
+/* VARIABLES Y BASE CORPORATIVA */
+@import '../../cotizaciones/cotizaciones.component.css';
+
+:host {
+    --primary-red: #a00d0d;
+    --secondary-blue: #07457b;
+    --success-emerald: #065f46; /* Verde Esmeralda Oscuro */
+    --danger-garnet: #7f1d1d;  /* Rojo Granate */
+    --pending-yellow: #854d0e; 
+    --process-blue: #1e40af;
+    --bg-gray: #f6f7fb;
+    --border-soft: #e2e8f0;
+}
+
+/* ESTRUCTURA (Respetando márgenes de Layout) */
+.layout {
+    display: flex;
+    background-color: var(--bg-gray);
+    min-height: 100vh;
+}
+
+.contenido {
+    flex: 1;
+    margin-left: 260px; /* Margen para menú vertical */
+    margin-top: 100px;  /* Margen para header */
+    padding: 40px;
+    box-sizing: border-box;
+}
+
+h1 {
+    color: var(--primary-red);
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+/* ACCIONES SUPERIORES (Filtros y Botón) */
+.top-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 30px;
+}
+
+.filters {
+    display: flex;
+    gap: 20px;
+}
+
+.opcion {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.opcion label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+}
+
+.opcion input, .opcion select {
+    padding: 10px 15px;
+    border: 2px solid var(--border-soft);
+    border-radius: 8px;
+    outline: none;
+}
+
+.btn-primary {
+    background: var(--secondary-blue);
+    color: white;
+    padding: 12px 25px;
+    border-radius: 10px;
+    border: none;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(7, 69, 123, 0.2);
+}
+
+/* TABLA DE ÓRDENES */
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid var(--border-soft);
+}
+
+.cot-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cot-table th {
+    background: var(--primary-red);
+    color: white;
+    padding: 15px;
+    text-align: left;
+    font-size: 13px;
+    text-transform: uppercase;
+}
+
+.cot-table td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #334155;
+}
+
+/* BADGES DE ESTADO (Colores Solicitados) */
+.badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    display: inline-block;
+}
+
+/* Amarillo (Pendiente) */
+.badge.pendiente { 
+    background: #fef9c3; 
+    color: var(--pending-yellow); 
+    border: 1px solid #fde047;
+}
+
+/* Azul (En Proceso) */
+.badge.proceso { 
+    background: #dbeafe; 
+    color: var(--process-blue); 
+    border: 1px solid #bfdbfe;
+}
+
+/* Verde Esmeralda (Realizada / Finalizada) */
+.badge.realizada { 
+    background: #d1fae5; 
+    color: var(--success-emerald); 
+    border: 1px solid #10b981;
+}
+
+/* Rojo Granate (Cancelada) */
+.badge.cancelada { 
+    background: #fee2e2; 
+    color: var(--danger-garnet); 
+    border: 1px solid #ef4444;
+}
+
+/* BOTONES DE ACCIÓN EN TABLA */
+.view {
+    background: var(--secondary-blue);
+    color: white;
+    border: none;
+    padding: 6px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+}

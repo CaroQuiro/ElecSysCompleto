@@ -1,0 +1,136 @@
+<aside class="sidebar">
+  <ul class="menu">
+
+    <li class="menu-item" (click)="Irinicio()">
+      <div class="menu-link">
+        <i class="fas fa-home"></i>
+        <span>Inicio</span>
+      </div>
+    </li>
+
+    <li class="menu-item">
+
+      <div class="menu-link" (click)="toggleCotizaciones()">
+        <i class="fas fa-file-alt"></i>
+        <span>Cotizaciones</span>
+        <i class="fas fa-chevron-down arrow"
+           [class.open]="cotizacionesOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="cotizacionesOpen">
+        <li (click)="CrearCotizacion()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Crear Cotización</span>
+        </li>
+
+        <li (click)="GestionCotizaciones()">
+          <i class="fas fa-list"></i>
+          <span>Gestión Cotizaciones</span>
+        </li>
+      </ul>
+
+    </li>
+
+  
+    <li class="menu-item">
+      <div class="menu-link" (click)="toggleVisitas()">
+        <i class="fas fa-calendar-check"></i> <span>Órdenes de Visita</span>
+        <i class="fas fa-chevron-down arrow" [class.open]="visitasOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="visitasOpen">
+        <li (click)="CrearVisita()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Programar Visita</span>
+        </li>
+        <li (click)="GestionVisitas()">
+          <i class="fas fa-list"></i>
+          <span>Gestión Visitas</span>
+        </li>
+      </ul>
+    </li>
+
+    <li class="menu-item">
+      <div class="menu-link" (click)="toggleTrabajos()">
+        <i class="fas fa-tools"></i> 
+        <span>Órdenes de Trabajo</span>
+        <i class="fas fa-chevron-down arrow" [class.open]="trabajosOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="trabajosOpen">
+        <li (click)="CrearTrabajoMenu()">
+          <i class="fas fa-plus-circle"></i>
+          <span>Nuevo Trabajo</span>
+        </li>
+        <li (click)="GestionTrabajos()">
+          <i class="fas fa-list"></i>
+          <span>Gestión Trabajos</span>
+        </li>
+      </ul>
+    </li>
+
+    <!-- CLIENTES -->
+    <li class="menu-item">
+      <div class="menu-link" (click)="barraClientes()">
+        <i class="fas fa-user"></i>
+        <span>Clientes</span>
+        <i class="fas fa-chevron-down arrow" [class.open]="clientesOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="clientesOpen">
+        <li (click)="GestionClientes()">
+          <i class="fas fa-list"></i>
+          <span>Gestión Clientes</span>
+        </li>
+      </ul>
+
+    </li>
+
+    
+    <!-- LUGARES -->
+    <li class="menu-item">
+      <div class="menu-link" (click)="barraLugares()">
+        <i class="fas fa-map-marker-alt"></i>
+        <span>Lugares</span>
+        <i class="fas fa-chevron-down arrow" [class.open]="lugaresOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="lugaresOpen">
+        <li (click)="GestionLugares()">
+          <i class="fas fa-list"></i>
+          <span>Gestión Lugares</span>
+        </li>
+      </ul>
+
+    </li>
+
+    <li class="menu-item">
+      <div class="menu-link" (click)="toggleNotificaciones()">
+        <i class="fas fa-bell"></i>
+        <span>Notificaciones</span>
+        <i class="fas fa-chevron-down arrow" [class.open]="notificacionesOpen"></i>
+      </div>
+
+      <ul class="submenu" *ngIf="notificacionesOpen">
+        <li (click)="CrearNotificacionMenu()">
+          <i class="fas fa-paper-plane"></i>
+          <span>Programar Envío</span>
+        </li>
+        <li (click)="GestionNotificaciones()">
+          <i class="fas fa-history"></i>
+          <span>Historial / Gestión</span>
+        </li>
+      </ul>
+    </li>
+
+
+    <!-- CONFIG -->
+    <li class="menu-item">
+      <div class="menu-link">
+        <i class="fas fa-cog"></i>
+        <span>Configuración</span>
+      </div>
+    </li>
+
+  </ul>
+</aside>

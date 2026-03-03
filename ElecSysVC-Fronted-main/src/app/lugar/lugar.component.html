@@ -1,0 +1,121 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Lugares
+            <button class="btn-primary" (click)="mostrarFormulario()">
+                Crear Lugar
+            </button>
+        </h1>
+        <p>A continuacion se mostraran los Lugares creados</p>
+
+        <!-- FILTROS -->
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+
+            <div class="filters">
+                <div class="opcion">
+                    <label>Direccion:</label>
+                    <input type="text" placeholder="Buscar" />
+                </div>
+
+                <div class="opcion">
+                    <label>Nombre del Lugar:</label>
+                    <input type="text" placeholder="Buscar" />
+                </div>
+            </div>
+
+            <div *ngIf="mostrarFormularioCrear" class="form-card">
+                <form (ngSubmit)="crearLugar()" #form="ngForm">
+                    <div class="form-header">
+                        <h2>Crear Nuevo Lugar</h2>
+                        <p>Completa la información del lugar</p>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Id del Lugar</label>
+                            <input type="number" name="idLugar" [(ngModel)]="LugarCrear.idLugar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nombre del Lugar</label>
+                            <input type="text" name="nombreLugar" [(ngModel)]="LugarCrear.nombreLugar" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Dirección</label>
+                            <input type="text" name="direccion" [(ngModel)]="LugarCrear.direccion" required>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-success" [disabled]="form.invalid">Guardar</button>
+                        <button type="button" class="btn-cancel"
+                            (click)="mostrarFormularioCrear = false">Cancelar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID Lugar</th>
+                        <th>Nombre del Lugar</th>
+                        <th>Direccion</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (lugar of lugares; track lugar.idLugar) {
+                    <tr>
+                        <td>{{lugar.idLugar}}</td>
+                        <td>{{lugar.nombreLugar}}</td>
+                        <td>{{lugar.direccion}}</td>
+                        <td>
+                            <button class="action-btn view" (click)="obtenerLugarID(lugar.idLugar)">Editar</button>
+                        </td>
+                    </tr>
+
+                    <tr *ngIf="idEditando === lugar.idLugar" class="fila-edicion">
+                        <td colspan="4">
+                            <form (ngSubmit)="actualizarLugar()" class="form-inline">
+                                <div class="form-grid">
+                                    <div class="form-header">
+                                        <h2>Actualizar Lugar</h2>
+                                        <p>Actualiza la información del lugar</p>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Nombre del Lugar</label>
+                                        <input type="text" [(ngModel)]="LugarEditar.nombreLugar" name="editNombre"
+                                            required>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Dirección</label>
+                                        <input type="text" [(ngModel)]="LugarEditar.direccion" name="editDireccion"
+                                            required>
+                                    </div>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="submit" class="btn-success">Guardar Cambios</button>
+                                    <button type="button" class="btn-cancel"
+                                        (click)="cancelarEdicion()">Cancelar</button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
