@@ -23,6 +23,7 @@ import { VerOrdenTrabajoComponent } from './ordenTrabajo/ver-ordenes-trabajo/ver
 import { ListarTrabajadoresComponent } from './trabajadores/listar-trabajadores/listar-trabajadores.component';
 import { CrearTrabajadorComponent } from './trabajadores/crear-trabajador/crear-trabajador.component';
 import { VerTrabajadorComponent } from './trabajadores/ver-trabajador/ver-trabajador.component';
+import { HistorialComponent } from './historial/historial.component'; 
 
 // IMPORTA TU GUARD AQUÍ
 import { authGuard } from './guards/auth.guard'; 
@@ -67,6 +68,9 @@ export const routes: Routes = [
     { path: 'trabajadores', component: ListarTrabajadoresComponent, canActivate: [authGuard] },
     { path: 'trabajadores/crear', component: CrearTrabajadorComponent, canActivate: [authGuard] },
     { path: 'trabajadores/ver/:id', component: VerTrabajadorComponent, canActivate: [authGuard] },
+
+    //HISTORIAL
+    { path: 'historial', component: HistorialComponent, canActivate: [authGuard] },
 
     // COMODÍN: Si alguien escribe algo que no existe, al login
     { path: '**', redirectTo: '' }

@@ -115,5 +115,12 @@
       </ul>
     </li>
 
+    <li class="menu-item" *ngIf="esAdmin" (click)="irAHistorial()">
+      <div class="menu-link" style="border-top: 1px solid #333; margin-top: 10px; padding-top: 20px;">
+        <i class="fas fa-history" style="color: #ffc107;"></i>
+        <span style="color: #ffc107; font-weight: bold;">Auditoría de Sistema</span>
+      </div>
+    </li>
+
   </ul>
 </aside>

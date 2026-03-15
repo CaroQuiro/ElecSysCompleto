@@ -108,14 +108,42 @@ export class VerOrdenTrabajoComponent implements OnInit {
   }
 
   procesarEnvio(archivo: File) {
-    const fd = new FormData();
-    fd.append('nombreUsuario', this.cliente!.nombre);
-    fd.append('correo', this.cliente!.correo);
-    fd.append('asunto', `Orden de Trabajo #${this.idOrden} - VC Eléctricos`);
-    fd.append('mensaje', `Adjunto reporte de trabajo para la orden #${this.idOrden}.`);
-    fd.append('archivo', archivo);
-    this.notificacionService.enviarCorreo(fd).subscribe(() => alert("Correo enviado"));
-  }
+  const fd = new FormData();
+  
+  const asunto = `Reporte de Servicio Técnico - Orden de Trabajo #${this.idOrden} - VC Eléctricos`;
+
+  // Usamos etiquetas HTML para asegurar los espacios y saltos de línea
+  const mensaje = `
+    <p>Estimado(a) <strong>${this.cliente!.nombre}</strong>,</p>
+
+    <p>Reciba un cordial saludo de parte de <strong>VC Eléctricos Construcciones S.A.S.</strong></p>
+
+    <p>Por medio del presente, hacemos entrega formal del reporte técnico detallado correspondiente a la 
+    <strong>Orden de Trabajo #${this.idOrden}</strong>, la cual fue realizada en sus instalaciones.</p>
+
+    <p>En el documento adjunto encontrará:<br>
+    • El desglose de las actividades técnicas ejecutadas.<br>
+    • Observaciones encontradas durante la prestación del servicio.<br>
+    • Duración y estado final del trabajo.</p>
+
+    <p>Agradecemos la confianza depositada en nuestro equipo profesional. Si requiere información adicional 
+    o tiene alguna inquietud técnica sobre este reporte, no dude en contactarnos respondiendo a este correo.</p>
+
+    <p>Atentamente,<br><br>
+    <strong>Departamento Técnico</strong><br>
+    VC Eléctricos Construcciones S.A.S.</p>
+  `;
+
+  fd.append('nombreUsuario', this.cliente!.nombre);
+  fd.append('correo', this.cliente!.correo);
+  fd.append('asunto', asunto);
+  fd.append('mensaje', mensaje); // El backend recibirá este HTML
+  fd.append('archivo', archivo);
+
+  this.notificacionService.enviarCorreo(fd).subscribe(() => {
+    alert("El reporte ha sido enviado exitosamente al cliente.");
+  });
+}
 
   agregarFila() {
   this.editDetalles.push({

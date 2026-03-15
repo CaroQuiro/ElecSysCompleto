@@ -12,6 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador REST para la gestión de clientes en el sistema ElecSys.
+ * Proporciona servicios para el registro, consulta, actualización y deshabilitación
+ * de clientes, integrando validaciones de negocio.
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/clientes")
@@ -22,9 +27,11 @@ public class ClienteControlador {
 
     private static final int MAX_TELEFONO = 12;
 
-    // =============================
-    // LISTAR CLIENTES
-    // =============================
+    /**
+     * Obtiene la lista de todos los clientes registrados.
+     * @return ResponseEntity con la lista de {@link ClienteDTO}.
+     * @throws ResourceNotFoundException Si no existen clientes en la base de datos.
+     */
     @GetMapping("/listar")
     public ResponseEntity<List<ClienteDTO>> listarClientes() {
         List<ClienteDTO> lista = clienteService.listarClientes();
@@ -35,17 +42,22 @@ public class ClienteControlador {
         return ResponseEntity.ok(lista);
     }
 
-    // =============================
-    // BUSCAR CLIENTE POR TEXTO
-    // =============================
+    /**
+     * Busca clientes mediante un criterio de texto (nombre, correo, etc.).
+     * @param query Texto de búsqueda.
+     * @return ResponseEntity con la lista de clientes que coinciden con el criterio.
+     */
     @GetMapping("/buscar")
     public ResponseEntity<List<ClienteDTO>> buscarCliente(@RequestParam String query){
         return ResponseEntity.ok(clienteService.buscarClienteTexto(query));
     }
 
-    // =============================
-    // BUSCAR CLIENTE POR ID
-    // =============================
+    /**
+     * Busca un cliente específico por su identificador único.
+     * @param id Identificador del cliente.
+     * @return ResponseEntity con el {@link ClienteDTO} encontrado.
+     * @throws ResourceNotFoundException Si el cliente con el ID proporcionado no existe.
+     */
     @GetMapping("/buscar/{id}")
     public ResponseEntity<ClienteDTO> buscarCliente(@PathVariable int id) {
         ClienteDTO cliente = clienteService.buscarCliente(id);
@@ -55,9 +67,12 @@ public class ClienteControlador {
         return ResponseEntity.ok(cliente);
     }
 
-    // =============================
-    // AGREGAR CLIENTE
-    // =============================
+    /**
+     * Registra un nuevo cliente en el sistema.
+     * @param dto Datos del cliente a agregar.
+     * @return ResponseEntity con el mensaje de éxito de la operación.
+     * @throws DuplicateResourceException Si ya existe un cliente con el mismo ID.
+     */
     @PostMapping("/agregar")
     public ResponseEntity<String> agregarCliente(@RequestBody ClienteDTO dto) {
 
@@ -72,9 +87,12 @@ public class ClienteControlador {
         return ResponseEntity.ok(msg);
     }
 
-    // =============================
-    // BORRAR CLIENTE
-    // =============================
+    /**
+     * Cambia el estado de un cliente a deshabilitado.
+     * @param id Identificador del cliente.
+     * @return ResponseEntity con el mensaje de confirmación.
+     * @throws ResourceNotFoundException Si el cliente no existe.
+     */
     @DeleteMapping("/deshabilitar/{id}")
     public ResponseEntity<String> deshabilitarCliente(@PathVariable int id) {
 
@@ -87,9 +105,13 @@ public class ClienteControlador {
         return ResponseEntity.ok(msg);
     }
 
-    // =============================
-    // ACTUALIZAR CLIENTE
-    // =============================
+    /**
+     * Actualiza la información de un cliente existente.
+     * @param id Identificador del cliente.
+     * @param dto Nuevos datos del cliente.
+     * @return ResponseEntity con el mensaje de éxito.
+     * @throws ResourceNotFoundException Si el cliente no existe.
+     */
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<String> actualizarCliente(
             @PathVariable int id,
@@ -110,9 +132,11 @@ public class ClienteControlador {
         return ResponseEntity.ok(msg);
     }
 
-    // =============================
-    // VALIDACIONES
-    // =============================
+    /**
+     * Realiza validaciones de integridad de datos para el objeto cliente.
+     * @param dto Objeto cliente a validar.
+     * @throws InvalidFieldException Si el nombre, correo o estado están ausentes, o si el teléfono excede el límite.
+     */
     private void validarCliente(ClienteDTO dto) {
 
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {

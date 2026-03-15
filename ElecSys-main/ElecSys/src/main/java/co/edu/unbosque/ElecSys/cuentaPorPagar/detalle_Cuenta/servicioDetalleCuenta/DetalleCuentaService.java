@@ -2,6 +2,7 @@ package co.edu.unbosque.ElecSys.cuentaPorPagar.detalle_Cuenta.servicioDetalleCue
 
 import co.edu.unbosque.ElecSys.cuentaPorPagar.detalle_Cuenta.detalleDTO.Detalle_CuentaDTO;
 import co.edu.unbosque.ElecSys.cuentaPorPagar.detalle_Cuenta.entidadDetalleCuenta.DetalleCuentaEntidad;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class DetalleCuentaService implements DetalleCuentaInterface{
 
     @Autowired
     private DetalleCuentaRepository DetalleCuentaRepository;
+
+    @Autowired
+    private AuditoriaHelper auditoria;
 
 
     /**
@@ -36,6 +40,8 @@ public class DetalleCuentaService implements DetalleCuentaInterface{
         try {
             DetalleCuentaEntidad detallecuentaguardado = DetalleCuentaRepository.save(detallecuentaNueva);
             detalle.setId_detalle_cuenta(detallecuentaguardado.getId_detalle_cuenta());
+            auditoria.registrarAccion("DETALLE_CUENTA_PAGAR", "Creación de Detalle Cuenta",
+                    "ID_DETALLE_CUENTA", "N/A", String.valueOf(detallecuentaguardado.getId_detalle_cuenta()));
             return detalle;
         } catch (Exception e){
             return null;
@@ -51,6 +57,8 @@ public class DetalleCuentaService implements DetalleCuentaInterface{
     public String borrarDetalleCuenta(int id) {
         try {
             DetalleCuentaRepository.deleteById(id);
+            auditoria.registrarAccion("DETALLE_CUENTA_PAGAR", "Eliminación de Detalle Cuenta",
+                    "ID_DETALLE_CUENTA", String.valueOf(id), "N/A");
             return "Detalle de Cuenta Eliminado Exitosamente";
         } catch (Exception e){
             return e.getMessage();
@@ -96,6 +104,8 @@ public class DetalleCuentaService implements DetalleCuentaInterface{
             entidad.setValor(detalle.getValor());
 
             DetalleCuentaRepository.save(entidad);
+            auditoria.registrarAccion("DETALLE_CUENTA_PAGAR", "Actualización de Detalle Cuenta",
+                    "ID_DETALLE_CUENTA", "Existente", String.valueOf(id));
             return "Detalle Cuenta Actualizada Correctamente";
         }
     }

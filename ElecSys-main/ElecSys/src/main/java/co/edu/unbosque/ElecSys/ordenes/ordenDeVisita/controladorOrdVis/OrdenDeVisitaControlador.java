@@ -13,6 +13,10 @@ import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.servicioOrdTra.OrdenDeTrab
 
 import java.util.List;
 
+/**
+ * Controlador REST para la gestión de Órdenes de Visita técnica.
+ * Permite programar visitas, gestionar sus actividades y validar dependencias con órdenes de trabajo.
+ */
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/ordenes-visita")
@@ -28,17 +32,21 @@ public class OrdenDeVisitaControlador {
     @Autowired
     private OrdenDeTrabajoService ordenDeTrabajoService;
 
-    /* =====================================================
-       LISTAR TODAS LAS ÓRDENES DE VISITA
-       ===================================================== */
+    /**
+     * Lista todas las órdenes de visita técnica registradas.
+     * @return Lista de {@link OrdenDeVisitaDTO}.
+     */
     @GetMapping("/listar")
     public List<OrdenDeVisitaDTO> listarOrdenesDeVisita() {
         return ordenDeVisitaService.listarOrdenVisita();
     }
 
-    /* =====================================================
-       BUSCAR ORDEN DE VISITA POR ID
-       ===================================================== */
+    /**
+     * Busca una orden de visita por su identificador.
+     * @param id ID de la visita.
+     * @return DTO de la orden de visita.
+     * @throws ResourceNotFoundException Si la orden no existe.
+     */
     @GetMapping("/buscar/{id}")
     public OrdenDeVisitaDTO buscarOrdenDeVisita(@PathVariable int id) {
 
@@ -51,12 +59,14 @@ public class OrdenDeVisitaControlador {
         return orden;
     }
 
-    /* =====================================================
-       CREAR ORDEN DE VISITA + DETALLES
-       ===================================================== */
+    /**
+     * Crea una orden de visita y sus detalles técnicos iniciales de forma atómica.
+     * @param request Solicitud con la cabecera de la visita y sus detalles.
+     * @return Mensaje confirmando la creación con el ID generado.
+     * @throws InvalidFieldException Si los datos de cliente/lugar/trabajador son inválidos o faltan detalles.
+     */
     @PostMapping("/agregar")
     public String agregarOrdenDeVisita(@RequestBody OrdenDeVisitaRequest request) {
-        // 1. Validaciones iniciales
         if (request == null || request.getOrden() == null)
             throw new InvalidFieldException("La solicitud no contiene datos de la orden de visita.");
 
@@ -65,11 +75,8 @@ public class OrdenDeVisitaControlador {
         if (orden.getIdCliente() <= 0 || orden.getIdLugar() <= 0 || orden.getIdTrabajador() <= 0)
             throw new InvalidFieldException("Cliente, lugar o trabajador inválido.");
 
-        // 2. GUARDAR ORDEN Y RECUPERAR EL ID (Cambio clave)
-        // El servicio ahora debe devolver un int con el ID generado por la secuencia
         int idOrdenGenerado = ordenDeVisitaService.agregarOrdenVisita(orden);
 
-        // 3. Procesar detalles con el ID real
         List<DetalleOrdenVisitaDTO> detalles = request.getDetalles();
         if (detalles == null || detalles.isEmpty())
             throw new InvalidFieldException("Debe enviar al menos un detalle de la visita.");
@@ -78,7 +85,6 @@ public class OrdenDeVisitaControlador {
             if (d.getActividad() == null || d.getActividad().isBlank())
                 throw new InvalidFieldException("La actividad del detalle es obligatoria.");
 
-            // Vinculamos el detalle al ID que acabamos de recibir del servicio
             d.setIdVisita(idOrdenGenerado);
             detalleOrdenVisitaService.agregarDetalleOrdVis(d);
         }
@@ -88,9 +94,14 @@ public class OrdenDeVisitaControlador {
 
 
 
-    /* =====================================================
-       ACTUALIZAR ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Actualiza una orden de visita siempre que no haya sido finalizada o cancelada.
+     * @param id ID de la visita.
+     * @param dto Datos actualizados.
+     * @return Mensaje de confirmación del servicio.
+     * @throws ResourceNotFoundException Si la visita no existe.
+     * @throws InvalidFieldException Si se intenta cambiar el ID o la orden ya está en un estado final.
+     */
     @PutMapping("/actualizar/{id}")
     public String actualizarOrdenDeVisita(
             @PathVariable int id,
@@ -114,9 +125,14 @@ public class OrdenDeVisitaControlador {
         return ordenDeVisitaService.editarOrdenVisita(id, dto);
     }
 
-    /* =====================================================
-       BORRAR ORDEN DE VISITA + DETALLES
-       ===================================================== */
+    /**
+     * Elimina una orden de visita y sus detalles.
+     * Valida que no existan Órdenes de Trabajo vinculadas antes de proceder.
+     * @param id ID de la visita a eliminar.
+     * @return Mensaje de éxito de la eliminación.
+     * @throws ResourceNotFoundException Si la visita no existe.
+     * @throws InvalidFieldException Si la visita ya fue realizada/cancelada o tiene trabajos asociados.
+     */
     @DeleteMapping("/borrar/{id}")
     public String borrarOrdenDeVisita(@PathVariable int id) {
 
@@ -139,7 +155,6 @@ public class OrdenDeVisitaControlador {
                     "Debe eliminar primero la Orden de Trabajo correspondiente.");
         }
 
-        // Borrar detalles primero
         detalleOrdenVisitaService.listarDetallesPorOrden(id)
                 .forEach(d ->
                         detalleOrdenVisitaService.borrarDetalleOrdVis(
@@ -149,9 +164,12 @@ public class OrdenDeVisitaControlador {
                 + " + detalles eliminados";
     }
 
-    /* =====================================================
-       LISTAR DETALLES DE UNA ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Lista los detalles de actividades programadas para una visita.
+     * @param idOrden ID de la visita técnica.
+     * @return Lista de {@link DetalleOrdenVisitaDTO}.
+     * @throws ResourceNotFoundException Si la visita no existe.
+     */
     @GetMapping("/{idOrden}/detalles")
     public List<DetalleOrdenVisitaDTO> listarDetallesPorOrden(
             @PathVariable int idOrden) {
@@ -163,9 +181,14 @@ public class OrdenDeVisitaControlador {
         return detalleOrdenVisitaService.listarDetallesPorOrden(idOrden);
     }
 
-    /* =====================================================
-       AGREGAR DETALLE A UNA ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Agrega una actividad específica a una orden de visita ya creada.
+     * @param idOrden ID de la visita.
+     * @param detalle Información de la actividad.
+     * @return Mensaje de éxito del servicio.
+     * @throws ResourceNotFoundException Si la visita no existe.
+     * @throws InvalidFieldException Si la actividad está vacía.
+     */
     @PostMapping("/{idOrden}/detalles/agregar")
     public String agregarDetalle(
             @PathVariable int idOrden,
@@ -183,9 +206,13 @@ public class OrdenDeVisitaControlador {
         return detalleOrdenVisitaService.agregarDetalleOrdVis(detalle);
     }
 
-    /* =====================================================
-       ACTUALIZAR DETALLE DE VISITA
-       ===================================================== */
+    /**
+     * Modifica un detalle de actividad de visita específico.
+     * @param idDetalle ID del detalle.
+     * @param detalle Nuevos datos.
+     * @return Mensaje de éxito de la actualización.
+     * @throws ResourceNotFoundException Si el detalle no existe.
+     */
     @PutMapping("/detalles/actualizar/{idDetalle}")
     public String actualizarDetalle(
             @PathVariable int idDetalle,
@@ -202,9 +229,12 @@ public class OrdenDeVisitaControlador {
                 .actualizarDetalleOrdVis(idDetalle, detalle);
     }
 
-    /* =====================================================
-       BORRAR DETALLE DE VISITA
-       ===================================================== */
+    /**
+     * Borra un detalle de actividad de la visita.
+     * @param idDetalle ID del detalle a eliminar.
+     * @return Mensaje de éxito.
+     * @throws ResourceNotFoundException Si el detalle no existe.
+     */
     @DeleteMapping("/detalles/borrar/{idDetalle}")
     public String borrarDetalle(@PathVariable int idDetalle) {
 

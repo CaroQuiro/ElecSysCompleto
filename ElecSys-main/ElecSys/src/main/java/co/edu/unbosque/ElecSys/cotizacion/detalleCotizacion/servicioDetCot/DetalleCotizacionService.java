@@ -2,6 +2,7 @@ package co.edu.unbosque.ElecSys.cotizacion.detalleCotizacion.servicioDetCot;
 
 import co.edu.unbosque.ElecSys.cotizacion.detalleCotizacion.dtoDetCot.DetalleCotizacionDTO;
 import co.edu.unbosque.ElecSys.cotizacion.detalleCotizacion.entidadDetCot.DetalleCotizacionEntidad;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class DetalleCotizacionService implements DetalleCotizacionInterface{
 
     @Autowired
     private DetalleCotizacionRepository detalleCotizacionRepository;
+
+    @Autowired
+    private AuditoriaHelper auditoria;
 
     /**
      * Guarda un nuevo detalle de cotización en la base de datos.
@@ -34,8 +38,9 @@ public class DetalleCotizacionService implements DetalleCotizacionInterface{
           detalleCotizacionDTO.getSubtotal()
         );
         try{
-            detalleCotizacionRepository.save(nuevodetalle);
-            return "Detalle creado";
+            DetalleCotizacionEntidad guardado = detalleCotizacionRepository.save(nuevodetalle);
+            auditoria.registrarAccion("DETALLE_COTIZACION", "Creación de Detalle",
+                    "ID_DETALLE", "N/A", String.valueOf(guardado.getId_detalle_cotizacion()));            return "Detalle creado";
         } catch (RuntimeException e) {
             return "Error al crear un nuevo detalle";
         }
@@ -50,6 +55,8 @@ public class DetalleCotizacionService implements DetalleCotizacionInterface{
     public String borrarDetalleCot(int id) {
         try{
             detalleCotizacionRepository.deleteById(id);
+            auditoria.registrarAccion("DETALLE_COTIZACION", "Eliminación de Detalle",
+                    "ID_DETALLE", String.valueOf(id), "N/A");
             return "Detalle eliminado correctamente";
         } catch (Exception e) {
             return e.getMessage();
@@ -97,6 +104,8 @@ public class DetalleCotizacionService implements DetalleCotizacionInterface{
             entidad.setSubtotal(detalle.getSubtotal());
 
             detalleCotizacionRepository.save(entidad);
+            auditoria.registrarAccion("DETALLE_COTIZACION", "Actualización de Detalle",
+                    "ID_DETALLE", "Existente", String.valueOf(id));
             return "Detalle Actualizado";
         }
     }

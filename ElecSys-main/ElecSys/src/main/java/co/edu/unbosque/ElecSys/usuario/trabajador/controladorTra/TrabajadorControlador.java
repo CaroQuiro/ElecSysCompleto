@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Controlador REST para administrar los trabajadores (usuarios del sistema).
+ * Incluye lógica para el registro de nuevos usuarios, asignación de roles y
+ * validación de credenciales.
+ */
 @RestController
 @CrossOrigin(origins = "http://localhost:4200")
 @RequestMapping("/api/trabajador")
@@ -23,9 +28,11 @@ public class TrabajadorControlador {
 
     private static final int MAX_TELEFONO = 12;
 
-    // =============================
-    // LISTAR TRABAJADORES
-    // =============================
+    /**
+     * Lista todos los trabajadores registrados en la plataforma.
+     * @return ResponseEntity con la lista de {@link TrabajadorDTO}.
+     * @throws ResourceNotFoundException Si la lista está vacía.
+     */
     @GetMapping("/listar")
     public ResponseEntity<List<TrabajadorDTO>> listarTrabajadores() {
         List<TrabajadorDTO> lista = trabajadorService.listarTrabajadores();
@@ -37,9 +44,12 @@ public class TrabajadorControlador {
         return ResponseEntity.ok(lista);
     }
 
-    // =============================
-    // BUSCAR TRABAJADOR POR ID
-    // =============================
+    /**
+     * Busca un trabajador específico por su ID.
+     * @param id Identificador del trabajador.
+     * @return ResponseEntity con el DTO del trabajador.
+     * @throws ResourceNotFoundException Si el trabajador no existe.
+     */
     @GetMapping("/buscar/{id}")
     public ResponseEntity<TrabajadorDTO> buscarTrabajador(@PathVariable int id) {
 
@@ -52,9 +62,12 @@ public class TrabajadorControlador {
         return ResponseEntity.ok(trabajador);
     }
 
-    // =============================
-    // AGREGAR TRABAJADOR
-    // =============================
+    /**
+     * Registra un nuevo trabajador validando roles y duplicados.
+     * @param dto Información del trabajador.
+     * @return ResponseEntity con mensaje de éxito.
+     * @throws DuplicateResourceException Si el ID ya está en uso.
+     */
     @PostMapping("/agregar")
     public ResponseEntity<String> agregarTrabajador(@RequestBody TrabajadorDTO dto) {
 
@@ -69,9 +82,12 @@ public class TrabajadorControlador {
         return ResponseEntity.ok(msg);
     }
 
-    // =============================
-    // BORRAR TRABAJADOR
-    // =============================
+    /**
+     * Deshabilita a un trabajador del sistema.
+     * @param id ID del trabajador.
+     * @return ResponseEntity con mensaje de confirmación.
+     * @throws ResourceNotFoundException Si el ID no existe.
+     */
     @DeleteMapping("/borrar/{id}")
     public ResponseEntity<String> borrarTrabajador(@PathVariable int id) {
 
@@ -84,9 +100,13 @@ public class TrabajadorControlador {
         return ResponseEntity.ok(msg);
     }
 
-    // =============================
-    // ACTUALIZAR TRABAJADOR
-    // =============================
+    /**
+     * Actualiza la información de un trabajador, incluyendo su estado y contraseña opcional.
+     * @param id ID del trabajador.
+     * @param dto Nuevos datos.
+     * @return ResponseEntity con el mensaje de éxito.
+     * @throws ResourceNotFoundException Si el trabajador no existe.
+     */
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<String> actualizarTrabajador(
             @PathVariable int id,
@@ -113,9 +133,11 @@ public class TrabajadorControlador {
             Set.of("ADMIN", "USUARIO");
 
 
-    // =============================
-    // VALIDACIONES
-    // =============================
+    /**
+     * Valida los campos requeridos para la creación de un nuevo trabajador.
+     * @param dto DTO a validar.
+     * @throws InvalidFieldException Si faltan datos críticos o el tipo de usuario no es ADMIN/USUARIO.
+     */
     private void validarTrabajador(TrabajadorDTO dto) {
 
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {
@@ -149,6 +171,11 @@ public class TrabajadorControlador {
         }
     }
 
+    /**
+     * Valida los campos requeridos para la actualización, omitiendo la obligatoriedad de la contraseña.
+     * @param dto DTO a validar.
+     * @throws InvalidFieldException Si los campos de perfil son incorrectos.
+     */
     private void validarTrabajadorParaActualizar(TrabajadorDTO dto) {
 
         if (dto.getNombre() == null || dto.getNombre().isBlank()) {

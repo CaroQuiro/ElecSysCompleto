@@ -136,7 +136,6 @@ export class ContratosComponent implements OnInit {
   cerrarFlotanteContrato() { this.mostrarFlotanteContrato = false; }
 
   guardarContrato(): void {
-    // Validaciones preventivas para evitar el error 400
     if (!this.nuevoContrato.contrato.id_trabajador || !this.nuevoContrato.edad || !this.nuevoContrato.estadoCivil) {
       alert("Error: Verifique que la edad sea mayor a 18 y todos los campos estén llenos.");
       return;

@@ -40,7 +40,7 @@ public class AuthService {
      */
     public String login(LoginRequestDTO dto) {
         String correoLimpio = dto.getCorreo().trim().toLowerCase();
-        TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio);
+        TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio).orElse(null);
 
         if (trabajador == null) return "Usuario no encontrado";
 
@@ -88,7 +88,7 @@ public class AuthService {
         }
 
         codigosTemporales.remove(correoLimpio);
-        TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio);
+        TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio).orElse(null);
         String token = JwtUtil.generarToken(correoLimpio);
 
         return new LoginResponseDTO(token, trabajador.getId_trabajador(),trabajador.getNombre(),

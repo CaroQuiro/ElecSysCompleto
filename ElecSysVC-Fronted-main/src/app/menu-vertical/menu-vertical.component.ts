@@ -77,4 +77,8 @@ export class MenuVerticalComponent implements OnInit {
       setTimeout(() => { this.flotanteServiceContrato.abrirFlotante(); }, 100);
     });
   }
+
+  irAHistorial() { 
+    this.router.navigate(['/historial']); 
+  }
 }

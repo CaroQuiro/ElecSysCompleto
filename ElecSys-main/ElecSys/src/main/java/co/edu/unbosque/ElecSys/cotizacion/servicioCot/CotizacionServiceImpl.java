@@ -3,6 +3,7 @@ package co.edu.unbosque.ElecSys.cotizacion.servicioCot;
 import co.edu.unbosque.ElecSys.cotizacion.analizador.PrediccionService;
 import co.edu.unbosque.ElecSys.cotizacion.dtoCot.CotizacionDTO;
 import co.edu.unbosque.ElecSys.cotizacion.entidadCot.CotizacionEntidad;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,9 @@ public class CotizacionServiceImpl implements CotizacionInterface{
 
     @Autowired
     private PrediccionService prediccionService;
+
+    @Autowired
+    private AuditoriaHelper auditoria;
 
     /**
      * Persiste una cotización en la base de datos.
@@ -47,6 +51,8 @@ public class CotizacionServiceImpl implements CotizacionInterface{
         try {
             CotizacionEntidad cotGuardada = cotizacionRepository.save(nuevaCotizacion);
             cotizacion.setId_cotizacion(cotGuardada.getId_cotizacion());
+            auditoria.registrarAccion("COTIZACION", "Creación de Cotización",
+                    "ID_COTIZACION", "N/A", String.valueOf(cotGuardada.getId_cotizacion()));
             return cotizacion;
 
         }catch (Exception e){
@@ -90,6 +96,8 @@ public class CotizacionServiceImpl implements CotizacionInterface{
     public String borrarCotizacion(int id) {
         try {
             cotizacionRepository.deleteById(id);
+            auditoria.registrarAccion("COTIZACION", "Eliminación de Cotización",
+                    "ID_COTIZACION", String.valueOf(id), "N/A");
             return "Cotizacion Eliminada";
         } catch (Exception e) {
             return e.getMessage();
@@ -153,6 +161,8 @@ public class CotizacionServiceImpl implements CotizacionInterface{
             entidad.setTotal_pagar(cotizacion.getTotal_pagar());
 
             cotizacionRepository.save(entidad);
+            auditoria.registrarAccion("COTIZACION", "Actualización de Cotización",
+                    "ID_COTIZACION", "Existente", String.valueOf(id));
             return "Cotizacion Actualizada Correctamente";
         }
     }

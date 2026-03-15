@@ -2,6 +2,7 @@ package co.edu.unbosque.ElecSys.cuentaPorPagar.servicioCuen;
 
 import co.edu.unbosque.ElecSys.cuentaPorPagar.dtoCuen.CuentaPorPagarDTO;
 import co.edu.unbosque.ElecSys.cuentaPorPagar.entidadCuen.CuentaPorPagarEntidad;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
 
     @Autowired
     private CuentasPorPagarRepository cuentasPorPagarRepository;
+
+    @Autowired
+    private AuditoriaHelper auditoria;
 
     /**
      * Crea un registro de cuenta de cobro en la base de datos.
@@ -37,6 +41,8 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
         try{
             CuentaPorPagarEntidad cuentaGuardada = cuentasPorPagarRepository.save(nuevaCuenta);
             cuenta.setId_cuenta_pagar(cuentaGuardada.getId_cuenta_pagar());
+            auditoria.registrarAccion("CUENTA_PAGAR", "Creación de Cuenta",
+                    "ID_CUENTA", "N/A", String.valueOf(cuentaGuardada.getId_cuenta_pagar()));
             return cuenta;
         } catch (Exception e) {
             return null;
@@ -52,6 +58,8 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
     public String borrarCuentaPagar(int id) {
         try {
             cuentasPorPagarRepository.deleteById(id);
+            auditoria.registrarAccion("CUENTA_PAGAR", "Eliminación de Cuenta",
+                    "ID_CUENTA", String.valueOf(id), "N/A");
             return "Cuenta Eliminada Exitosamente";
         } catch (Exception e) {
             return e.getMessage();
@@ -105,6 +113,8 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
             entidad.setEstado(cuentaPorPagarDTO.getEstado());
 
             cuentasPorPagarRepository.save(entidad);
+            auditoria.registrarAccion("CUENTA_PAGAR", "Actualización de Cuenta",
+                    "ID_CUENTA", "Existente", String.valueOf(id));
             return "Cotizacion Actualizada Correctamente";
         }
     }

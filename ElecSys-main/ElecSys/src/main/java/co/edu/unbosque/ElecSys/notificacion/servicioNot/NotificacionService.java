@@ -1,6 +1,7 @@
 package co.edu.unbosque.ElecSys.notificacion.servicioNot;
 
 
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import co.edu.unbosque.ElecSys.notificacion.dtoNot.NotificacionDTO;
 import co.edu.unbosque.ElecSys.notificacion.entidadNot.NotificacionDestinatarioEntidad;
 import co.edu.unbosque.ElecSys.notificacion.entidadNot.NotificacionEntidad;
@@ -41,6 +42,9 @@ public class NotificacionService implements NotificacionInterface {
     @Autowired
     private ClienteServiceImpl clienteService;
 
+    @Autowired
+    private AuditoriaHelper auditoria;
+
     /**
      * Almacena una notificación base en el repositorio con estado inicial ACTIVA.
      * @param dto Información de la notificación.
@@ -56,7 +60,10 @@ public class NotificacionService implements NotificacionInterface {
             notificacion.setEstado("ACTIVA");
             notificacion.setFechaCreacion(LocalDateTime.now());
 
-            notificacionRepository.save(notificacion);
+            NotificacionEntidad guardada = notificacionRepository.save(notificacion);
+
+            auditoria.registrarAccion("NOTIFICACION", "Creación Manual",
+                    "ID_NOTIFICACION", "N/A", String.valueOf(guardada.getIdNotificacion()));
 
             return "Notificación creada correctamente";
         } catch (Exception e) {
@@ -79,6 +86,9 @@ public class NotificacionService implements NotificacionInterface {
                     notificacion.setMensaje(notificacionNueva.getMensaje());
                     notificacion.setTipo(notificacionNueva.getTipo());
                     notificacionRepository.save(notificacion);
+                    auditoria.registrarAccion("NOTIFICACION", "Edición de Contenido",
+                            "ID_NOTIFICACION", String.valueOf(idNotificacionAnt), "Editado");
+
                     return "Notificación editada correctamente";
                 })
                 .orElse("No se encontró la notificación");
@@ -93,6 +103,8 @@ public class NotificacionService implements NotificacionInterface {
     public String borrarNotificacion(long idNotificacion) {
         try {
             notificacionRepository.deleteById((int) idNotificacion);
+            auditoria.registrarAccion("NOTIFICACION", "Eliminación Física",
+                    "ID_NOTIFICACION", String.valueOf(idNotificacion), "Borrado");
             return "Notificación eliminada correctamente";
         } catch (Exception e) {
             return "Error al eliminar la notificación";
@@ -134,6 +146,8 @@ public class NotificacionService implements NotificacionInterface {
                 .map(notificacion -> {
                     notificacion.setEstado("INACTIVA");
                     notificacionRepository.save(notificacion);
+                    auditoria.registrarAccion("NOTIFICACION", "Cambio de Estado",
+                            "ESTADO", "ACTIVA", "INACTIVA");
                     return "Notificación desactivada";
                 })
                 .orElse("No se encontró la notificación");
@@ -150,6 +164,8 @@ public class NotificacionService implements NotificacionInterface {
                 .map(notificacion -> {
                     notificacion.setEstado("ACTIVA");
                     notificacionRepository.save(notificacion);
+                    auditoria.registrarAccion("NOTIFICACION", "Cambio de Estado",
+                            "ESTADO", "INACTIVA", "ACTIVA");
                     return "Notificación activada";
                 })
                 .orElse("No se encontró la notificación");
@@ -199,6 +215,8 @@ public class NotificacionService implements NotificacionInterface {
             d.setEnviado(true);
             d.setFechaEnvio(LocalDateTime.now());
             destinatarioRepository.save(d);
+            auditoria.registrarAccion("NOTIFICACION_ENVIO", "Envío Exitoso",
+                    "ID_DESTINATARIO", "Pendiente", String.valueOf(d.getIdNotificacionDestinatario()));
         }
     }
 
@@ -263,6 +281,9 @@ public class NotificacionService implements NotificacionInterface {
             prog.setFechaFin(fechaFin);
             prog.setUltimaEjecucion(null);
             programacionRepository.save(prog);
+
+            auditoria.registrarAccion("NOTIFICACION", "Programación Recurrente",
+                    "TITULO", "N/A", dto.getTitulo());
 
             return "Notificación programada creada con éxito";
         } catch (Exception e) {

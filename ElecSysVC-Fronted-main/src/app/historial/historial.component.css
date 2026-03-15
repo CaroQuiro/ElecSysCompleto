@@ -1,0 +1,39 @@
+:host {
+    --primary: #a00d0d;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+    --bg-app: #f8fafc;
+    --border: #e2e8f0;
+}
+
+.layout { display: flex; background: var(--bg-app); min-height: 100vh; margin-top: 90px; }
+.contenido { flex: 1; margin-left: 240px; padding: 40px; max-width: 1500px; }
+
+/* CABECERA */
+.header-seccion { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; }
+h1 { font-size: 32px; color: var(--text-main); font-weight: 800; margin: 0; }
+.stats-badge { background: #1e293b; color: white; padding: 8px 15px; border-radius: 8px; font-size: 12px; font-weight: 600; }
+
+/* FILTROS */
+.filters-container { background: white; padding: 25px; border-radius: 16px; border: 1px solid var(--border); margin-bottom: 25px; }
+.filters-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+.opcion label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px; }
+.opcion input { width: 100%; padding: 12px; border-radius: 10px; border: 1px solid var(--border); font-size: 14px; background: #fcfcfc; }
+
+/* TABLA */
+.table-wrapper { background: white; border-radius: 16px; overflow: hidden; border: 1px solid var(--border); box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+table { width: 100%; border-collapse: collapse; }
+th { background: #f1f5f9; padding: 18px; text-align: left; font-size: 12px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+td { padding: 18px; border-bottom: 1px solid #f1f5f9; font-size: 14px; vertical-align: middle; }
+
+/* COLUMNAS */
+.col-id { font-weight: 800; color: var(--text-muted); font-family: monospace; }
+.col-time { display: flex; flex-direction: column; }
+.col-time strong { color: var(--text-main); }
+.col-time span { font-size: 12px; color: var(--text-muted); }
+.col-user { font-weight: 600; color: var(--primary); }
+.mod-tag { background: #e2e8f0; color: #475569; padding: 4px 10px; border-radius: 6px; font-weight: 800; font-size: 11px; }
+.col-action { font-weight: 500; color: #334155; }
+
+/* Efecto hover en filas */
+tbody tr:hover { background-color: #f8fafc; }

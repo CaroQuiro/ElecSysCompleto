@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * Controlador REST para la gestión de Órdenes de Trabajo.
+ * Proporciona endpoints para el ciclo de vida completo de una orden, incluyendo
+ * la gestión de sus detalles técnicos y validaciones de estado del cliente.
+ */
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/ordenes-trabajo")
@@ -28,17 +33,21 @@ public class OrdenDeTrabajoControlador {
     @Autowired
     private ClienteServiceImpl clienteService;
 
-    /* =====================================================
-       LISTAR TODAS LAS ÓRDENES
-       ===================================================== */
+    /**
+     * Recupera todas las órdenes de trabajo registradas en el sistema.
+     * @return Lista de objetos {@link OrdenDeTrabajoDTO}.
+     */
     @GetMapping("/listar")
     public List<OrdenDeTrabajoDTO> listarOrdenTrabajo() {
         return ordenDeTrabajoService.listarOrdenTrabajo();
     }
 
-    /* =====================================================
-       BUSCAR ORDEN POR ID
-       ===================================================== */
+    /**
+     * Busca una orden de trabajo específica por su identificador único.
+     * @param id Identificador de la orden.
+     * @return El DTO de la orden encontrada.
+     * @throws ResourceNotFoundException Si no existe la orden con el ID proporcionado.
+     */
     @GetMapping("/buscar/{id}")
     public OrdenDeTrabajoDTO buscarOrdenTrabajo(@PathVariable int id) {
 
@@ -50,9 +59,13 @@ public class OrdenDeTrabajoControlador {
         return orden;
     }
 
-    /* =====================================================
-   CREAR ORDEN + DETALLES (CORREGIDO)
-   ===================================================== */
+    /**
+     * Crea una nueva orden de trabajo junto con sus detalles asociados.
+     * Valida que el cliente exista y esté en estado ACTIVO antes de proceder.
+     * @param request Objeto que contiene la cabecera de la orden y su lista de detalles.
+     * @return Mensaje de éxito con el ID de la orden generada.
+     * @throws InvalidFieldException Si la solicitud es nula, el cliente no es apto o faltan actividades en los detalles.
+     */
     @PostMapping("/agregar")
     public String agregarOrdenDeTrabajo(@RequestBody OrdenDeTrabajoRequest request) {
         if (request == null || request.getOrden() == null)
@@ -81,9 +94,15 @@ public class OrdenDeTrabajoControlador {
         return "Orden de Trabajo #" + idOrdenGenerado + " y detalles creados correctamente.";
     }
 
-    /* =====================================================
-       ACTUALIZAR ORDEN
-       ===================================================== */
+    /**
+     * Actualiza la información de una orden de trabajo existente.
+     * Solo permite modificaciones si la orden no está en estado 'REALIZADA' o 'CANCELADA'.
+     * @param id ID de la orden a actualizar.
+     * @param dto Datos actualizados de la orden.
+     * @return Mensaje de éxito de la actualización.
+     * @throws ResourceNotFoundException Si la orden no existe.
+     * @throws InvalidFieldException Si se intenta cambiar el ID o si la orden ya está finalizada/cancelada.
+     */
     @PutMapping("/actualizar/{id}")
     public String actualizarOrdenDeTrabajo(
             @PathVariable int id,
@@ -105,16 +124,19 @@ public class OrdenDeTrabajoControlador {
         return ordenDeTrabajoService.editarOrdenTrabajo(id, dto);
     }
 
-    /* =====================================================
-       BORRAR ORDEN + DETALLES
-       ===================================================== */
+    /**
+     * Elimina una orden de trabajo y todos sus detalles vinculados.
+     * @param id ID de la orden a eliminar.
+     * @return Mensaje confirmando la eliminación de la orden y sus detalles.
+     * @throws ResourceNotFoundException Si la orden no existe.
+     * @throws InvalidFieldException Si la orden ya fue realizada o cancelada.
+     */
     @DeleteMapping("/borrar/{id}")
     public String borrarOrdenTrabajo(@PathVariable int id) {
 
         if (!ordenDeTrabajoService.existeOrden(id))
             throw new ResourceNotFoundException("No existe la orden de trabajo con ID: " + id);
 
-        // Borrar detalles primero
         detalleOrdenTrabajoService.listarDetallesPorOrden(id)
                 .forEach(d ->
                         detalleOrdenTrabajoService.borrarDetalleOrdTra(
@@ -131,9 +153,12 @@ public class OrdenDeTrabajoControlador {
                 + " + detalles eliminados";
     }
 
-    /* =====================================================
-       LISTAR DETALLES DE UNA ORDEN
-       ===================================================== */
+    /**
+     * Lista los detalles técnicos asociados a una orden de trabajo específica.
+     * @param idOrden ID de la orden de trabajo.
+     * @return Lista de {@link DetalleOrdenTrabajoDTO}.
+     * @throws ResourceNotFoundException Si la orden de trabajo no existe.
+     */
     @GetMapping("/{idOrden}/detalles")
     public List<DetalleOrdenTrabajoDTO> listarDetallesPorOrden(
             @PathVariable int idOrden) {
@@ -145,9 +170,14 @@ public class OrdenDeTrabajoControlador {
         return detalleOrdenTrabajoService.listarDetallesPorOrden(idOrden);
     }
 
-    /* =====================================================
-       AGREGAR DETALLE A UNA ORDEN
-       ===================================================== */
+    /**
+     * Agrega un nuevo ítem de detalle a una orden de trabajo existente.
+     * @param idOrden ID de la orden padre.
+     * @param detalle Información del nuevo detalle (actividad, duración, etc.).
+     * @return Mensaje de confirmación del servicio de detalles.
+     * @throws ResourceNotFoundException Si la orden de trabajo no existe.
+     * @throws InvalidFieldException Si la actividad del detalle está vacía.
+     */
     @PostMapping("/{idOrden}/detalles/agregar")
     public String agregarDetalle(
             @PathVariable int idOrden,
@@ -164,9 +194,13 @@ public class OrdenDeTrabajoControlador {
         return detalleOrdenTrabajoService.agregarDetalleOrdTra(detalle);
     }
 
-    /* =====================================================
-       ACTUALIZAR DETALLE
-       ===================================================== */
+    /**
+     * Modifica un detalle técnico específico.
+     * @param idDetalle ID del detalle a actualizar.
+     * @param detalle Nuevos datos del detalle.
+     * @return Mensaje de éxito de la actualización.
+     * @throws ResourceNotFoundException Si el detalle no existe.
+     */
     @PutMapping("/detalles/actualizar/{idDetalle}")
     public String actualizarDetalle(
             @PathVariable int idDetalle,
@@ -182,9 +216,12 @@ public class OrdenDeTrabajoControlador {
         return detalleOrdenTrabajoService.actualizarDetalleOrdTra(idDetalle, detalle);
     }
 
-    /* =====================================================
-       BORRAR DETALLE
-       ===================================================== */
+    /**
+     * Elimina un detalle técnico individual de la base de datos.
+     * @param idDetalle ID del detalle a eliminar.
+     * @return Mensaje de éxito de la eliminación.
+     * @throws ResourceNotFoundException Si el detalle no existe.
+     */
     @DeleteMapping("/detalles/borrar/{idDetalle}")
     public String borrarDetalle(@PathVariable int idDetalle) {
 
