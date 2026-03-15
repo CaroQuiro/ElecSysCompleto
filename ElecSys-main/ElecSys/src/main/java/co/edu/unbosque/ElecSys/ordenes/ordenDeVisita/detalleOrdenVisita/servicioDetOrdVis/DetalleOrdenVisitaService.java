@@ -1,6 +1,7 @@
 package co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.detalleOrdenVisita.servicioDetOrdVis;
 
 
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.detalleOrdenVisita.dtoDetOrdVis.DetalleOrdenVisitaDTO;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.detalleOrdenVisita.entidadDetOrdVis.DetalleOrdenVisitaEntidad;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.entidadOrdVis.OrdenDeVisitaEntidad;
@@ -10,6 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Servicio para la gestión de las actividades detalladas en las Órdenes de Visita.
+ * Controla qué se debe hacer en cada inspección o visita técnica.
+ */
 @Service
 public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
 
@@ -19,9 +24,14 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
     @Autowired
     private OrdenVisitaRepository ordenVisitaRepository;
 
-    /* =====================================================
-       AGREGAR DETALLE
-       ===================================================== */
+    @Autowired
+    private AuditoriaHelper auditoria;
+
+    /**
+     * Agrega una nueva actividad a una visita validando que la visita padre exista.
+     * @param dto Datos de la actividad técnica.
+     * @return Mensaje de éxito o error.
+     */
     @Override
     public String agregarDetalleOrdVis(DetalleOrdenVisitaDTO dto) {
         try {
@@ -39,7 +49,10 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
             detalle.setObservaciones(dto.getObservaciones());
             detalle.setDuracion(dto.getDuracion());
 
-            detalleOrdenVisitaRepository.save(detalle);
+            DetalleOrdenVisitaEntidad guardado = detalleOrdenVisitaRepository.save(detalle);
+
+            auditoria.registrarAccion("DETALLE_ORDEN_VISITA", "Creación de Detalle Visita",
+                    "ID_DETALLE_VISITA", "N/A", String.valueOf(guardado.getId_detalle_visita()));
 
             return "Detalle de orden de visita agregado correctamente";
         } catch (Exception e) {
@@ -48,9 +61,11 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
         }
     }
 
-    /* =====================================================
-       BORRAR DETALLE
-       ===================================================== */
+    /**
+     * Elimina una actividad técnica del registro.
+     * @param id ID del detalle de visita.
+     * @return Mensaje indicando el resultado.
+     */
     @Override
     public String borrarDetalleOrdVis(int id) {
         try {
@@ -59,6 +74,9 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
             }
 
             detalleOrdenVisitaRepository.deleteById(id);
+
+            auditoria.registrarAccion("DETALLE_ORDEN_VISITA", "Eliminación de Detalle Visita",
+                    "ID_DETALLE_VISITA", String.valueOf(id), "Eliminado");
             return "Detalle de orden de visita eliminado correctamente";
         } catch (Exception e) {
             e.printStackTrace();
@@ -66,9 +84,10 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
         }
     }
 
-    /* =====================================================
-       LISTAR TODOS LOS DETALLES
-       ===================================================== */
+    /**
+     * Lista todos los detalles de visitas registrados en el sistema.
+     * @return Lista de DTOs de detalles de visita.
+     */
     @Override
     public List<DetalleOrdenVisitaDTO> listarDetallesOrdVis() {
         return detalleOrdenVisitaRepository.findAll()
@@ -77,9 +96,12 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
                 .toList();
     }
 
-    /* =====================================================
-       ACTUALIZAR DETALLE
-       ===================================================== */
+    /**
+     * Actualiza la descripción o duración de una actividad de visita.
+     * @param id ID del detalle a actualizar.
+     * @param dto Nuevos datos.
+     * @return Mensaje de éxito o error.
+     */
     @Override
     public String actualizarDetalleOrdVis(int id, DetalleOrdenVisitaDTO dto) {
         try {
@@ -97,6 +119,9 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
 
             detalleOrdenVisitaRepository.save(detalle);
 
+            auditoria.registrarAccion("DETALLE_ORDEN_VISITA", "Actualización de Detalle Visita",
+                    "ID_DETALLE_VISITA", "Existente", String.valueOf(id));
+
             return "Detalle de orden de visita actualizado correctamente";
         } catch (Exception e) {
             e.printStackTrace();
@@ -104,9 +129,11 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
         }
     }
 
-    /* =====================================================
-       LISTAR DETALLES POR ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Filtra los detalles de actividades pertenecientes a una visita técnica específica.
+     * @param idOrdenVisita ID de la visita.
+     * @return Lista de detalles asociados.
+     */
     public List<DetalleOrdenVisitaDTO> listarDetallesPorOrden(int idOrdenVisita) {
         return detalleOrdenVisitaRepository.findAll()
                 .stream()
@@ -115,25 +142,31 @@ public class DetalleOrdenVisitaService implements DetalleOrdenVisitaInterface{
                 .toList();
     }
 
-    /* =====================================================
-       BUSCAR DETALLE POR ID
-       ===================================================== */
+    /**
+     * Busca un detalle de visita por su ID primario.
+     * @param idDetalle ID del detalle.
+     * @return DTO del detalle o null.
+     */
     public DetalleOrdenVisitaDTO buscarDetalle(int idDetalle) {
         return detalleOrdenVisitaRepository.findById(idDetalle)
                 .map(this::mapToDTO)
                 .orElse(null);
     }
 
-    /* =====================================================
-       EXISTE DETALLE
-       ===================================================== */
+    /**
+     * Verifica si existe un detalle de visita específico.
+     * @param idDetalle ID a consultar.
+     * @return true si el registro existe.
+     */
     public boolean existeDetalle(int idDetalle) {
         return detalleOrdenVisitaRepository.existsById(idDetalle);
     }
 
-    /* =====================================================
-       MAPPER PRIVADO
-       ===================================================== */
+    /**
+     * Mapea una entidad de detalle de visita a un DTO.
+     * @param entidad Entidad de base de datos.
+     * @return DTO resultante.
+     */
     private DetalleOrdenVisitaDTO mapToDTO(DetalleOrdenVisitaEntidad entidad) {
         return new DetalleOrdenVisitaDTO(
                 entidad.getId_detalle_visita(),

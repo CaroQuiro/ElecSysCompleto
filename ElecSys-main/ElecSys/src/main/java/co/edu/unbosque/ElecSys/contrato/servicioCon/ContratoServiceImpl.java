@@ -2,6 +2,7 @@ package co.edu.unbosque.ElecSys.contrato.servicioCon;
 
 import co.edu.unbosque.ElecSys.contrato.dtoCon.ContratoDTO;
 import co.edu.unbosque.ElecSys.contrato.entidadCon.ContratoEntidad;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,9 @@ public class ContratoServiceImpl implements ContratoInterface{
 
     @Autowired
     private ContratoRepository contratoRepository;
+
+    @Autowired
+    private AuditoriaHelper auditoria;
 
     /**
      * Transforma el DTO en entidad y lo persiste en la base de datos PostgreSQL.
@@ -40,6 +44,8 @@ public class ContratoServiceImpl implements ContratoInterface{
             ContratoEntidad contratoGuardado = contratoRepository.save(nuevocontrato);
             contrato.setId_contrato(contratoGuardado.getId_contrato());
             System.out.println("Contrato Guardado exitosamente");
+            auditoria.registrarAccion("CONTRATOS", "Creación de Contrato",
+                    "ID_CONTRATO", "N/A", String.valueOf(contratoGuardado.getId_contrato()));
             return contrato;
 
         }catch (Exception e){

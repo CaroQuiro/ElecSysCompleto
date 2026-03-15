@@ -1,4 +1,5 @@
 package co.edu.unbosque.ElecSys.lugarTrabajo.servicioLug;
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import co.edu.unbosque.ElecSys.lugarTrabajo.dtoLug.LugarTrabajoDTO;
 import co.edu.unbosque.ElecSys.lugarTrabajo.entidadLug.LugarTrabajoEntidad;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,9 @@ public class LugarTrabajoService implements LugarTrabajoInterface{
     @Autowired
     LugarTrabajoRepository lugarTrabajoRepository;
 
+    @Autowired
+    private AuditoriaHelper auditoria;
+
 
     /**
      * Crea un nuevo registro de lugar de trabajo en la base de datos.
@@ -32,7 +36,9 @@ public class LugarTrabajoService implements LugarTrabajoInterface{
                 lugar.getDireccion()
         );
         try {
-            lugarTrabajoRepository.save(lugarTrabajo);
+            LugarTrabajoEntidad guardado = lugarTrabajoRepository.save(lugarTrabajo);
+            auditoria.registrarAccion("LUGAR_TRABAJO", "Creación de Lugar",
+                    "ID_LUGAR", "N/A", String.valueOf(guardado.getId_lugar()));
             return "Se creo el lugar correctamente";
         } catch (Exception e) {
             return "Hubo un error al crear el lugar";
@@ -58,6 +64,9 @@ public class LugarTrabajoService implements LugarTrabajoInterface{
                 lugarExistente.setDireccion(lugar.getDireccion());
 
                 lugarTrabajoRepository.save(lugarExistente);
+
+                auditoria.registrarAccion("LUGAR_TRABAJO", "Edición de Lugar",
+                        "ID_LUGAR", String.valueOf(idAnterior), "Modificado");
 
                 return "El lugar se ha editado correctamente";
             } else {

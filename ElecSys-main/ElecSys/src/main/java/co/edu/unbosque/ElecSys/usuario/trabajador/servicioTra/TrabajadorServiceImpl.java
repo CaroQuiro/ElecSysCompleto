@@ -1,6 +1,7 @@
 package co.edu.unbosque.ElecSys.usuario.trabajador.servicioTra;
 
 
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import co.edu.unbosque.ElecSys.usuario.trabajador.dtoTra.TrabajadorDTO;
 import co.edu.unbosque.ElecSys.usuario.trabajador.entidadTra.TrabajadorEntidad;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +12,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+
+/**
+ * Servicio encargado de la lógica operativa de los trabajadores.
+ * Implementa el hashing de contraseñas mediante {@link BCryptPasswordEncoder}.
+ */
 @Service
 public class TrabajadorServiceImpl implements TrabajadorInterface{
 
     @Autowired
     private TrabajadorRepository trabajadorRepository;
 
+    @Autowired
+    private AuditoriaHelper auditoria;
+
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
+    /**
+     * Registra un trabajador cifrando su contraseña antes de la persistencia.
+     * @param trabajadorDTO Datos del nuevo trabajador.
+     * @return Mensaje de estado de la creación.
+     */
     @Override
     public String agregarTrabajador(TrabajadorDTO trabajadorDTO) {
 
@@ -37,12 +51,19 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
 
         try {
             trabajadorRepository.save(nuevoTrabajador);
+            auditoria.registrarAccion("TRABAJADORES", "Creación de Trabajador",
+                    "ID_TRABAJADOR", "N/A", String.valueOf(trabajadorDTO.getId_trabajador()));
             return "Trabajador creado exitosamente";
         } catch (Exception e) {
             return "Error al crear trabajador";
         }
     }
 
+    /**
+     * Busca un trabajador en la base de datos por su identificador.
+     * @param id ID del trabajador.
+     * @return DTO del trabajador o null si no se halla.
+     */
     @Override
     public TrabajadorDTO buscarTrabajador(int id) {
         TrabajadorEntidad trabajador = trabajadorRepository.findById(id).orElse(null);
@@ -62,6 +83,11 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
         return null;
     }
 
+    /**
+     * Modifica el estado del trabajador a "Deshabilitado".
+     * @param id ID del trabajador.
+     * @return Mensaje de confirmación del cambio.
+     */
     @Override
     public String deshabilitarTrabajador(int id) {
         Optional<TrabajadorEntidad> trabajadorExit = trabajadorRepository.findById(id);
@@ -77,6 +103,10 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
         }
     }
 
+    /**
+     * Obtiene el listado de todos los trabajadores del sistema.
+     * @return Lista de objetos {@link TrabajadorDTO}.
+     */
     @Override
     public List<TrabajadorDTO> listarTrabajadores() {
             List<TrabajadorEntidad> trabajador = trabajadorRepository.findAll();
@@ -98,6 +128,12 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
             return trabajadorDTOS;
     }
 
+    /**
+     * Actualiza el perfil del trabajador. Si se recibe una contraseña nueva, esta se actualiza.
+     * @param id ID del trabajador.
+     * @param trabajadorDTO Datos actualizados.
+     * @return Mensaje indicando éxito en la actualización.
+     */
     @Override
     public String actualizarTrabajador(int id, TrabajadorDTO trabajadorDTO) {
 
@@ -115,7 +151,6 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
         entidad.setCorreo(trabajadorDTO.getCorreo());
         entidad.setEstado(trabajadorDTO.getEstado());
 
-        // ⚠️ SOLO hashear si viene una nueva contraseña
         if (trabajadorDTO.getPassword() != null &&
                 !trabajadorDTO.getPassword().isBlank()) {
 
@@ -125,6 +160,8 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
         }
 
         trabajadorRepository.save(entidad);
+        auditoria.registrarAccion("TRABAJADORES", "Actualización de Perfil",
+                "ID_TRABAJADOR", "Existente", String.valueOf(id));
         return "Trabajador actualizado exitosamente";
     }
 

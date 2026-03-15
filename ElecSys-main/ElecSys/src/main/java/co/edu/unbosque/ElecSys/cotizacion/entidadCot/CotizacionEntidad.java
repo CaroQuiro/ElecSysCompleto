@@ -23,7 +23,7 @@ public class CotizacionEntidad {
     @SequenceGenerator(
             name = "cotizacion_seq",
             sequenceName = "seq_cotizacion_id",
-            allocationSize = 1 //Importante para que no se salte numeros ni nada.
+            allocationSize = 1
     )
     @Column(name = "id_cotizacion")
     private Integer id_cotizacion;

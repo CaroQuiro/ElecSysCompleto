@@ -1,5 +1,6 @@
 package co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.servicioOrdVis;
 
+import co.edu.unbosque.ElecSys.historialActividad.helperHis.AuditoriaHelper;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.dtoOrdVis.OrdenDeVisitaDTO;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeVisita.entidadOrdVis.OrdenDeVisitaEntidad;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,15 +8,25 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+/**
+ * Servicio para la gestión de Órdenes de Visita técnica.
+ * Procesa la programación de citas técnicas y su seguimiento de estado.
+ */
 @Service
 public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
 
     @Autowired
     private OrdenVisitaRepository ordenVisitaRepository;
 
-    /* =====================================================
-       AGREGAR ORDEN DE VISITA
-       ===================================================== */
+    @Autowired
+    private AuditoriaHelper auditoria;
+
+    /**
+     * Crea una nueva orden de visita y devuelve el ID generado por la base de datos.
+     * @param dto Información de la visita (cliente, lugar, trabajador, etc.).
+     * @return El ID (int) de la visita generada.
+     * @throws RuntimeException Si falla la creación.
+     */
     @Override
     public int agregarOrdenVisita(OrdenDeVisitaDTO dto) {
         try {
@@ -27,10 +38,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
             orden.setDescripcion(dto.getDescripcion());
             orden.setEstado(dto.getEstado());
 
-            // Al guardar, el repositorio usa la secuencia y nos devuelve la entidad con el ID
             OrdenDeVisitaEntidad guardada = ordenVisitaRepository.save(orden);
 
-            // Devolvemos el ID generado al controlador
+            auditoria.registrarAccion("ORDEN_VISITA", "Creación de Visita",
+                    "ID_VISITA", "N/A", String.valueOf(guardada.getIdVisita()));
+
             return guardada.getIdVisita();
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,9 +50,12 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
         }
     }
 
-    /* =====================================================
-       EDITAR ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Actualiza los datos de una orden de visita ya programada.
+     * @param idOrdenAnt ID de la visita a modificar.
+     * @param ordenNueva Nuevos datos.
+     * @return Mensaje de estado de la operación.
+     */
     @Override
     public String editarOrdenVisita(int idOrdenAnt, OrdenDeVisitaDTO ordenNueva) {
         try {
@@ -61,6 +76,9 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
 
             ordenVisitaRepository.save(orden);
 
+            auditoria.registrarAccion("ORDEN_VISITA", "Edición de Visita",
+                    "ID_VISITA", String.valueOf(idOrdenAnt), "Modificada");
+
             return "Orden de visita actualizada correctamente";
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,9 +86,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
         }
     }
 
-    /* =====================================================
-       BORRAR ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Borra una orden de visita del sistema.
+     * @param idOrden ID de la visita a eliminar.
+     * @return Mensaje confirmando la eliminación.
+     */
     @Override
     public String borrarOrdenVisita(int idOrden) {
         try {
@@ -79,6 +99,9 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
             }
 
             ordenVisitaRepository.deleteById(idOrden);
+            auditoria.registrarAccion("ORDEN_VISITA", "Eliminación de Visita",
+                    "ID_VISITA", String.valueOf(idOrden), "Eliminada");
+
             return "Orden de visita eliminada correctamente";
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,9 +109,10 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
         }
     }
 
-    /* =====================================================
-       LISTAR TODAS LAS ÓRDENES DE VISITA
-       ===================================================== */
+    /**
+     * Lista todas las visitas técnicas del sistema.
+     * @return Lista de {@link OrdenDeVisitaDTO}.
+     */
     @Override
     public List<OrdenDeVisitaDTO> listarOrdenVisita() {
         return ordenVisitaRepository.findAll()
@@ -97,9 +121,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
                 .toList();
     }
 
-    /* =====================================================
-       LISTAR ÓRDENES DE VISITA POR CLIENTE
-       ===================================================== */
+    /**
+     * Obtiene las visitas programadas para un cliente en particular.
+     * @param idCliente ID del cliente.
+     * @return Lista de visitas asociadas al cliente.
+     */
     @Override
     public List<OrdenDeVisitaDTO> listarOrdenVisitaPorCliente(int idCliente) {
         return ordenVisitaRepository.findByIdCliente(idCliente)
@@ -108,9 +134,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
                 .toList();
     }
 
-    /* =====================================================
-       BUSCAR ORDEN DE VISITA POR ID
-       ===================================================== */
+    /**
+     * Recupera una visita técnica por su identificador único.
+     * @param idOrden ID de la visita.
+     * @return DTO de la visita o null.
+     */
     @Override
     public OrdenDeVisitaDTO buscarOrdenVisita(int idOrden) {
         return ordenVisitaRepository.findById(idOrden)
@@ -118,9 +146,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
                 .orElse(null);
     }
 
-    /* =====================================================
-       MAPPER PRIVADO
-       ===================================================== */
+    /**
+     * Transforma una entidad de Orden de Visita a su DTO.
+     * @param entidad Entidad persistida.
+     * @return DTO mapeado.
+     */
     private OrdenDeVisitaDTO mapToDTO(OrdenDeVisitaEntidad entidad) {
         return new OrdenDeVisitaDTO(
                 entidad.getIdVisita(),
@@ -133,9 +163,11 @@ public class OrdenDeVisitaService implements OrdenDeVisitaInterface{
         );
     }
 
-    /* =====================================================
-       EXISTE ORDEN DE VISITA
-       ===================================================== */
+    /**
+     * Verifica la existencia de una orden de visita.
+     * @param idOrden ID de la visita.
+     * @return true si la visita existe.
+     */
     public boolean existeOrden(int idOrden) {
         return ordenVisitaRepository.existsById(idOrden);
     }

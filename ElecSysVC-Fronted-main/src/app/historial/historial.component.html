@@ -1,0 +1,62 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <div class="header-seccion">
+            <div>
+                <h1><i class="fas fa-shield-alt"></i> Auditoría de Sistema</h1>
+                <p>Monitoreo cronológico de integridad y seguridad de datos.</p>
+            </div>
+            <div class="stats-badge">
+                <i class="fas fa-eye"></i> Solo lectura (ADMIN)
+            </div>
+        </div>
+
+        <div class="card filters-container">
+            <div class="filters-grid">
+                <div class="opcion">
+                    <label><i class="fas fa-layer-group"></i> Filtrar Módulo</label>
+                    <input type="text" [(ngModel)]="filtroModulo" (input)="aplicarFiltros()" placeholder="Ej: CLIENTES, COTIZACIONES...">
+                </div>
+                <div class="opcion">
+                    <label><i class="fas fa-user-tag"></i> ID del Trabajador</label>
+                    <input type="text" [(ngModel)]="filtroTrabajador" (input)="aplicarFiltros()" placeholder="Buscar por identificación...">
+                </div>
+            </div>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID Reg</th>
+                        <th>Registro Temporal</th>
+                        <th>Responsable</th>
+                        <th>Módulo</th>
+                        <th>Operación Realizada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of logsFiltrados">
+                        <td class="col-id">#{{log.idHistorial}}</td>
+                        
+                        <td class="col-time">
+                            <strong>{{log.fechaRealizacion}}</strong>
+                            <span>{{log.hora}}</span>
+                        </td>
+                        
+                        <td class="col-user">
+                            <i class="fas fa-user-circle"></i> ID: {{log.idTrabajador}}
+                        </td>
+                        
+                        <td><span class="mod-tag">{{log.moduloSistema}}</span></td>
+                        
+                        <td class="col-action">{{log.accionRealizada}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
