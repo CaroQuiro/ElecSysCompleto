@@ -68,6 +68,65 @@ p {
     font-size: 14px;
 }
 
+/* =========== filtro por seccion ===================*/
+
+.filtro-dashboard {
+  display: flex;
+  justify-content: center;
+  margin: 35px 0 20px 0;
+}
+
+.filtro-opciones {
+  display: flex;
+  background: white;
+  border-radius: 50px;
+  padding: 8px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+  gap: 8px;
+}
+
+.filtro-item {
+  padding: 12px 25px;
+  border-radius: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  transition: 0.3s;
+  color: #555;
+}
+
+.filtro-item .contador {
+  background: #eee;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.filtro-item:hover {
+  background: #f5f5f5;
+}
+
+.filtro-item.activo {
+  background: #8B0000;
+  color: white;
+}
+
+.filtro-item.activo .contador {
+  background: rgba(255,255,255,0.2);
+  color: white;
+}
+
+/* Colores sutiles por estado */
+.filtro-item.pendiente.activo {
+  background: #d4ac0d;
+}
+
+.filtro-item.pagado.activo {
+  background: #27ae60;
+}
+
 /* =================== BOTÓN PRINCIPAL =================== */
 .btn-primary {
     align-self: end;

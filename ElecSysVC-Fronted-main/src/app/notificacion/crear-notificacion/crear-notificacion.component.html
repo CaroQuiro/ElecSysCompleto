@@ -6,7 +6,7 @@
     <div class="contenido">
         <div class="header-section">
             <h1>Programar Notificación</h1>
-            <p>Configure el contenido y la frecuencia de los envíos automáticos</p>
+            <p>Configure el mensaje y seleccione los destinatarios activos</p>
         </div>
 
         <div class="card form-container">
@@ -14,11 +14,11 @@
                 <h3>1. Información del Mensaje</h3>
                 <div class="field">
                     <label>Título / Asunto</label>
-                    <input type="text" [(ngModel)]="request.notificacion.titulo" placeholder="Ej: Recordatorio de Mantenimiento">
+                    <input type="text" [(ngModel)]="request.notificacion.titulo" placeholder="Ej: Mantenimiento Preventivo">
                 </div>
                 <div class="field">
                     <label>Mensaje</label>
-                    <textarea [(ngModel)]="request.notificacion.mensaje" rows="5" placeholder="Escriba el contenido del correo..."></textarea>
+                    <textarea [(ngModel)]="request.notificacion.mensaje" rows="4" placeholder="Escriba el contenido aquí..."></textarea>
                 </div>
             </div>
 
@@ -39,21 +39,15 @@
                             <option value="DIARIA">Diaria</option>
                             <option value="SEMANAL">Semanal</option>
                             <option value="MENSUAL">Mensual</option>
-                            <option value="SEMESTRAL">Semestral</option>
                             <option value="ANUAL">Anual</option>
                         </select>
                     </div>
 
                     <div class="field">
-                        <label>Fecha de Inicio</label>
+                        <label>Fecha y Hora de Inicio</label>
                         <input type="datetime-local" [(ngModel)]="request.fechaInicio">
                     </div>
-
-                    <div class="field" *ngIf="request.notificacion.tipo === 'RECURRENTE'">
-                        <label>Fecha de Finalización (Opcional)</label>
-                        <input type="date" [(ngModel)]="request.fechaFin">
                     </div>
-                </div>
             </div>
 
             <div class="form-section">
@@ -61,23 +55,34 @@
                 <div class="field">
                     <label>Enviar a:</label>
                     <div class="toggle-group">
-                        <button [class.active]="request.tipoDestinatario === 'CLIENTE'" (click)="request.tipoDestinatario = 'CLIENTE'">Clientes</button>
-                        <button [class.active]="request.tipoDestinatario === 'TRABAJADOR'" (click)="request.tipoDestinatario = 'TRABAJADOR'">Trabajadores</button>
+                        <button [class.active]="request.tipoDestinatario === 'CLIENTE'" 
+                                (click)="cambiarTipoDestinatario('CLIENTE')">Clientes</button>
+                        <button [class.active]="request.tipoDestinatario === 'TRABAJADOR'" 
+                                (click)="cambiarTipoDestinatario('TRABAJADOR')">Trabajadores</button>
                     </div>
                 </div>
 
                 <div class="destinatarios-box">
-                    <div class="destinatario-item" *ngFor="let c of clientes">
-                        <input type="checkbox" [id]="'c' + c.id_cliente" (change)="toggleDestinatario(c.id_cliente)">
-                        <label [for]="'c' + c.id_cliente">{{c.nombre}} ({{c.correo}})</label>
+                    <div class="destinatario-item" *ngFor="let item of destinatariosFiltrados">
+                        <input type="checkbox" 
+                               [id]="'d' + (item.id_cliente || item.idTrabajador)" 
+                               (change)="toggleDestinatario(item.id_cliente || item.idTrabajador)">
+                        <label [for]="'d' + (item.id_cliente || item.idTrabajador)">
+                            {{item.nombre}} {{item.apellido || ''}} — <small>{{item.correo}}</small>
+                        </label>
+                    </div>
+                    <div *ngIf="destinatariosFiltrados.length === 0" class="no-data">
+                        No hay {{request.tipoDestinatario.toLowerCase()}}s activos disponibles.
                     </div>
                 </div>
-                <small>{{request.idsDestinatarios.length}} seleccionados</small>
+                <div class="selection-counter">
+                    <strong>{{request.idsDestinatarios.length}}</strong> seleccionados
+                </div>
             </div>
 
             <div class="form-actions">
                 <button class="btn-cancel" (click)="cancelar()">Cancelar</button>
-                <button class="btn-save" (click)="guardar()">Guardar y Activar</button>
+                <button class="btn-save" (click)="guardar()">Guardar y Programar</button>
             </div>
         </div>
     </div>

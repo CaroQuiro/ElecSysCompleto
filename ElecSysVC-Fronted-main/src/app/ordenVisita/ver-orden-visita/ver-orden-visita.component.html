@@ -3,9 +3,12 @@
     <app-menu-vertical></app-menu-vertical>
 
     <div class="contenido" *ngIf="orden">
-        <form>
+        <form #ordenForm="ngForm">
             <h1>Visualización de la Orden de Visita</h1>
-            <p>A continuación se muestra la información de la visita técnica programada.</p>
+            
+            <p *ngIf="!esAdmin && (orden.estado === 'REALIZADA' || orden.estado === 'CANCELADA')" class="alerta-bloqueo">
+                <i class="fas fa-lock"></i> Esta orden se encuentra <strong>{{orden.estado}}</strong>. Solo un administrador puede realizar cambios.
+            </p>
 
             <div class="estado-cotizacion">
                 <div>
@@ -15,7 +18,7 @@
 
                 <div class="selector-wrapper">
                     <label class="label-estado">Estado de la visita</label>
-                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden">
+                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden" [disabled]="!puedeEditar">
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="PROGRAMADA">PROGRAMADA</option>
                         <option value="REALIZADA">REALIZADA</option>
@@ -24,24 +27,11 @@
                 </div>
             </div>
 
-            <div class="card-section grid-2">
-                <div class="info-block">
-                    <h3>Información del Cliente</h3>
-                    <div class="fila"><label>Nombre:</label><span>{{cliente?.nombre}}</span></div>
-                    <div class="fila"><label>Identificador:</label><span>{{cliente?.id_cliente}}</span></div>
-                </div>
-                <div class="info-block">
-                    <h3>Ubicación de Visita</h3>
-                    <div class="fila"><label>Lugar:</label><span>{{lugar?.nombreLugar}}</span></div>
-                    <div class="fila"><label>Dirección:</label><span>{{lugar?.direccion}}</span></div>
-                </div>
-            </div>
-
             <div class="card-section detalle-proyecto">
                 <h2>Actividades a Realizar</h2>
                 <div class="ref-group">
                     <label>Descripción General:</label>
-                    <textarea class="input-full" [(ngModel)]="orden.descripcion" name="descripcionG"></textarea>
+                    <textarea class="input-full" [(ngModel)]="orden.descripcion" name="descripcionG" [disabled]="!puedeEditar"></textarea>
                 </div>
 
                 <table class="tabla-detalle">
@@ -50,15 +40,15 @@
                             <th>Actividad</th>
                             <th>Observaciones</th>
                             <th>Duración</th>
-                            <th>Acciones</th>
+                            <th *ngIf="puedeEditar">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr *ngFor="let d of editDetalles; let i = index">
-                            <td><input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando" name="act{{i}}"></td>
-                            <td><input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando" name="obs{{i}}"></td>
-                            <td><input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando" name="dur{{i}}"></td>
-                            <td>
+                            <td><input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando || !puedeEditar" name="act{{i}}"></td>
+                            <td><input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando || !puedeEditar" name="obs{{i}}"></td>
+                            <td><input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando || !puedeEditar" name="dur{{i}}"></td>
+                            <td *ngIf="puedeEditar">
                                 <ng-container *ngIf="!d.editando">
                                     <button type="button" (click)="editarFila(d)">✏️</button>
                                     <button type="button" class="btn-delete" (click)="eliminarFila(d, i)">🗑️</button>
@@ -71,24 +61,19 @@
                         </tr>
                     </tbody>
                 </table>
-                <button class="btn-add-task" type="button" (click)="agregarFila()">+ Agregar Actividad</button>
+                <button *ngIf="puedeEditar" class="btn-add-task" type="button" (click)="agregarFila()">+ Agregar Actividad</button>
             </div>
 
             <div class="card-section">
                 <div class="opciones-document">
-                    <button class="crear" type="button" (click)="actualizarOrdenCompleta()"> 
+                    <button *ngIf="puedeEditar" class="crear" type="button" (click)="actualizarOrdenCompleta()"> 
                         Actualizar Orden 
                     </button>
                     
-                    <button class="enviar" type="button" (click)="enviarEmail()"> 
-                        Enviar Email 
-                    </button>
+                    <button class="enviar" type="button" (click)="enviarEmail()">Enviar Email</button>
+                    <button class="descargar" type="button" style="filter: grayscale(0.5);">Descargar PDF</button>
 
-                    <button class="descargar" type="button" style="filter: grayscale(0.5); cursor: help;"> 
-                        Descargar PDF 
-                    </button>
-
-                    <button class="descargar" type="button" (click)="borrarOrdenTotal()"> 
+                    <button *ngIf="esAdmin" class="descargar" type="button" (click)="borrarOrdenTotal()" style="background: #c3350e;"> 
                         Borrar Orden 
                     </button>
                 </div>

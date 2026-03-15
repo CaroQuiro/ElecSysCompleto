@@ -9,6 +9,8 @@ import { OrdenDeTrabajoDTO, DetalleTrabajoUI } from '../data/orden-trabajo.model
 import { ServiceClienteService } from '../../cliente/service-cliente.service';
 import { EntidadCliente } from '../../cliente/entidad-cliente';
 import { NotificacionService } from '../../notificacion/notificacion.service';
+import { AuthService } from '../../servicios/auth.service';
+
 
 @Component({
   selector: 'app-ver-orden-trabajo',
@@ -23,11 +25,15 @@ export class VerOrdenTrabajoComponent implements OnInit {
   private ordenService = inject(OrdenTrabajoService);
   private clienteService = inject(ServiceClienteService);
   private notificacionService = inject(NotificacionService);
+  private authService = inject(AuthService);
 
   idOrden!: number;
   orden?: OrdenDeTrabajoDTO;
   editDetalles: DetalleTrabajoUI[] = [];
   cliente?: EntidadCliente;
+
+  esAdmin: boolean = false;
+  puedeEditar: boolean = false;
 
   ngOnInit() {
     this.idOrden = Number(this.route.snapshot.params['id']);
@@ -35,12 +41,16 @@ export class VerOrdenTrabajoComponent implements OnInit {
   }
 
   cargarDatos() {
-    this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
-      this.orden = data;
-      this.clienteService.buscarClientePorId(data.id_cliente).subscribe(c => this.cliente = c);
-      this.recargarDetalles();
-    });
-  }
+  this.esAdmin = this.authService.getUserRole() === 'ADMIN';
+  
+  this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
+    this.orden = data;
+    this.puedeEditar = (data.estado !== 'REALIZADA' && data.estado !== 'CANCELADA');
+    
+    this.clienteService.buscarClientePorId(data.id_cliente).subscribe(c => this.cliente = c);
+    this.recargarDetalles();
+  });
+}
 
   recargarDetalles() {
     this.ordenService.listarDetallesPorOrden(this.idOrden).subscribe(res => {

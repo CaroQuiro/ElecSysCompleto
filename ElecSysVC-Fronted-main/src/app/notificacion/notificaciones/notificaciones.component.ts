@@ -1,15 +1,17 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { FormsModule } from '@angular/forms'; // Necesario para los filtros
 import { NotificacionService } from '../notificacion.service';
 import { NotificacionDTO } from '../notificacion.model';
-import { HeaderUsuarrioComponent } from '../../header-usuarrio/header-usuarrio.component';
+import { Router } from '@angular/router';
 import { MenuVerticalComponent } from '../../menu-vertical/menu-vertical.component';
+import { HeaderUsuarrioComponent } from '../../header-usuarrio/header-usuarrio.component';
+
 
 @Component({
   selector: 'app-notificaciones',
   standalone: true,
-  imports: [CommonModule, HeaderUsuarrioComponent, MenuVerticalComponent],
+  imports: [CommonModule, FormsModule, MenuVerticalComponent,HeaderUsuarrioComponent],
   templateUrl: './notificaciones.component.html',
   styleUrl: './notificaciones.component.css'
 })
@@ -18,50 +20,77 @@ export class NotificacionesComponent implements OnInit {
   private router = inject(Router);
 
   notificaciones: NotificacionDTO[] = [];
+  
+  // Filtros
+  filtroTitulo: string = '';
+  filtroTipo: string = '';
+
+  // Modal
+  mostrarModal: boolean = false;
+  notificacionSeleccionada: NotificacionDTO = {} as NotificacionDTO;
 
   ngOnInit(): void {
     this.cargarNotificaciones();
   }
 
   cargarNotificaciones(): void {
-    this.service.listar().subscribe({
-      next: (data) => this.notificaciones = data,
-      error: (err) => console.error('Error al cargar notificaciones', err)
+    this.service.listar().subscribe(data => this.notificaciones = data);
+  }
+
+  // Lógica de Filtrado Dinámico
+  get notificacionesFiltradas() {
+    return this.notificaciones.filter(n => {
+      const coincideTitulo = n.titulo.toLowerCase().includes(this.filtroTitulo.toLowerCase());
+      const coincideTipo = this.filtroTipo === '' || n.tipo === this.filtroTipo;
+      return coincideTitulo && coincideTipo;
     });
   }
 
-  irACrear(): void {
-    this.router.navigate(['/notificaciones/crear']);
+  // Acciones de Estado
+  toggleEstado(n: NotificacionDTO): void {
+    const accion = n.estado === 'ACTIVA' ? this.service.desactivar(n.idNotificacion!) : this.service.activar(n.idNotificacion!);
+    accion.subscribe(() => {
+      alert(`Notificación ${n.estado === 'ACTIVA' ? 'pausada' : 'activada'} correctamente.`);
+      this.cargarNotificaciones();
+    });
   }
 
-  desactivar(id: number | undefined): void {
-    if (!id) return;
-    if (confirm('¿Está seguro de desactivar esta notificación? Ya no se enviará automáticamente.')) {
-      this.service.desactivar(id).subscribe({
-        next: (resp) => {
-          alert(resp);
-          this.cargarNotificaciones();
-        },
-        error: (err) => alert('Error al desactivar')
+  eliminar(id: number): void {
+    if (confirm('¿Desea eliminar esta notificación recurrente?')) {
+      this.service.borrar(id).subscribe(() => {
+        this.cargarNotificaciones();
       });
     }
   }
 
-  eliminar(id: number | undefined): void {
-    if (!id) return;
-    if (confirm('¿Desea eliminar permanentemente este registro?')) {
-      this.service.borrar(id).subscribe({
-        next: (resp) => {
-          alert(resp);
-          this.cargarNotificaciones();
-        },
-        error: (err) => alert('Error al eliminar')
-      });
-    }
+  // Lógica del Modal de Actualización
+  abrirModal(n: NotificacionDTO): void {
+    this.notificacionSeleccionada = { ...n }; // Clonamos el objeto
+    this.mostrarModal = true;
   }
 
-  // Método para truncar mensajes largos en la tabla
-  formatearMensaje(mensaje: string): string {
-    return mensaje.length > 50 ? mensaje.substring(0, 50) + '...' : mensaje;
+  cerrarModal(): void {
+    this.mostrarModal = false;
+  }
+
+  guardarCambios(): void {
+    this.service.actualizar(this.notificacionSeleccionada.idNotificacion!, this.notificacionSeleccionada).subscribe(() => {
+      alert('Notificación actualizada con éxito.');
+      this.cerrarModal();
+      this.cargarNotificaciones();
+    });
+  }
+
+  formatearMensaje(msg: string): string {
+    return msg.length > 40 ? msg.substring(0, 40) + '...' : msg;
+  }
+
+  irACrear() { this.router.navigate(['/notificaciones/crear']); }
+
+  limpiarYFormatearMensaje(html: string): string {
+    // 1. Quitar etiquetas HTML
+    const textoPlano = html.replace(/<[^>]*>/g, '');
+    // 2. Truncar
+    return textoPlano.length > 50 ? textoPlano.substring(0, 50) + '...' : textoPlano;
   }
 }

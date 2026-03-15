@@ -1,0 +1,97 @@
+/* VARIABLES CORPORATIVAS VC ELÉCTRICOS */
+:host {
+    --primary: #a00d0d;
+    --primary-dark: #7d0a0a;
+    --action: #07457b;
+    --background: #f6f7fb;
+    --card: #ffffff;
+    --border: #dcdcdc;
+    --text-dark: #222;
+    --text-light: #666;
+    --success: #22c55e;
+    --danger: #ef4444;
+}
+
+.layout { display: flex; background-color: var(--background); min-height: 100vh; }
+.contenido { flex: 1; margin-left: 260px; margin-top: 100px; padding: 40px; box-sizing: border-box; }
+
+h1 { color: var(--primary); font-size: 32px; font-weight: 800; margin-bottom: 10px; }
+h2 { color: var(--action); font-size: 20px; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 20px; }
+
+/* PANEL SUPERIOR */
+.estado-cotizacion {
+    background: #ffffff;
+    padding: 25px 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 8px solid var(--action);
+}
+
+.estado-cotizacion .titulo { font-size: 13px; color: #94a3b8; text-transform: uppercase; font-weight: 700; }
+.estado-cotizacion .codigo { font-size: 42px; color: var(--action); font-weight: 900; margin: 0; }
+
+.select-estado {
+    background: #f8fafc;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 10px 20px;
+    font-weight: 700;
+    color: var(--action);
+    cursor: pointer;
+}
+
+/* FORMULARIO Y FILAS */
+.card-section { background: var(--card); border-radius: 12px; padding: 25px; margin-bottom: 25px; border: 1px solid var(--border); }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
+.info-block { background: #f8fafc; padding: 15px; border-radius: 10px; }
+
+.fila-edit {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #eef2f7;
+}
+
+.fila-edit label { font-weight: 700; width: 110px; color: #475569; font-size: 14px; }
+
+.input-form, .select-form {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.input-form:focus { border-color: var(--action); outline: none; background: white; }
+
+/* FOOTER BOTONES */
+.opciones-document { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+
+.btn-footer {
+    height: 50px;
+    border-radius: 30px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: 0.3s;
+}
+
+.regresar { background: #64748b; }
+.actualizar { background: var(--success); }
+.borrar { background: var(--danger); }
+.pdf.placeholder-btn { background: #94a3b8; cursor: help; }
+
+.btn-footer:hover:not(.placeholder-btn) {
+    transform: translateY(-3px);
+    filter: brightness(1.1);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}

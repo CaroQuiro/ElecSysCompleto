@@ -1,0 +1,79 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+    
+    <div class="contenido">
+        <h1><i class="fas fa-users-cog"></i> Gestión de Personal</h1>
+        <p>Administración de técnicos y administrativos de ElecSys VC</p>
+
+        <div class="top-actions">
+            <div class="filters">
+                <div class="opcion">
+                    <label>Identificación</label>
+                    <input type="text" [(ngModel)]="filtroId" (input)="aplicarFiltros()" placeholder="ID...">
+                </div>
+                <div class="opcion">
+                    <label>Nombre</label>
+                    <input type="text" [(ngModel)]="filtroNombre" (input)="aplicarFiltros()" placeholder="Buscar...">
+                </div>
+                <div class="opcion" *ngIf="esAdmin">
+                    <label>Rol / Tipo</label>
+                    <select [(ngModel)]="filtroTipo" (change)="aplicarFiltros()">
+                        <option value="">Todos los roles</option>
+                        <option value="ADMIN">ADMINISTRADOR</option>
+                        <option value="USUARIO">USUARIO (Técnico)</option>
+                    </select>
+                </div>
+            </div>
+
+            <button *ngIf="esAdmin" class="btn-primary" (click)="crearTrabajador()">
+                <i class="fas fa-user-plus"></i> Registrar Trabajador
+            </button>
+        </div>
+
+        <div class="card">
+            <table class="worker-table">
+                <thead>
+                    <tr>
+                        <th>Identificación</th>
+                        <th>Nombre Completo</th>
+                        <th>Correo Electrónico</th>
+                        <th>Tipo</th>
+                        <th>Estado</th>
+                        <th style="text-align: center;">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let t of trabajadoresFiltrados">
+                        <td><strong>{{ t.id_trabajador }}</strong></td>
+                        <td>{{ t.nombre }}</td>
+                        <td>{{ t.correo }}</td>
+                        <td>
+                            <span class="role-text">
+                                <i class="fas" [ngClass]="t.tipo_usuario === 'ADMINISTRADOR' ? 'fa-user-shield' : 'fa-tools'"></i>
+                                {{ t.tipo_usuario }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge" [ngClass]="evaluarEstado(t.estado)">
+                                {{ t.estado }}
+                            </span>
+                        </td>
+                        <td style="text-align: center;">
+                            <button class="view-btn" (click)="verTrabajador(t.id_trabajador)">
+                                <i class="fas fa-user-edit"></i> 
+                                {{ esAdmin ? 'Gestionar' : 'Mi Perfil' }}
+                            </button>
+                        </td>
+                    </tr>
+                    <tr *ngIf="trabajadoresFiltrados.length === 0">
+                        <td colspan="6" style="text-align: center; padding: 20px; color: #666;">
+                            No se encontraron trabajadores con los criterios aplicados.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

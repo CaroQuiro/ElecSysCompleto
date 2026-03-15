@@ -100,12 +100,14 @@ export class OrdenesTrabajoCrearComponent implements OnInit {
   // --- LÓGICA DE BÚSQUEDA MANUAL (Si no hay visita de referencia) ---
 
   buscarCliente(): void {
-    if (this.textoBusquedaCliente.length < 2) {
-      this.clientes = [];
-      return;
-    }
-    this.clienteService.buscarClienteQuery(this.textoBusquedaCliente).subscribe(res => this.clientes = res);
+  if (this.textoBusquedaCliente.length < 2) {
+    this.clientes = [];
+    return;
   }
+  this.clienteService.buscarClienteQuery(this.textoBusquedaCliente).subscribe(res => {
+    this.clientes = res.filter(c => c.estado === 'ACTIVO');
+  });
+}
 
   seleccionarCliente(c: EntidadCliente): void {
     this.clienteSeleccionado = c;

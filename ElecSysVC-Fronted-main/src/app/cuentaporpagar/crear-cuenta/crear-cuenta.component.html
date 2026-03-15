@@ -1,0 +1,134 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <form>
+            <h1>Crear Cuenta de Cobro</h1>
+            <p>Ha continuacion se daran los parametros para crear una cotizacion</p>
+            <div class="card-section">
+                <h2>Cliente</h2>
+                <div class="card-cliente">
+                    <div class="cliente-left">
+                        <div class="buscador-moderno">
+                            <input type="text" placeholder="Buscar cliente por nombre, NIT o teléfono"
+                                name="buscarCliente" [(ngModel)]="textoBusqueda" (input)="buscarClientes()" />
+
+                            <div class="dropdown-clientes" *ngIf="clientesFiltrados.length > 0">
+                                <div class="item-cliente" *ngFor="let cliente of clientesFiltrados"
+                                    (click)="seleccionarCliente(cliente)">
+                                    <div class="nit">NIT: {{cliente.id_cliente}}</div>
+                                    <div class="nombre">{{cliente.nombre}}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="boton-crear" type="button" (click)="navegarCliente()">
+                            + Crear Cliente
+                        </button>
+                    </div>
+
+                    <div class="cliente-right" *ngIf="clienteSeleccionado">
+                        <div class="card-resumen">
+                            <h3>Cliente seleccionado</h3>
+
+                            <div class="fila">
+                                <label>Nombre: </label>
+                                <span>{{clienteSeleccionado.nombre}}</span>
+                            </div>
+
+                            <div class="fila">
+                                <label>NIT/CC: </label>
+                                <span>{{clienteSeleccionado.id_cliente}}</span>
+                            </div>
+
+                            <div class="fila">
+                                <label>Correo: </label>
+                                <span>{{clienteSeleccionado.correo}}</span>
+                            </div>
+
+                            <button class="btn-cambiar" (click)="limpiarCliente()">
+                                Cambiar cliente
+                            </button>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section detalle-proyecto">
+                <h2>Detalle Cuenta de cobro</h2>
+                <div class="header-detalle">
+
+                    <div class="ref-group">
+                        <label>Referencia:</label>
+                        <input type="text" placeholder="Nombre o referencia del proyecto" name="referencia"
+                            [(ngModel)]="referencia" />
+                    </div>
+
+                    <div class="resumen-cuenta">
+                        <div class="resumen-box">
+                            <span class="label">Total a cobrar</span>
+                            <span class="valor">$ {{ calcularTotal() | number:'1.0-0' }}</span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Descripción</th>
+                            <th>Valor</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @for (detalle of detalles; track $index; let i = $index) {
+                        <tr>
+                            <td> <textarea class="textarea-descripcion" name="descripcion{{i}}" rows="1"
+                                    [(ngModel)]="detalle.descripcion"></textarea></td>
+                            <td><input type="number" name="valor{{i}}" [(ngModel)]="detalle.valor"></td>
+                            <td>
+                                <button class="btn-delete" type="button" (click)="eliminarDetalle(i)">Eliminar</button>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+
+                </table>
+                <button id="add" class="btn-add" type="button" (click)="agregarDetalle()">+ Agregar fila</button>
+            </div>
+
+            <div class="card-section">
+                <h2>Notas</h2>
+                <table class="tabla-detalle">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="items">
+                        <tr>
+                            <td>1</td>
+                            <td>
+                                <textarea class="textarea-notas" rows="4" placeholder="Ingrese las Notas"
+                                    [(ngModel)]="cuentaform.nota" name="nota">
+                                </textarea>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+
+            <div class="card-section">
+                <div class="opciones-document">
+                    <button class="crear" type="button" (click)="guardarCuenta()">Guardar Cotizacion</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

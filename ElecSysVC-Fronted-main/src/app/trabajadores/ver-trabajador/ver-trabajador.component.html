@@ -1,0 +1,95 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido" *ngIf="trabajador">
+        <form #workerForm="ngForm">
+            <div class="header-perfil">
+                <h1><i class="fas fa-user-circle"></i> {{ esPropioPerfil ? 'Mi Perfil' : 'Gestionar Trabajador' }}</h1>
+                <p>Información de cuenta y contacto en ElecSys VC</p>
+            </div>
+
+            <div class="estado-cotizacion">
+                <div>
+                    <p class="titulo">Número de Identidad</p>
+                    <h1 class="codigo">ID: {{ idTrabajador }}</h1>
+                </div>
+
+                <div class="selector-wrapper">
+                    <label class="label-estado">Estado de Cuenta</label>
+                    <select class="select-estado" [(ngModel)]="trabajador.estado" name="estadoTrabajador" 
+                            [disabled]="esPropioPerfil">
+                        <option value="ACTIVO">ACTIVO</option>
+                        <option value="INACTIVO">INACTIVO</option>
+                        <option value="DESHABILITADO">DESHABILITADO</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="grid-2">
+                <div class="card-section">
+                    <h2><i class="fas fa-id-card"></i> Datos Personales</h2>
+                    <div class="info-block">
+                        <div class="fila-edit">
+                            <label>Nombre:</label>
+                            <input type="text" [(ngModel)]="trabajador.nombre" name="nombre" 
+                                   class="input-form" [disabled]="esPropioPerfil">
+                        </div>
+                        <div class="fila-edit">
+                            <label>Teléfono:</label>
+                            <input type="text" [(ngModel)]="trabajador.telefono" name="telefono" 
+                                   class="input-form" maxlength="12">
+                        </div>
+                        <div class="fila-edit">
+                            <label>Dirección:</label>
+                            <input type="text" [(ngModel)]="trabajador.direccion" name="direccion" class="input-form">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-section">
+                    <h2><i class="fas fa-key"></i> Seguridad de Acceso</h2>
+                    <div class="info-block">
+                        <div class="fila-edit">
+                            <label>Correo Electrónico:</label>
+                            <input type="email" [(ngModel)]="trabajador.correo" name="correo" class="input-form">
+                        </div>
+
+                        <div class="fila-edit" *ngIf="esPropioPerfil">
+                            <label class="label-seguridad">Confirmar Clave Actual:</label>
+                            <input type="password" [(ngModel)]="claveActualInput" name="claveAct" 
+                                   class="input-form warning" placeholder="Requerido solo para cambiar clave">
+                        </div>
+
+                        <div class="fila-edit">
+                            <label>{{ esPropioPerfil ? 'Nueva Contraseña:' : 'Resetear Contraseña (Admin):' }}</label>
+                            <input type="password" [(ngModel)]="nuevaPassword" name="nPass" 
+                                   class="input-form" placeholder="Dejar en blanco si no cambia">
+                        </div>
+
+                        <div class="fila-edit">
+                            <label>Rol en el Sistema:</label>
+                            <select [(ngModel)]="trabajador.tipo_usuario" name="tipo" 
+                                    class="select-form" [disabled]="esPropioPerfil">
+                                <option value="USUARIO">USUARIO (Técnico)</option>
+                                <option value="ADMIN">ADMINISTRADOR</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section footer-actions">
+                <div class="opciones-document">
+                    <button class="btn-footer regresar" type="button" (click)="regresar()"> 
+                        <i class="fas fa-arrow-left"></i> Volver 
+                    </button>
+                    
+                    <button class="btn-footer actualizar" type="button" (click)="actualizarTrabajador()"> 
+                        <i class="fas fa-save"></i> {{ esPropioPerfil ? 'Guardar mi información' : 'Actualizar Trabajador' }}
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

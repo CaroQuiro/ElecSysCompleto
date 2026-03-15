@@ -55,15 +55,18 @@ export class OrdenesTrabajoListarComponent implements OnInit {
   }
 
   aplicarFiltros() {
-    this.ordenesFiltradas = this.ordenesOriginales.filter(orden => {
-      const coincideId = orden.id_orden?.toString().includes(this.filtroId);
-      const nombreC = this.clientesMap.get(orden.id_cliente)?.nombre.toLowerCase() || '';
-      const coincideCliente = nombreC.includes(this.filtroCliente.toLowerCase());
-      const coincideEstado = !this.filtroEstado || orden.estado === this.filtroEstado;
+  this.ordenesFiltradas = this.ordenesOriginales.filter(orden => {
+    const coincideId = orden.id_orden?.toString().includes(this.filtroId);
+    
+    const cliente = this.clientesMap.get(orden.id_cliente);
+    const coincideCliente = !this.filtroCliente || 
+                            cliente?.nombre.toLowerCase().includes(this.filtroCliente.toLowerCase());
+    
+    const coincideEstado = !this.filtroEstado || orden.estado === this.filtroEstado;
 
-      return coincideId && coincideCliente && coincideEstado;
-    });
-  }
+    return coincideId && coincideCliente && coincideEstado;
+  });
+}
 
   evaluarEstado(estado: string): string {
   switch (estado) {

@@ -3,24 +3,32 @@
     <app-menu-vertical></app-menu-vertical>
 
     <div class="contenido">
+        <div *ngIf="!esEditable" class="alert-info" style="background-color: #f8d7da; color: #721c24; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 5px solid #dc3545;">
+            <i class="fas fa-lock"></i> <strong>Cotización Finalizada:</strong> Esta cotización está en estado <b>{{cotizacion.estado}}</b>. Los cambios y la edición de detalles están deshabilitados.
+        </div>
+
         <form>
             <h1>Visualizacion de la Cotizacion</h1>
             <p>Ha continuacion se mostrara toda la informacion pertinente a la cotizacion Creada</p>
+            
             <div class="estado-cotizacion">
                 <p class="titulo">Cotización actual</p>
                 <h1 class="codigo">#{{ cotizacion.id_cotizacion }}</h1>
 
                 <label class="label-estado">Estado de la cotización</label>
-                <select class="select-estado" [(ngModel)]="cotizacionEditable.estado" name="estadoCotizacion">
+                <select class="select-estado" [(ngModel)]="cotizacionEditable.estado" name="estadoCotizacion" [disabled]="!esEditable">
                     <option value="ACTIVO">ACTIVO</option>
                     <option value="PENDIENTE">PENDIENTE</option>
                     <option value="RECHAZADO">RECHAZADO</option>
                 </select>
             </div>
 
-
             <div class="card-section">
-                <h2>Cliente <button type="button" (click)="editarCliente()"> ✏️ </button></h2>
+                <h2>Cliente  
+                    <button *ngIf="esEditable" type="button" (click)="editarCliente()" class="btn-icon">
+                        <i class="fas fa-pen"></i>
+                    </button>
+                </h2>
 
                 <div class="card-cliente">
                     <div class="cliente-left">
@@ -51,7 +59,6 @@
 
                             <div class="tabla-cliente" *ngIf="clienteSeleccionado">
                                 <p class="info">Cliente seleccionado:</p>
-
                                 <div class="fila">
                                     <label>ID:</label>
                                     <span class="valor">{{ clienteSeleccionado.id_cliente }}</span>
@@ -70,12 +77,12 @@
                                 <button type="button" class="btn-guardar" (click)="guardarCliente()">
                                     Actualizar Cliente
                                 </button>
-
                                 <button type="button" class="btn-cancelar" (click)="cancelarCliente()">
                                     Cancelar
                                 </button>
                             </div>
                         </div>
+
                         <div class="tabla-cliente" *ngIf="!editCliente">
                             <p class="info">Información del Cliente:</p>
                             <div>
@@ -110,7 +117,11 @@
 
             <div class="card-section grid-2">
                 <div class="lugar-left">
-                    <h2>Lugar <button type="button" (click)="editarLugar()"> ✏️ </button></h2>
+                    <h2>Lugar 
+                        <button *ngIf="esEditable" type="button" (click)="editarLugar()" class="btn-icon">
+                            <i class="fas fa-pen"></i>
+                        </button>
+                    </h2>
                     <div *ngIf="editLugar">
                         <div class="opciones">
                             <div class="barra">
@@ -138,17 +149,14 @@
 
                         <div class="tabla-lugar" *ngIf="lugarSeleccionado">
                             <p class="info">Lugar seleccionado:</p>
-
                             <div class="fila">
                                 <label>ID:</label>
                                 <span class="valor">{{ lugarSeleccionado.idLugar }}</span>
                             </div>
-
                             <div class="fila">
                                 <label>Nombre:</label>
                                 <span class="valor">{{ lugarSeleccionado.nombreLugar }}</span>
                             </div>
-
                             <div class="fila">
                                 <label>Dirección:</label>
                                 <span class="valor">{{ lugarSeleccionado.direccion }}</span>
@@ -156,13 +164,8 @@
                         </div>
 
                         <div class="acciones" *ngIf="lugarCambio()">
-                            <button class="btn-guardar" (click)="guardarLugar()">
-                                Guardar Lugar
-                            </button>
-
-                            <button class="btn-cancelar" (click)="cancelarLugar()">
-                                Cancelar
-                            </button>
+                            <button class="btn-guardar" (click)="guardarLugar()">Guardar Lugar</button>
+                            <button class="btn-cancelar" (click)="cancelarLugar()">Cancelar</button>
                         </div>
                     </div>
                     <div class="tabla-lugar" *ngIf="!editLugar">
@@ -179,26 +182,25 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="config-right">
                     <h3>Configuración de Cotización</h3>
                     <div class="checkbox-aiu">
                         <label>La cotización tiene IVA directo:</label>
-                        <input type="checkbox" name="existIva" [(ngModel)]="existIva">
+                        <input type="checkbox" name="existIva" [(ngModel)]="existIva" [disabled]="!esEditable">
                     </div>
                     <div class="porcentajes" *ngIf="!existIva">
                         <label>% Administración</label>
-                        <input type="number" step="0.01" min="0" max="1" [(ngModel)]="aiuForm.administracion"
-                            name="administracion">
+                        <input type="number" step="0.01" [(ngModel)]="aiuForm.administracion" [disabled]="!esEditable" name="administracion">
 
                         <label>% Imprevistos</label>
-                        <input type="number" step="0.01" min="0" [(ngModel)]="aiuForm.imprevistos" name="imprevistos">
+                        <input type="number" step="0.01" [(ngModel)]="aiuForm.imprevistos" [disabled]="!esEditable" name="imprevistos">
 
                         <label>% Utilidad</label>
-                        <input type="number" step="0.01" min="0" [(ngModel)]="aiuForm.utilidad" name="utilidad">
+                        <input type="number" step="0.01" [(ngModel)]="aiuForm.utilidad" [disabled]="!esEditable" name="utilidad">
                     </div>
                 </div>
             </div>
-
 
             <div class="card-section detalle-proyecto">
                 <h2>Detalle Proyecto</h2>
@@ -217,111 +219,74 @@
                             <th>Acción</th>
                         </tr>
                     </thead>
-
                     <tbody>
                         <tr *ngFor="let d of editdetallecotizacion; let i = index;">
                             <td>
                                 <textarea class="textarea-descripcion" [(ngModel)]="d.descripcion"
-                                    [disabled]="!d.editando" name="descripcion{{i}}">
+                                    [disabled]="!d.editando || !esEditable" name="descripcion{{i}}" rows="1" (input)="autoResize($event)">
                                   </textarea>
                             </td>
-
                             <td>
-                                <input type="number" [(ngModel)]="d.cantidad" [disabled]="!d.editando"
+                                <input type="number" [(ngModel)]="d.cantidad" [disabled]="!d.editando || !esEditable"
                                     name="cantidad{{i}}">
                             </td>
-
                             <td>
-                                <input type="number" [(ngModel)]="d.valor_unitario" [disabled]="!d.editando"
+                                <input type="number" [(ngModel)]="d.valor_unitario" [disabled]="!d.editando || !esEditable"
                                     name="valor{{i}}">
                             </td>
-
                             <td>{{ d.cantidad * d.valor_unitario | currency:'COP' }}</td>
 
-                            <td>
-                                <ng-container *ngIf="!d.editando">
-                                    <button type="button" (click)="editarFila(d)">✏️</button>
-                                    <button type="button" class="btn-delete" (click)="eliminarFila(d, i)">🗑️</button>
-                                </ng-container>
+                            <td class="acciones">
+                                <ng-container *ngIf="esEditable">
+                                    <ng-container *ngIf="!d.editando">
+                                        <button type="button" class="btn-icon btn-edit" (click)="editarFila(d)">
+                                            <span class="material-icons">edit</span>
+                                        </button>
+                                        <button type="button" class="btn-icon btn-delete" (click)="eliminarFila(d, i)">
+                                            <span class="material-icons">delete</span>
+                                        </button>
+                                    </ng-container>
 
-                                <ng-container *ngIf="d.editando">
-                                    <button type="button" class="btn-guardar" (click)="guardarFila(d)">💾</button>
-                                    <button type="button" class="btn-cancelar" (click)="cancelarFila(d, i)">❌</button>
+                                    <ng-container *ngIf="d.editando">
+                                        <button type="button" class="btn-icon btn-save" (click)="guardarFila(d)">
+                                            <span class="material-icons">save</span>
+                                        </button>
+                                        <button type="button" class="btn-icon btn-cancel" (click)="cancelarFila(d, i)">
+                                            <span class="material-icons">close</span>
+                                        </button>
+                                    </ng-container>
                                 </ng-container>
+                                <span *ngIf="!esEditable" style="color: #999; font-size: 0.8rem;">Solo lectura</span>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-
-                <button id="add" class="btn-add" type="button" (click)="agregarFila()">+ Agregar fila</button>
-
+                <button *ngIf="esEditable" id="add" class="btn-add" type="button" (click)="agregarFila()">+ Agregar fila</button>
 
                 <div class="confi-totales">
                     <div class="totales-card">
                         <div class="fila-tot"><span>Subtotal:</span><label>{{subtotal | currency:'COP'}}</label></div>
-
-                        <div class="fila-tot" *ngIf="!existIva">
-                            <span>Administración:</span><label>{{ administracion | currency:'COP'}}</label>
-                        </div>
-                        <div class="fila-tot" *ngIf="!existIva">
-                            <span>Imprevistos:</span><label>{{ imprevistos|
-                                currency:'COP'}}</label>
-                        </div>
-
-                        <div class="fila-tot" *ngIf="!existIva">
-                            <span>Utilidades:</span><label>{{utilidad |
-                                currency:'COP'}}</label>
-                        </div>
-
-                        <div class="fila-tot" *ngIf="!existIva">
-                            <span>Iva sobre utilidades:</span><label>{{ivaSobreUtilidad
-                                | currency:'COP'}}</label>
-                        </div>
-
-                        <div class="fila-tot total-final" *ngIf="!existIva">
-                            <span>Total:</span><label>{{totalAIU | currency:'COP'}}</label>
-                        </div>
-
                         <div class="fila-tot total-final" *ngIf="existIva">
-                            <span>IVA 19%: </span><label>{{ivaDirecto
-                                | currency:'COP'}}</label>
-                        </div>
-
-                        <div class="fila-tot total-final" *ngIf="existIva">
-                            <span>Total A Pagar:</span><label>
-                                {{TotalconIva | currency:'COP'}}</label>
+                            <span>Total A Pagar:</span><label>{{TotalconIva | currency:'COP'}}</label>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="card-section">
-                <h2>Notas</h2>
-                <table class="tabla-detalle">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Descripción</th>
-                        </tr>
-                    </thead>
-                    <tbody id="items">
-                        <tr>
-                            <td>1</td>
-                            <td>
-                                <Input type="text" placeholder="Ingrese las Notas">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button id="add" class="btn-add">+ Agregar fila</button>
+                <div class="opciones-document" style="display: flex; justify-content: center; gap: 20px; padding-left: 0;">
+                    
+                    <button *ngIf="esEditable" class="crear" type="button" (click)="actualizarCotizacion()"> 
+                        Actualizar Cotizacion 
+                    </button>
 
-            </div>
-
-            <div class="card-section">
-                <div class="opciones-document">
-                    <button class="crear" type="button" (click)="actualizarCotizacion()"> Actualizar Cotizacion </button>
                     <button class="enviar" type="button" (click)="enviarEmail()">Enviar Email</button>
-                    <button class="descargar">Descargar PDF</button>
+                    <button class="descargar" type="button">Descargar PDF</button>
+
+                    <button *ngIf="esEditable && esAdmin" class="btn-borrar-todo" type="button" 
+                        (click)="borrarCotizacionCompleta()" style="background-color: #333;"> 
+                        Borrar Cotización 
+                    </button>
                 </div>
             </div>
         </form>

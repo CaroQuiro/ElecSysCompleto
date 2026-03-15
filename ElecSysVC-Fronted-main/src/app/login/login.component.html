@@ -10,14 +10,30 @@
         </div>
         <div class="formulario">
             <h1>CONECTATE</h1>
-            <p>Bienvenido a VC Electricos Construcciones SAS</p>
-            <form>
-                <input type="text" placeholder="Usuario" />
-                <input type="password" placeholder="Contraseña" />
-                <a class="clave">¿Olvido su contraseña?</a>
-                <p>________ or _________</p>
-                <button class="boton-login" (click)="Entrar()">Login</button>
+            <p>VC Eléctricos Construcciones SAS</p>
+
+            <form *ngIf="!pasoVerificacion" (ngSubmit)="entrar()">
+                <input type="email" name="correo" [(ngModel)]="loginData.correo" placeholder="Correo Electrónico" required />
+                <input type="password" name="password" [(ngModel)]="loginData.password" placeholder="Contraseña" required />
+                
+                <button type="submit" class="boton-login" [disabled]="cargando">
+                    {{ cargando ? 'Enviando...' : 'Enviar Código' }}
+                </button>
             </form>
+
+            <form *ngIf="pasoVerificacion" (ngSubmit)="confirmarCodigo()">
+                <p class="instruccion">Ingresa el código enviado a tu correo:</p>
+                <input type="text" name="codigo" [(ngModel)]="codigoVerificacion" placeholder="Código de 6 dígitos" required />
+                
+                <button type="submit" class="boton-login" [disabled]="cargando">
+                    {{ cargando ? 'Verificando...' : 'Verificar y Entrar' }}
+                </button>
+                
+                <a class="regresar" (click)="pasoVerificacion = false">
+                    <i class="fas fa-arrow-left"></i> Volver al inicio
+                </a>
+            </form>
+
             <div class="iconos">
                 <i class="fab fa-facebook-f"></i>
                 <i class="fab fa-instagram"></i>

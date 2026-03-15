@@ -10,50 +10,34 @@ export class NotificacionService {
   private http = inject(HttpClient);
   private readonly URL = 'http://localhost:8080/api/notificaciones';
 
-  /**
-   * Envía un correo manual con archivo adjunto (Usado en VerCotizacion)
-   */
   enviarCorreo(formData: FormData): Observable<any> {
     return this.http.post(`${this.URL}/enviar-correo`, formData);
   }
 
-  /**
-   * Obtiene todas las notificaciones registradas
-   */
   listar(): Observable<NotificacionDTO[]> {
     return this.http.get<NotificacionDTO[]>(`${this.URL}/listar`);
   }
 
-  /**
-   * Crea una notificación programada con sus destinatarios
-   */
   programar(request: ProgramacionRequest): Observable<string> {
-    return this.http.post(`${this.URL}/programar`, request, { 
-      responseType: 'text' 
-    });
+    return this.http.post(`${this.URL}/programar`, request, { responseType: 'text' });
   }
 
-  /**
-   * Cambia el estado de la notificación a INACTIVA
-   */
+  activar(id: number): Observable<string> {
+    return this.http.put(`${this.URL}/activar/${id}`, {}, { responseType: 'text' });
+  }
+
   desactivar(id: number): Observable<string> {
-    return this.http.put(`${this.URL}/desactivar/${id}`, {}, { 
-      responseType: 'text' 
-    });
+    return this.http.put(`${this.URL}/desactivar/${id}`, {}, { responseType: 'text' });
   }
 
-  /**
-   * Elimina permanentemente una notificación
-   */
+  actualizar(id: number, dto: NotificacionDTO): Observable<string> {
+    return this.http.put(`${this.URL}/actualizar/${id}`, dto, { responseType: 'text' });
+  }
+
   borrar(id: number): Observable<string> {
-    return this.http.delete(`${this.URL}/borrar/${id}`, { 
-      responseType: 'text' 
-    });
+    return this.http.delete(`${this.URL}/borrar/${id}`, { responseType: 'text' });
   }
 
-  /**
-   * Busca una notificación por su ID
-   */
   buscarNotificacion(id: number): Observable<NotificacionDTO> {
     return this.http.get<NotificacionDTO>(`${this.URL}/buscar/${id}`);
   }

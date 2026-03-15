@@ -1,167 +1,283 @@
-.layout{
+/* ==========================================================================
+   CONFIGURACIÓN DE LAYOUT Y VARIABLES
+   ========================================================================== */
+:host {
+    --primary: #a00d0d;          /* Rojo Corporativo */
+    --primary-dark: #820a0a;
+    --success: #15803d;          /* Verde Registro */
+    --cancel: #64748b;           /* Gris Cancelar */
+    --bg-light: #f8fafc;
+    --border: #e2e8f0;
+    --white: #ffffff;
+    --text-main: #1e293b;
+}
+
+.layout {
     display: flex;
-    margin-top: 100px;
+    background: var(--bg-light);
+    min-height: 100vh;
+    margin-top: 90px;
 }
 
 .contenido {
-    width: calc(100% - 260px); /* resto del espacio */
+    flex: 1;
+    margin-left: 240px; /* Ancho del sidebar */
+    padding: 30px 50px;
     max-width: 1400px;
-    margin-left: 260px;        /* empuja el contenido */
-    margin-right: auto;
-    margin-top: 40px;
-    background: #fff;
-    border-radius: 14px;
-    padding: 30px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.07);
 }
 
-
 h1 {
-    color: #a00d0d;
-    font-size: 45px;
-    font-weight: 700;
-    margin: 15px auto;
+    font-size: 34px;
+    color: var(--text-main);
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 p {
-    margin-top: 0;
-    margin-bottom: 25px;
-    color: var(--text-light);
+    color: var(--text-muted);
+    margin-bottom: 30px;
+    font-size: 15px;
 }
 
-.card-section {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 10px 3px 10px rgb(231, 225, 225);
-    margin: 10px 0px;
+/* ==========================================================================
+   BOTONES PROFESIONALES
+   ========================================================================== */
+/* Botón "Registrar Cliente" (Verde) */
+.btn-primary {
+    background: var(--success);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
 }
 
-/* ============== Para formularios =======================*/
-/* TARJETA DEL FORMULARIO */
-.form-card {
-  background: #ffffff;
-  padding: 20px 25px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-  margin-top: 15px;
+.btn-primary:hover {
+    background: #166534;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(21, 128, 61, 0.2);
 }
 
-/* ENCABEZADO */
-.form-header h2 {
-  margin: 0;
-  color: #7b1fa2;
-}
-
-.form-header p {
-  margin: 5px 0 15px;
-  color: #666;
-  font-size: 14px;
-}
-
-/* GRID DE CAMPOS */
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-/* GRUPO INPUT */
-.form-group {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-group label {
-  font-weight: 600;
-  margin-bottom: 5px;
-  color: #444;
-}
-
-.form-group input {
-  padding: 8px 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  transition: 0.2s;
-}
-
-.form-group input:focus {
-  border-color: #7b1fa2;
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(123,31,162,0.1);
-}
-
-/* BOTONES */
-.form-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-success {
-  background: #2e7d32;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-success:hover {
-  background: #1b5e20;
-}
-
-.btn-cancel {
-  background: #b0bec5;
-  color: #333;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.btn-cancel:hover {
-  background: #90a4ae;
-}
-
-/* FILA DE EDICIÓN */
-.fila-edicion {
-  background: #fafafa;
-  animation: aparecer 0.2s ease-in-out;
-}
-
-/* ANIMACIÓN SUAVE */
-@keyframes aparecer {
-  from { opacity: 0; transform: scaleY(0.95); }
-  to { opacity: 1; transform: scaleY(1); }
-}
-
-/* ====== VARIANTE CLIENTES (COLOR AZUL) ====== */
-
-.form-card-cliente {
-  border-left: 5px solid #1565c0;
-}
-
-.form-card-cliente .form-header h2 {
-  color: #1565c0;
-}
-
+/* Botón "Guardar Cliente / Cambios" (Rojo Corporativo) */
 .btn-success-cliente {
-  background: #1565c0;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(160, 13, 13, 0.15);
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .btn-success-cliente:hover {
-  background: #0d47a1;
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(160, 13, 13, 0.3);
 }
 
-.form-card-cliente input:focus,
-.form-card-cliente select:focus {
-  border-color: #1565c0;
-  box-shadow: 0 0 0 2px rgba(21,101,192,0.15);
+.btn-success-cliente:disabled {
+    background: #cbd5e1;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Botón "Cancelar / Cerrar" (Gris Elegante) */
+.btn-cancel {
+    background: var(--white);
+    color: var(--cancel);
+    border: 2px solid #e2e8f0;
+    padding: 10px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-cancel:hover {
+    background: #f1f5f9;
+    color: #1e293b;
+    border-color: #cbd5e1;
+}
+
+/* ==========================================================================
+   FILTROS Y PANEL DE BÚSQUEDA
+   ========================================================================== */
+.filters-container {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    margin-bottom: 25px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.opcion {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.opcion label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.opcion input, .opcion select {
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: #f8fafc;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.opcion input:focus, .opcion select:focus {
+    border-color: var(--primary);
+    outline: none;
+    background: white;
+}
+
+/* ==========================================================================
+   FORM CARDS (CREAR Y EDITAR)
+   ========================================================================== */
+.form-card {
+    background: var(--white);
+    padding: 35px;
+    border-radius: 20px;
+    margin-bottom: 30px;
+    border-left: 8px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+    animation: slideDown 0.4s ease-out;
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.form-header h2 {
+    margin: 0 0 5px 0;
+    color: var(--text-main);
+    font-size: 24px;
+}
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.form-group label {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 8px;
+    color: #475569;
+}
+
+.form-group input, .form-group select {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 15px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid #f1f5f9;
+}
+
+/* ==========================================================================
+   TABLA DE CLIENTES
+   ========================================================================== */
+.table-wrapper {
+    background: var(--white);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+    background: #f1f5f9;
+    padding: 18px;
+    text-align: left;
+    font-size: 12px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+td {
+    padding: 20px 18px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+}
+
+tbody tr:hover { background: #f8fafc; }
+
+/* BADGES DE ESTADO */
+.badge {
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 800;
+    color: white;
+}
+
+.badge.activo { background: #10b981; }
+.badge.inactivo { background: #94a3b8; }
+
+/* LISTA DE COTIZACIONES */
+.quotes-list {
+    color: var(--primary);
+    font-weight: 700;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 13px;
+}
+
+.action-btn.edit {
+    background: #f1f5f9;
+    border: none;
+    color: var(--text-main);
+    padding: 8px 15px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.action-btn.edit:hover {
+    background: #e2e8f0;
 }

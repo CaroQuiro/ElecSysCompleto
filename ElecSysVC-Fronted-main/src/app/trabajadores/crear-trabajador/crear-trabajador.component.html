@@ -1,0 +1,93 @@
+<app-header-usuarrio></app-header-usuarrio>
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1 class="main-title"><i class="fas fa-user-plus"></i> Registrar Nuevo Trabajador</h1>
+
+        <div class="grid-2">
+            <div class="card-section">
+                <h2><i class="fas fa-id-card"></i> Información Personal</h2>
+                
+                <div class="form-group">
+                    <label>Número de Identidad (ID)</label>
+                    <div class="barra">
+                        <input type="number" [(ngModel)]="trabajador.id_trabajador" placeholder="Ej: 10102030">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <div class="barra">
+                        <input type="text" [(ngModel)]="trabajador.nombre" placeholder="Nombre y apellidos">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Teléfono de Contacto</label>
+                    <div class="barra">
+                        <input type="text" 
+                            [(ngModel)]="trabajador.telefono" 
+                            name="telefono"
+                            maxlength="12" 
+                            (input)="formatearTelefono($event)"
+                            (keypress)="validarSoloNumeros($event)"
+                            placeholder="Máximo 12 dígitos">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Dirección de Residencia</label>
+                    <div class="barra">
+                        <input type="text" [(ngModel)]="trabajador.direccion" placeholder="Calle, Carrera, Ciudad">
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-section">
+                <h2><i class="fas fa-user-lock"></i> Cuenta y Acceso</h2>
+
+                <div class="form-group">
+                    <label>Correo Electrónico</label>
+                    <div class="barra">
+                        <input type="email" [(ngModel)]="trabajador.correo" placeholder="ejemplo@elecsys.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Contraseña de Acceso</label>
+                    <div class="barra">
+                        <input type="password" [(ngModel)]="trabajador.password" placeholder="Mínimo 6 caracteres">
+                    </div>
+                </div>
+
+                <div class="grid-2-inner">
+                    <div class="form-group">
+                        <label>Tipo de Usuario</label>
+                        <select [(ngModel)]="trabajador.tipo_usuario" class="select-simple">
+                            <option value="USUARIO">USUARIO (Técnico)</option>
+                            <option value="ADMIN">ADMINISTRADOR</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Estado Inicial</label>
+                        <select [(ngModel)]="trabajador.estado" class="select-simple">
+                            <option value="ACTIVO">ACTIVO</option>
+                            <option value="INACTIVO">INACTIVO</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions-footer">
+            <button class="btn-cancel" (click)="cancelar()">
+                <i class="fas fa-times"></i> CANCELAR
+            </button>
+            <button class="btn-save" (click)="guardarTrabajador()">
+                <i class="fas fa-save"></i> GUARDAR TRABAJADOR
+            </button>
+        </div>
+    </div>
+</div>
