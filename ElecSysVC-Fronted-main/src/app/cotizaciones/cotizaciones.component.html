@@ -14,30 +14,50 @@
             <div class="filters">
                 <div class="opcion">
                     <label>ID</label>
-                    <input type="text" placeholder="Buscar ID" />
+                    <input type="text" placeholder="Buscar ID" [(ngModel)]="filtroId" (input)="aplicarFiltros()" />
                 </div>
 
                 <div class="opcion">
                     <label>Cliente</label>
-                    <input type="text" placeholder="Buscar por cliente" />
+                    <input type="text" placeholder="Buscar Cliente" [(ngModel)]="filtroCliente" (input)="aplicarFiltros()" />
                 </div>
 
                 <div class="opcion">
                     <label>Fecha</label>
-                    <input type="date" />
+                    <input type="date" [(ngModel)]="filtroFecha" (change)="aplicarFiltros()" />
                 </div>
 
                 <div class="opcion">
                     <label>Estado</label>
-                    <select>
-                        <option>Completado</option>
-                        <option>Pendiente</option>
-                        <option>Cancelado</option>
+                    <select [(ngModel)]="filtroEstadoSelect" (change)="aplicarFiltros()">
+                        <option value="">Todos</option>
+                        <option value="ACTIVO">Completado (Activo)</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="RECHAZADO">Cancelado (Rechazado)</option>
                     </select>
                 </div>
             </div>
 
             <button class="btn-primary" (click)="crearCotizacion()">Crear Nueva Cotización</button>
+        </div>
+
+        <div class="filtro-dashboard">
+            <div class="filtro-opciones">
+                <div class="filtro-item" [class.activo]="filtroActivo === 'TODAS'" (click)="filtrarEstado('TODAS')">
+                    <span class="titulo">Todas</span>
+                    <span class="contador">{{ cotizaciones.length }}</span>
+                </div>
+
+                <div class="filtro-item pendiente" [class.activo]="filtroActivo === 'PENDIENTE'"
+                    (click)="filtrarEstado('PENDIENTE')">
+                    <span class="titulo">Pendientes</span>
+                </div>
+
+                <div class="filtro-item pagado" [class.activo]="filtroActivo === 'RECHAZADO'"
+                    (click)="filtrarEstado('RECHAZADO')">
+                    <span class="titulo">Rechazado</span>
+                </div>
+            </div>
         </div>
 
         <!-- TABLA -->
@@ -61,7 +81,7 @@
                     </thead>
 
                     <tbody>
-                    @for (cotizacion of cotizaciones; track cotizacion.id_cotizacion) {
+                    @for (cotizacion of cotizacionesFiltradas; track cotizacion.id_cotizacion) {
                         <tr>
                             <td>{{cotizacion.id_cotizacion}}</td>
                             <td>{{clietesMap.get(cotizacion.id_cliente)?.nombre}}</td>

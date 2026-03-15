@@ -1,0 +1,110 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Cuentas Por Pagar</h1>
+        <p>Se mostrarán a continuación todas las Cuentas que estan siendo gestionadas</p>
+
+        <div class="resumen-cuentas">
+
+            <div class="resumen-card total">
+                <p>Total Cuentas</p>
+                <h2>{{ totalCuentas | currency:'COP':'symbol':'1.0-0' }}</h2>
+            </div>
+
+            <div class="resumen-card pendiente">
+                <p>Total Pendiente</p>
+                <h2>{{ totalPendiente | currency:'COP':'symbol':'1.0-0' }}</h2>
+            </div>
+
+            <div class="resumen-card pagado">
+                <p>Total Pagado</p>
+                <h2>{{ totalPagado | currency:'COP':'symbol':'1.0-0' }}</h2>
+            </div>
+
+        </div>
+
+        <!-- FILTROS -->
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+
+            <div class="filters">
+            <div class="opcion">
+                <label>ID</label>
+                <input type="text" placeholder="Buscar ID" [(ngModel)]="filtroId" (input)="aplicarFiltros()" />
+            </div>
+
+            <div class="opcion">
+                <label>Cliente</label>
+                <input type="text" placeholder="Buscar por cliente" [(ngModel)]="filtroCliente" (input)="aplicarFiltros()" />
+            </div>
+
+            <div class="opcion">
+                <label>Fecha</label>
+                <input type="date" [(ngModel)]="filtroFecha" (change)="aplicarFiltros()" />
+            </div>
+        </div>
+            <button class="btn-primary" (click)="navegarCrearCuenta()">Crear Cuenta de Cobro</button>
+        </div>
+
+        <div class="filtro-dashboard">
+            <div class="filtro-opciones">
+                <div class="filtro-item" [class.activo]="filtroActivo === 'TODAS'" (click)="filtrarEstado('TODAS')">
+                    <span class="titulo">Todas</span>
+                    <span class="contador">{{ cuentasporpagar.length }}</span>
+                </div>
+
+                <div class="filtro-item pendiente" [class.activo]="filtroActivo === 'PENDIENTE'"
+                    (click)="filtrarEstado('PENDIENTE')">
+                    <span class="titulo">Pendientes</span>
+                    <span class="contador">
+                        {{ cantidadPendiente }}
+                    </span>
+                </div>
+
+                <div class="filtro-item pagado" [class.activo]="filtroActivo === 'PAGADO'"
+                    (click)="filtrarEstado('PAGADO')">
+                    <span class="titulo">Pagadas</span>
+                    <span class="contador">
+                        {{ cantidadPagado }}
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        <!-- TABLA -->
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID Cuenta</th>
+                        <th>Cliente</th>
+                        <th>Fecha</th>
+                        <th>Monto</th>
+                        <th>Estado</th>
+                        <th>Nota</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (cuenta of cuentasFiltradas; track cuenta.id_cuenta_pagar){
+                    <tr>
+                        <td>{{cuenta.id_cuenta_pagar}}</td>
+                        <td>{{clientesMap.get(cuenta.id_cliente)?.nombre}} </td>
+                        <td>{{cuenta.fecha_realizacion}}</td>
+                        <td>{{cuenta.monto | currency:'COP':'symbol':'1.0-0'}}</td>
+                        <td><span [ngClass]="evaluarEstado(cuenta.estado)">{{cuenta.estado}}</span></td>
+                        <td></td>
+                        <td>
+                            <button class="action-btn view" (click)="verCuentaPagar(cuenta.id_cuenta_pagar)">Ver</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

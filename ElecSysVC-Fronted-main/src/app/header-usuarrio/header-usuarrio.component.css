@@ -1,129 +1,146 @@
-.body{
-    box-sizing: border-box;
-    padding: 0;
-    margin: 0;
+:host {
+  --rojo-principal: #b80000;
+  --rojo-oscuro: #8b0000;
+  --blanco: #ffffff;
+  --texto-oscuro: #333333;
 }
 
 .navegacion {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;            
-  height: 135px;
+  right: 0;
+  height: 110px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 16px 35px;
-  background-color: rgb(191, 32, 32);
-  box-sizing: border-box; 
+  padding: 0 30px;
+  background-color: var(--rojo-principal); /* Fondo Rojo de la imagen */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   z-index: 1000;
-
 }
 
+/* LOGO */
 .nav-left {
-  flex: 0.5;
-}
-
-/* CENTRO */
-.nav-center {
-  flex: 1; 
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding-left: 40px;
+  padding-left: 15px;
 }
 
-/* DERECHA */
-.nav-right {
+.nav-left .logo-vc {
+  height: 120px; /* ¡Ahora sí es grande! */
+  width: auto;
+  filter: brightness(0) invert(1); 
+  transition: transform 0.3s ease-in-out;
+  object-fit: contain;
+}
+
+.nav-left .logo-vc:hover {
+  transform: scale(1.05);
+}
+
+/* CENTRO: BUSCADOR E ICONOS */
+.nav-center {
   flex: 1;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  gap: 25px;
+  justify-content: center;
+  gap: 30px;
+  margin: 0 40px;
 }
 
-.navegacion img {
-    width: 200px;
-    height: auto;
+.busqueda-contenedor {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
 }
 
-.navegacion input {
-    width: 100%;
-    max-width: 650px;
-    height: 35px;
-    border: none;
-    border-radius: 15px;
-    padding: 12px;
+.busqueda-contenedor i {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
 }
 
-.iconos {
-    width: 150px;
-    height: 40px;
-    margin-left: 30px; 
+.busqueda-contenedor input {
+  width: 100%;
+  padding: 10px 15px 10px 45px;
+  border-radius: 25px;
+  border: none;
+  background-color: var(--blanco);
+  font-size: 0.9rem;
 }
 
-.iconos i {
-    color: white;
-    font-size: 35px;
-    text-align: center;
-    border-radius: 15px;
-    padding: 0px 22px 0px 0px;
-    cursor: pointer;
-    margin-left: 1rem;
+.iconos-notificacion {
+  display: flex;
+  gap: 20px;
 }
 
-.perfil {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 10px 15px;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 250px;
-    justify-content: center;
+.icono-wrap {
+  color: var(--blanco); /* Iconos blancos sobre fondo rojo */
+  font-size: 1.5rem;
+  cursor: pointer;
+  position: relative;
 }
 
-.perfil img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    /* Hace la imagen redonda */
-    object-fit: cover;
-    padding: 0px 0px 15px 0px;
+.badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: #ffeb3b; /* Punto amarillo de notificación */
+  border-radius: 50%;
 }
 
-
-.perfil-info{
-    width: 150px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 5px;
+/* DERECHA: TARJETA BLANCA (LA ESENCIA) */
+.perfil-tarjeta {
+  background-color: var(--blanco);
+  padding: 10px 20px;
+  border-radius: 12px; /* Cuadrado redondeado como en la imagen */
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 220px;
 }
 
-.perfil h1 {
-    font-weight: bold;
-    color: black;
-    font-size: 18px;
-    text-align: center;
-    word-break: break-word;
-    padding: auto;
-    margin: 0;
+.perfil-info {
+  display: flex;
+  flex-direction: column;
+  text-align: right;
+  border-right: 2px solid #eee;
+  padding-right: 15px;
 }
 
-.perfil button {
-    background-color: red;
-    width: 100%;
-    height: 30px;
-    border: none;
-    border-radius: 15px;
-    color: white;
-    cursor: pointer;
+.nombre-usuario {
+  font-weight: 800;
+  color: var(--texto-oscuro);
+  font-size: 1.1rem;
 }
 
-.perfil button:hover {
-    background-color: white;
-    color: black;
-    border: 2px solid red;
+.cargo-texto {
+  font-size: 0.75rem;
+  color: #666;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* BOTÓN CERRAR SESIÓN */
+.btn-logout {
+  background-color: var(--rojo-principal);
+  color: var(--blanco);
+  border: none;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+  white-space: nowrap;
+}
+
+.btn-logout:hover {
+  background-color: var(--rojo-oscuro);
 }

@@ -69,11 +69,3 @@
   background: #333845;
   color: #fff;
 }
-
-.menu-link i.fa-bell {
-  color: #facc15; 
-}
-
-.submenu li:hover i.fa-paper-plane {
-  color: var(--primary);
-}

@@ -6,6 +6,7 @@ import { NotificacionService } from '../notificacion.service';
 import { ProgramacionRequest } from '../notificacion.model';
 import { ServiceClienteService } from '../../cliente/service-cliente.service';
 import { EntidadCliente } from '../../cliente/entidad-cliente';
+import { TrabajadorService } from '../../trabajadores/data/trabajadores.service'; // Ajusta la ruta según tu proyecto
 import { HeaderUsuarrioComponent } from '../../header-usuarrio/header-usuarrio.component';
 import { MenuVerticalComponent } from '../../menu-vertical/menu-vertical.component';
 
@@ -19,12 +20,12 @@ import { MenuVerticalComponent } from '../../menu-vertical/menu-vertical.compone
 export class CrearNotificacionComponent implements OnInit {
   private service = inject(NotificacionService);
   private clienteService = inject(ServiceClienteService);
+  private trabajadorService = inject(TrabajadorService);
   private router = inject(Router);
 
-  // Listas para selección
-  clientes: EntidadCliente[] = [];
+  // Listas de datos filtrados
+  destinatariosFiltrados: any[] = [];
   
-  // Objeto de solicitud inicializado con valores por defecto
   request: ProgramacionRequest = {
     notificacion: {
       titulo: '',
@@ -32,8 +33,8 @@ export class CrearNotificacionComponent implements OnInit {
       tipo: 'UNICA'
     },
     frecuencia: 'DIARIA',
-    fechaInicio: new Date().toISOString().slice(0, 16), // Fecha actual para el input datetime-local
-    fechaFin: null,
+    fechaInicio: new Date().toISOString().slice(0, 16),
+    fechaFin: null, // Mantenemos null ya que se quitó del formulario
     idsDestinatarios: [],
     tipoDestinatario: 'CLIENTE'
   };
@@ -42,9 +43,25 @@ export class CrearNotificacionComponent implements OnInit {
     this.cargarDestinatarios();
   }
 
+  // Cambia el tipo y recarga la lista
+  cambiarTipoDestinatario(tipo: 'CLIENTE' | 'TRABAJADOR'): void {
+    this.request.tipoDestinatario = tipo;
+    this.request.idsDestinatarios = []; // Limpiamos selección al cambiar tipo
+    this.cargarDestinatarios();
+  }
+
   cargarDestinatarios(): void {
-    // Por ahora cargamos clientes, podrías añadir lógica para trabajadores si tienes el servicio
-    this.clienteService.listarClientes().subscribe(data => this.clientes = data);
+    if (this.request.tipoDestinatario === 'CLIENTE') {
+      this.clienteService.listarClientes().subscribe(data => {
+        // Filtramos solo los activos (ajusta 'estado' según tu entidad)
+        this.destinatariosFiltrados = data.filter(c => c.estado === 'ACTIVO');
+      });
+    } else {
+      this.trabajadorService.listarTrabajadores().subscribe(data => {
+        // Filtramos solo los activos
+        this.destinatariosFiltrados = data.filter(t => t.estado === 'ACTIVO');
+      });
+    }
   }
 
   toggleDestinatario(id: number): void {
@@ -57,7 +74,6 @@ export class CrearNotificacionComponent implements OnInit {
   }
 
   guardar(): void {
-    // Validaciones mínimas
     if (!this.request.notificacion.titulo || !this.request.notificacion.mensaje) {
       alert('Por favor complete el título y el mensaje.');
       return;
@@ -69,11 +85,10 @@ export class CrearNotificacionComponent implements OnInit {
 
     this.service.programar(this.request).subscribe({
       next: (resp) => {
-        alert(resp);
+        alert("Notificación programada con éxito");
         this.router.navigate(['/notificaciones']);
       },
       error: (err) => {
-        console.error(err);
         alert('Error al procesar la programación.');
       }
     });

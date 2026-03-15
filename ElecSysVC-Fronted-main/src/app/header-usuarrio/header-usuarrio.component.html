@@ -1,20 +1,34 @@
 <nav class="navegacion">
   <div class="nav-left">
-    <img class="logo-vc" src="img/LOGO POSITIVO.png" />
+    <img class="logo-vc" src="img/Logo-Original.png" alt="Logo VC" />
   </div>
 
   <div class="nav-center">
-    <input type="text" placeholder="Buscar" />
-    <div class="iconos">
-      <i class="fas fa-envelope"></i>
-      <i class="fas fa-bell"></i>
+    <div class="busqueda-contenedor">
+      <i class="fas fa-search"></i>
+      <input type="text" placeholder="Buscar en ElecSys..." />
     </div>
-  </div>
-    <div class="perfil">
-      <img src="img/Foto Ivan.jpg" />
-      <div class="perfil-info">
-        <h1>Ivan</h1>
-        <button>Cerrar Sesion</button>
+    <div class="iconos-notificacion">
+      <div class="icono-wrap">
+        <i class="fas fa-envelope"></i>
+        <span class="badge"></span>
+      </div>
+      <div class="icono-wrap">
+        <i class="fas fa-bell"></i>
+        <span class="badge"></span>
       </div>
     </div>
+  </div>
+
+  <div class="nav-right">
+    <div class="perfil-tarjeta">
+      <div class="perfil-info">
+        <span class="nombre-usuario">{{ nombre }}</span>
+        <span class="cargo-texto">{{ cargo }}</span>
+      </div>
+      <button (click)="cerrarSesion()" class="btn-logout" title="Cerrar Sesión">
+        Cerrar Sesión
+      </button>
+    </div>
+  </div>
 </nav>

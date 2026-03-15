@@ -13,6 +13,8 @@ import { CommonModule, NgForOf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DetalleCotizacionForm, DetalleUI, AIUForm, CotizacionForm } from '../Cotizaciones/request-cotizacion';
 import { NotificacionService } from '../../notificacion/notificacion.service';
+import { AuthService } from '../../servicios/auth.service';
+
 
 @Component({
   selector: 'app-ver-cotizacion',
@@ -36,6 +38,7 @@ export class VerCotizacionComponent {
     private serviceCliente: ServiceClienteService,
     private serviceLugar: ServiceLugarService,
     private notificacionService: NotificacionService,
+    private authService: AuthService,
     private route: Router) { }
 
   idCotizacion!: number;
@@ -227,31 +230,42 @@ export class VerCotizacionComponent {
       cantidad: det.cantidad,
       valor_unitario: det.valor_unitario
     };
-    if (det.esNuevo) {
-      this.serviceCotizacion
-        .crearDetalleCotizacion(this.idCotizacion, dto)
-        .subscribe(() => {
-          alert('Detalle Creado Exitosamente');
-          this.editdetallecotizacion = [];
-          this.recargarDetalles();
-        });
-    }
-    else {
-      this.serviceCotizacion
-        .actualizarDetalleCotizacion(
-          this.idCotizacion,
-          det.id_detalle_cotizacion,
-          dto
-        )
-        .subscribe(() => {
-          det.subtotal = det.cantidad * det.valor_unitario;
-          det.editando = false;
-          alert('Detalle Actualiado exitosamente');
-          this.editdetallecotizacion = [];
-          this.recargarDetalles();
-        });
-    }
-  }
+
+    const peticion = det.esNuevo 
+      ? this.serviceCotizacion.crearDetalleCotizacion(this.idCotizacion, dto)
+      : this.serviceCotizacion.actualizarDetalleCotizacion(this.idCotizacion, det.id_detalle_cotizacion, dto);
+
+    peticion.subscribe({
+      next: () => {
+        alert(det.esNuevo ? 'Detalle Creado' : 'Detalle Actualizado');
+        det.editando = false;
+        det.esNuevo = false;
+        
+        // 1. Recargamos los detalles para tener los IDs nuevos
+        this.recargarDetalles();
+        
+        // 2. IMPORTANTE: Llamamos a actualizar la cotización global 
+        // para que el TOTAL_PAGAR en la BD se refresque con los nuevos ítems
+        this.actualizarCotizacionSilenciosa(); 
+      }
+    });
+}
+
+// Nuevo método para actualizar totales sin saltar a la lista
+private actualizarCotizacionSilenciosa(): void {
+    const esAIU = !this.existIva;
+    const dto: EntidadCotizaciones = {
+      ...this.baseCotizacion(),
+      tiene_aiu: esAIU,
+      iva: esAIU ? this.ivaSobreUtilidad : this.ivaDirecto,
+      total_pagar: esAIU ? this.totalAIU : this.TotalconIva,
+      administracion: esAIU ? this.administracion : 0,
+      imprevistos: esAIU ? this.imprevistos : 0,
+      utilidad: esAIU ? this.utilidad : 0
+    };
+
+    this.serviceCotizacion.actualizarCotizacion(this.idCotizacion, dto).subscribe();
+}
 
   eliminarFila(det: DetalleUI, index: number) {
 
@@ -267,6 +281,7 @@ export class VerCotizacionComponent {
         alert('Detalle Eliminado Exitosamente');
         this.editdetallecotizacion = [];
         this.recargarDetalles();
+        this.actualizarCotizacionSilenciosa(); 
       });
   }
 
@@ -403,6 +418,12 @@ export class VerCotizacionComponent {
       });
   }
 
+  autoResize(event: Event): void {
+  const textarea = event.target as HTMLTextAreaElement;
+  textarea.style.height = 'auto';
+  textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
   enviarEmail() {
     // 1. Crear un input de tipo file invisible para que el usuario elija el archivo
     const inputArchivo = document.createElement('input');
@@ -467,12 +488,43 @@ export class VerCotizacionComponent {
   }
 
   consultarProbabilidad() {
-    this.serviceCotizacion.obtenerProbabilidad(this.idCotizacion).subscribe({
-      next: (res) => {
-        this.probabilidadCalculada = res.probabilidad_aceptacion;
-      },
-      error: (err) => console.error('Error al obtener probabilidad', err)
-    });
+  this.serviceCotizacion.obtenerProbabilidad(this.idCotizacion).subscribe({
+    next: (res) => {
+      this.probabilidadCalculada = res.probabilidad_aceptacion || 0.01; 
+    },
+    error: (err) => {
+      console.error('El usuario no tiene permiso para ver la IA:', err);
+      this.probabilidadCalculada = 0;
+    }
+  });
+}
+
+  get esAdmin(): boolean {
+      return this.authService.getUserRole().toUpperCase() === 'ADMIN';
+    }
+
+  get esEditable(): boolean {
+    return this.cotizacion?.estado === 'PENDIENTE';
+  }
+
+  borrarCotizacionCompleta() {
+    if (!this.esAdmin) {
+      alert("No tienes permisos de administrador para realizar esta acción.");
+      return;
+    }
+
+    if (confirm(`¿Estás seguro de que deseas eliminar la cotización #${this.idCotizacion}? Esta acción no se puede deshacer.`)) {
+      this.serviceCotizacion.borrarCotizacion(this.idCotizacion).subscribe({
+        next: () => {
+          alert("Cotización eliminada exitosamente.");
+          this.route.navigate(['/cotizaciones']);
+        },
+        error: (err) => {
+          console.error(err);
+          alert("Error al intentar eliminar la cotización.");
+        }
+      });
+    }
   }
 
 }

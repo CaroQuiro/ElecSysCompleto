@@ -4,13 +4,13 @@
     <section class="intro">
         <h1 class="titulo">Panel de Control</h1>
         <p class="bienvenida">
-            Bienvenido a VC Eléctricos Construcciones S.A.S
+            Bienvenido, <strong>{{ nombreUsuario }}</strong> a VC Eléctricos Construcciones S.A.S
         </p>
         <p>
-            Aquí podrás acceder a todo el ecosistema digital empresarial y
-            gestionar recursos según tu perfil.
+            Gestiona los recursos de la empresa de manera eficiente desde tu perfil.
         </p>
     </section>
+
     <section class="seccion">
         <h2 class="izquierda">Cotizaciones</h2>
         <div class="sub_boton">
@@ -22,45 +22,25 @@
                 <i class="fas fa-eye"></i>
                 <h3>Ver Cotizaciones</h3>
             </button>
-            <button class="card">
-                <i class="fas fa-edit"></i>
-                <h3>Editar / Actualizar</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-info-circle"></i>
-                <h3>Estados Cotizaciones</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-chart-line"></i>
-                <h3>Seguimientos & Estadísticas</h3>
-            </button>
         </div>
     </section>
 
     <section class="seccion">
         <h2 class="derecha">Cuentas de Cobro</h2>
         <div class="sub_boton">
-            <button class="card">
+            <button class="card" (click)="CrearCuenta()">
                 <i class="fas fa-file-invoice-dollar"></i>
-                <h3>Nueva Cuenta de Cobro</h3>
+                <h3>Nueva Cuenta</h3>
             </button>
-            <button class="card">
+            <button class="card" (click)="GestionCuentasPagar()">
                 <i class="fas fa-eye"></i>
-                <h3>Ver Cuentas de Cobro</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-edit"></i>
-                <h3>Editar / Actualizar</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-history"></i>
-                <h3>Historial & Reportes</h3>
+                <h3>Ver Cuentas</h3>
             </button>
         </div>
     </section>
 
     <section class="seccion">
-        <h2 class="derecha">Órdenes de Visita</h2>
+        <h2 class="izquierda">Órdenes de Visita</h2>
         <div class="sub_boton">
             <button class="card" (click)="CrearVisita()">
                 <i class="fas fa-calendar-plus"></i>
@@ -70,19 +50,11 @@
                 <i class="fas fa-clipboard-list"></i>
                 <h3>Ver Visitas</h3>
             </button>
-            <button class="card">
-                <i class="fas fa-map-location-dot"></i>
-                <h3>Rutas y Lugares</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-user-gear"></i>
-                <h3>Asignar Técnicos</h3>
-            </button>
         </div>
     </section>
 
     <section class="seccion">
-        <h2 class="izquierda">Órdenes de Trabajo</h2>
+        <h2 class="derecha">Órdenes de Trabajo</h2>
         <div class="sub_boton">
             <button class="card" (click)="CrearTrabajo()">
                 <i class="fas fa-tools"></i>
@@ -92,39 +64,19 @@
                 <i class="fas fa-tasks"></i>
                 <h3>Ver Trabajos</h3>
             </button>
-            <button class="card">
-                <i class="fas fa-user-check"></i>
-                <h3>Finalizar Labores</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-file-invoice"></i>
-                <h3>Generar Reporte</h3>
-            </button>
         </div>
     </section>
 
-    <section class="seccion">
-        <h2 class="derecha">Contratos</h2>
+    <section class="seccion" *ngIf="esAdmin">
+        <h2 class="izquierda">Contratos</h2>
         <div class="sub_boton">
-            <button class="card">
+            <button class="card" (click)="CrearContrato()">
                 <i class="fas fa-file-signature"></i>
                 <h3>Nuevo Contrato</h3>
             </button>
-            <button class="card">
+            <button class="card" (click)="GestionarContratos()">
                 <i class="fas fa-eye"></i>
                 <h3>Ver Contratos</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-sync-alt"></i>
-                <h3>Renovar / Actualizar</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-archive"></i>
-                <h3>Archivados</h3>
-            </button>
-            <button class="card">
-                <i class="fas fa-clock"></i>
-                <h3>Estados & Vencimiento</h3>
             </button>
         </div>
     </section>

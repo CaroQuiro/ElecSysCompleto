@@ -4,70 +4,80 @@
     <app-menu-vertical></app-menu-vertical>
 
     <div class="contenido">
-        <h1>Centro de Notificaciones</h1>
-        <p>Historial de comunicaciones y programaciones automáticas</p>
-
-        <div class="top-actions">
-            <div class="filters">
-                <div class="opcion">
-                    <label>Filtrar por Título</label>
-                    <input type="text" placeholder="Escriba para buscar..." />
-                </div>
-                <div class="opcion">
-                    <label>Tipo</label>
-                    <select>
-                        <option value="">Todos los tipos</option>
-                        <option value="UNICA">Única vez</option>
-                        <option value="RECURRENTE">Recurrente</option>
-                    </select>
-                </div>
+        <div class="header-main">
+            <div class="title-group">
+                <h1>Gestión de Notificaciones</h1>
+                <p><i class="fas fa-info-circle"></i> Monitoreo de envíos únicos y programaciones recurrentes</p>
             </div>
-
-            <button class="btn-primary" (click)="irACrear()">+ Programar Notificación</button>
+            <button class="btn-primary" (click)="irACrear()">
+                <i class="fas fa-plus"></i> Nueva Programación
+            </button>
         </div>
 
-        <div class="card">
-            <table class="notif-table">
+        <div class="filters-bar">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" [(ngModel)]="filtroTitulo" placeholder="Buscar por título de notificación...">
+            </div>
+            <div class="select-box">
+                <i class="fas fa-filter"></i>
+                <select [(ngModel)]="filtroTipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="UNICA">Única Vez</option>
+                    <option value="RECURRENTE">Recurrente</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-container">
+            <table>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Título</th>
-                        <th>Mensaje (Previa)</th>
+                        <th style="width: 40%;">Título y Mensaje</th>
                         <th>Tipo</th>
                         <th>Estado</th>
-                        <th>Fecha Creación</th>
-                        <th>Acciones</th>
+                        <th>Creación</th>
+                        <th style="text-align: center;">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let n of notificaciones">
-                        <td><strong>#{{n.idNotificacion}}</strong></td>
-                        <td>{{n.titulo}}</td>
-                        <td class="text-muted">{{formatearMensaje(n.mensaje)}}</td>
+                    <tr *ngFor="let n of notificacionesFiltradas" class="row-hover">
                         <td>
-                            <span class="tipo-tag" [ngClass]="n.tipo">{{n.tipo}}</span>
+                            <div class="title-cell">
+                                <span class="main-title">{{n.titulo}}</span>
+                                <span class="sub-message">{{limpiarYFormatearMensaje(n.mensaje)}}</span>
+                            </div>
                         </td>
                         <td>
-                            <span [ngClass]="n.estado === 'ACTIVA' ? 'badge activo' : 'badge inactivo'">
-                                {{n.estado}}
+                            <span class="tag" [ngClass]="n.tipo">
+                                <i class="fas" [ngClass]="n.tipo === 'UNICA' ? 'fa-paper-plane' : 'fa-redo'"></i>
+                                {{n.tipo}}
                             </span>
                         </td>
-                        <td>{{n.fechaCreacion | date:'dd/MM/yyyy'}}</td>
-                        <td class="actions-cell">
-                            <button *ngIf="n.estado === 'ACTIVA'" 
-                                    class="action-btn deactivate" 
-                                    (click)="desactivar(n.idNotificacion)">
-                                Pausar
-                            </button>
-                            <button class="action-btn delete" 
-                                    (click)="eliminar(n.idNotificacion)">
-                                Borrar
-                            </button>
+                        <td>
+                            <span class="badge" [ngClass]="n.tipo === 'UNICA' ? 'enviado' : n.estado?.toLowerCase()">
+                                <i class="fas fa-circle"></i>
+                                {{ n.tipo === 'UNICA' ? 'ENVIADO' : n.estado }}
+                            </span>
                         </td>
-                    </tr>
-                    <tr *ngIf="notificaciones.length === 0">
-                        <td colspan="7" style="text-align: center; padding: 40px; color: #999;">
-                            No hay notificaciones registradas.
+                        <td class="date-cell">{{n.fechaCreacion | date:'dd/MM/yyyy'}}</td>
+                        <td class="actions">
+                            <div class="action-container" *ngIf="n.tipo === 'RECURRENTE'; else sinAcciones">
+                                <button class="btn-icon state" (click)="toggleEstado(n)" 
+                                        [ngClass]="n.estado === 'ACTIVA' ? 'active' : 'paused'"
+                                        [title]="n.estado === 'ACTIVA' ? 'Pausar' : 'Activar'">
+                                    <i class="fas" [ngClass]="n.estado === 'ACTIVA' ? 'fa-pause' : 'fa-play'"></i>
+                                </button>
+                                <button class="btn-icon delete" (click)="eliminar(n.idNotificacion!)" title="Eliminar">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            <ng-template #sinAcciones>
+                                <div class="no-actions">
+                                    <i class="fas fa-lock" title="Registro histórico"></i>
+                                    <span>Histórico</span>
+                                </div>
+                            </ng-template>
                         </td>
                     </tr>
                 </tbody>

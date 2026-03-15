@@ -35,7 +35,7 @@ export class CrearCotComponent {
     id_lugar: 0,
     fecha_realizacion: new Date().toISOString().split('T')[0],
     referencia: '',
-    estado: 'ACTIVO'
+    estado: 'PENDIENTE'
   };
 
   existIva = true;
@@ -54,7 +54,7 @@ export class CrearCotComponent {
     if (this.textoBusquedaCliente.length < 2) return;
     this.clienteService.buscarClienteQuery(this.textoBusquedaCliente).subscribe({
       next: resultado => {
-        this.clientes = resultado;
+        this.clientes = resultado.filter(c => c.estado?.toUpperCase() === 'ACTIVO');
       },
       error: () => this.clientes = []
     });
@@ -150,7 +150,7 @@ guardarCotizacion() {
         id_lugar: this.lugarSeleccionado.idLugar,
         fecha_realizacion: new Date().toISOString().split('T')[0],
         referencia: this.cotizacionForm.referencia,
-        estado: 'ACTIVO'
+        estado: 'PENDIENTE'
       },
       detalleCotizacionDTOS: this.detalles,
       existIva: this.existIva
@@ -195,19 +195,6 @@ guardarCotizacion() {
       utilidad <= 0
     ) {
       alert('Todos los valores AIU deben ser mayores a 0');
-      return false;
-    }
-    if (
-      administracion > 1 ||
-      imprevistos > 1 ||
-      utilidad > 1
-    ) {
-      alert('Los valores AIU no pueden ser mayores a 1');
-      return false;
-    }
-    const total = administracion + imprevistos + utilidad;
-    if (total > 1) {
-      alert('La suma de Administración + Imprevistos + Utilidad no puede ser mayor a 1');
       return false;
     }
     return true;

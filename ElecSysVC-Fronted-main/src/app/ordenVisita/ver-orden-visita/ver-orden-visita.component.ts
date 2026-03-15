@@ -12,6 +12,8 @@ import { NotificacionService } from '../../notificacion/notificacion.service';
 import { EntidadCliente } from '../../cliente/entidad-cliente';
 import { EntidadLugar } from '../../lugar/entidad-lugar';
 import { DetalleVisitaUI } from '../data/orden-visita.models'; // Ajusta la ruta
+import { AuthService } from '../../servicios/auth.service';
+
 
 @Component({
   selector: 'app-ver-orden-visita',
@@ -27,6 +29,10 @@ export class VerOrdenVisitaComponent implements OnInit {
   private clienteService = inject(ServiceClienteService);
   private lugarService = inject(ServiceLugarService);
   private notificacionService = inject(NotificacionService);
+  private authService = inject(AuthService);
+
+  esAdmin: boolean = false;
+  puedeEditar: boolean = false;
 
   idOrden!: number;
   orden?: OrdenDeVisitaDTO;
@@ -40,24 +46,11 @@ export class VerOrdenVisitaComponent implements OnInit {
     this.cargarDatos();
   }
 
-  cargarDatos() {
-    this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
-      this.orden = data;
-      this.cargarRelaciones(data.idCliente, data.idLugar);
-      this.recargarDetalles();
-    });
-  }
+  
 
-  cargarRelaciones(idCliente: number, idLugar: number) {
-    this.clienteService.buscarClientePorId(idCliente).subscribe(c => this.cliente = c);
-    this.lugarService.buscarLugarPorId(idLugar).subscribe(l => this.lugar = l);
-  }
+  
 
-  recargarDetalles() {
-    this.ordenService.listarDetallesPorOrden(this.idOrden).subscribe(res => {
-      this.editDetalles = res.map(d => ({ ...d, editando: false }));
-    });
-  }
+  
 
   // --- GESTIÓN DE FILAS (ACTIVIDADES) ---
   editarFila(d: DetalleVisitaUI) { d.editando = true; }
@@ -124,13 +117,49 @@ export class VerOrdenVisitaComponent implements OnInit {
     }
   }
 
-  borrarOrdenTotal() {
-    if(confirm("¿Seguro que desea eliminar TODA la orden y sus detalles? Esta acción no se puede deshacer.")) {
-      this.ordenService.borrarOrden(this.idOrden).subscribe(() => {
-        this.router.navigate(['/ordenes-visita']);
-      });
-    }
+  cargarRelaciones(idCliente: number, idLugar: number) {
+    this.clienteService.buscarClientePorId(idCliente).subscribe(c => this.cliente = c);
+    this.lugarService.buscarLugarPorId(idLugar).subscribe(l => this.lugar = l);
   }
+
+  recargarDetalles() {
+    this.ordenService.listarDetallesPorOrden(this.idOrden).subscribe(res => {
+      this.editDetalles = res.map(d => ({ ...d, editando: false }));
+    });
+  }
+
+  cargarDatos() {
+  this.esAdmin = this.authService.getUserRole() === 'ADMIN';
+  
+  this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
+    this.orden = data;
+    
+    this.puedeEditar = data.estado !== 'REALIZADA' && data.estado !== 'CANCELADA';
+    
+    this.cargarRelaciones(data.idCliente, data.idLugar);
+    this.recargarDetalles();
+  });
+}
+
+borrarOrdenTotal() {
+
+  if (!this.puedeEditar) {
+    alert("Esta orden está archivada (Realizada/Cancelada) y no puede ser eliminada.");
+    return;
+  }
+  
+  if (confirm("¿Seguro que desea eliminar TODA la orden?")) {
+    this.ordenService.borrarOrden(this.idOrden).subscribe({
+      next: () => {
+        alert("Orden eliminada con éxito.");
+        this.router.navigate(['/ordenes-visita']);
+      },
+      error: (err) => {
+        alert("No se puede borrar: " + err.error);
+      }
+    });
+  }
+}
 
   enviarEmail() {
     const inputArchivo = document.createElement('input');

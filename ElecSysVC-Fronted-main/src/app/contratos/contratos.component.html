@@ -1,0 +1,137 @@
+<app-header-usuarrio></app-header-usuarrio>
+
+<div class="layout">
+    <app-menu-vertical></app-menu-vertical>
+
+    <div class="contenido">
+        <h1>Gestión de Contratos Laborales Empresa</h1>
+        <p>Se muestran los contratos activos y vencidos de la compañía.</p>
+
+        <div class="top-actions">
+            <h4 style="margin:0; font-weight:600;">Buscar por:</h4>
+            <div class="filters">
+                <div class="opcion">
+                    <label>ID Contrato</label>
+                    <input type="text" placeholder="Buscar ID" [(ngModel)]="filtroId" (input)="aplicarFiltros()" />
+                </div>
+                <div class="opcion">
+                    <label>Trabajador</label>
+                    <input type="text" placeholder="Nombre" [(ngModel)]="filtroTrabajador" (input)="aplicarFiltros()" />
+                </div>
+                <div class="opcion">
+                    <label>Fecha Expedición</label>
+                    <input type="date" [(ngModel)]="filtroFecha" (change)="aplicarFiltros()" />
+                </div>
+            </div>
+            <button class="btn-primary" (click)="abrirFlotanteContrato()">Crear Contrato</button>
+        </div>
+
+        <div class="filtro-dashboard">
+            <div class="filtro-opciones">
+                <div class="filtro-item" [class.activo]="filtroActivo === 'TODAS'" (click)="filtrarEstado('TODAS')">
+                    <span class="titulo">Todas</span>
+                    <span class="contador">{{ cantTodas }}</span>
+                </div>
+                <div class="filtro-item pendiente" [class.activo]="filtroActivo === 'ACTIVO'" (click)="filtrarEstado('ACTIVO')">
+                    <span class="titulo">Activos</span>
+                    <span class="contador">{{ cantActivos }}</span>
+                </div>
+                <div class="filtro-item pagado" [class.activo]="filtroActivo === 'VENCIDO'" (click)="filtrarEstado('VENCIDO')">
+                    <span class="titulo">Vencidos</span>
+                    <span class="contador">{{ cantVencidos }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <table class="cot-table">
+                <thead>
+                    <tr>
+                        <th>ID Contrato</th>
+                        <th>Trabajador</th>
+                        <th>Sueldo</th>
+                        <th>F. Expedición</th>
+                        <th>Encargado</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (contrato of contratosFiltrados; track contrato.id_contrato) {
+                    <tr>
+                        <td>{{contrato.id_contrato}}</td>
+                        <td>{{trabajadorMap.get(contrato.id_trabajador)?.nombre}}</td>
+                        <td>{{contrato.sueldo | currency:'COP':'symbol':'1.0-0' }}</td>
+                        <td>{{contrato.fecha_expedicion}}</td>
+                        <td>{{trabajadorMap.get(contrato.id_trabajador_encargado)?.nombre}}</td>
+                        <td><span [ngClass]="evaluarEstado(contrato.estado)">{{contrato.estado}}</span></td>
+                        <td>
+                            <button class="action-btn view" (click)="verContrato(contrato.id_contrato)">Ver</button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <app-ver-contratos [contrato]="contratoSeleccionado" [mostrar]="mostrarVerContrato" (cerrarModal)="mostrarVerContrato=false"></app-ver-contratos>
+
+        <div class="modal-overlay" *ngIf="mostrarFlotanteContrato">
+            <div class="modal-contrato">
+                <div class="modal-header">
+                    <h2>Nuevo Contrato ElecSys</h2>
+                    <button class="btn-secundario" (click)="crearTrabajador()">+ Crear Trabajador</button>
+                </div>
+
+                <div class="seccion-form">
+                    <h3>1. Información del Empleado</h3>
+                    <div class="grid-2">
+                        <div class="form-group">
+                            <label>Trabajador</label>
+                            <select [(ngModel)]="nuevoContrato.contrato.id_trabajador">
+                                <option [ngValue]="0">Seleccione...</option>
+                                <option *ngFor="let t of trabajadores" [ngValue]="t.id_trabajador">{{t.nombre}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label>Nacimiento</label><input type="date" [(ngModel)]="nuevoContrato.fecha_nacimiento"></div>
+                        <div class="form-group"><label>Lugar</label><input type="text" [(ngModel)]="nuevoContrato.lugar_nacimiento"></div>
+                        <div class="form-group"><label>Edad</label><input type="number" [(ngModel)]="nuevoContrato.edad"></div>
+                        <div class="form-group">
+                            <label>Estado Civil</label>
+                            <select [(ngModel)]="nuevoContrato.estadoCivil">
+                                <option value="">Seleccione...</option>
+                                <option value="Soltero">Soltero</option>
+                                <option value="Casado">Casado</option>
+                                <option value="Union Libre">Unión Libre</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="seccion-form">
+                    <h3>2. Detalle Laboral</h3>
+                    <div class="grid-2">
+                        <div class="form-group"><label>Cargo</label><input type="text" [(ngModel)]="nuevoContrato.contrato.cargo"></div>
+                        <div class="form-group"><label>Sueldo</label><input type="text" [value]="formatearSueldo(nuevoContrato.contrato.sueldo)" (input)="actualizarSueldo($event)"></div>
+                        <div class="form-group"><label>Expedición</label><input type="date" [(ngModel)]="nuevoContrato.contrato.fecha_expedicion"></div>
+                        <div class="form-group"><label>Inicio Labores</label><input type="date" [(ngModel)]="nuevoContrato.contrato.fecha_iniciacion"></div>
+                        <div class="form-group">
+                            <label>Tipo Contrato</label>
+                            <select [(ngModel)]="nuevoContrato.contrato.tipo_contrato">
+                                <option value="">Seleccione...</option>
+                                <option value="Indefinido">Indefinido</option>
+                                <option value="Temporal">Temporal</option>
+                                <option value="Obra Labor">Obra Labor</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn-cancelar" (click)="cerrarFlotanteContrato()">Cancelar</button>
+                    <button class="btn-primary" (click)="guardarContrato()">Guardar Contrato</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

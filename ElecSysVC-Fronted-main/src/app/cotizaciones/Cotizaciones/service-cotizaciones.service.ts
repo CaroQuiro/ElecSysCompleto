@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, Subject, tap } from 'rxjs';
 import { EntidadCotizaciones } from './entidad-cotizaciones';
 import { RequestCotizacion } from './request-cotizacion';
 import { EntidadDetalleCotizacion } from './entidad-detalleCotizacion';
@@ -13,8 +13,19 @@ export class ServiceCotizacionesService {
   private url_base = 'http://localhost:8080/api/cotizaciones';
   private clienthttp = inject(HttpClient);
 
+  private _refreshNeeded$ = new Subject<void>();
+
+  get refreshNeeded$() {
+    return this._refreshNeeded$;
+  }
+
+  /**
+   * Listar Cotizaciones con Cache-Buster
+   * Añadimos un timestamp para forzar al navegador a pedir datos nuevos siempre.
+   */
   listarCotizaciones(): Observable<EntidadCotizaciones[]> {
-    return this.clienthttp.get<EntidadCotizaciones[]>(`${this.url_base}/listar`);
+    const timestamp = new Date().getTime();
+    return this.clienthttp.get<EntidadCotizaciones[]>(`${this.url_base}/listar?t=${timestamp}`);
   }
 
   crearCotizacion(solicitud: RequestCotizacion){
@@ -22,7 +33,8 @@ export class ServiceCotizacionesService {
   }
 
   obtenerCotizacionPorId(id: number){
-    return this.clienthttp.get<EntidadCotizaciones>(`${this.url_base}/buscar/${id}`);
+    const timestamp = new Date().getTime();
+    return this.clienthttp.get<EntidadCotizaciones>(`${this.url_base}/buscar/${id}?t=${timestamp}`);
   }
 
   obtenerDetalleCotizacionPorId(id: number){
@@ -30,27 +42,31 @@ export class ServiceCotizacionesService {
   }
 
   borrarCotizacion(id: number){
-    return this.clienthttp.delete<String>(`${this.url_base}/borrar/${id}`);
+   return this.clienthttp.delete(`${this.url_base}/borrar/${id}`, { responseType: 'text' })
+    .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
   actualizarCotizacion(id: number, dto: any){
-    return this.clienthttp.put(`${this.url_base}/actualizar/${id}`, dto , {responseType: 'text' });
+    return this.clienthttp.put(`${this.url_base}/actualizar/${id}`, dto , {responseType: 'text' })
+    .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
   borrarDetalleCotizacion(idCot: number, idDetalle: number){
-    return this.clienthttp.delete(`${this.url_base}/borrar/${idCot}/detalle/${idDetalle}` , {responseType: 'text' });
+    return this.clienthttp.delete(`${this.url_base}/borrar/${idCot}/detalle/${idDetalle}` , {responseType: 'text' })
+    .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
   actualizarDetalleCotizacion(idCot: number, idDetalle: number, dto: any){
-    return this.clienthttp.put(`${this.url_base}/actualizar/${idCot}/detalle/${idDetalle}`, dto , {responseType: 'text' });
+    return this.clienthttp.put(`${this.url_base}/actualizar/${idCot}/detalle/${idDetalle}`, dto , {responseType: 'text' })
+    .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
   crearDetalleCotizacion(idCot: number, dto: any) {
-    return this.clienthttp.post(`${this.url_base}/${idCot}/detalle`, dto , {responseType: 'text' });
+    return this.clienthttp.post(`${this.url_base}/${idCot}/detalle`, dto , {responseType: 'text' })
+    .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
   obtenerProbabilidad(id: number): Observable<any> {
     return this.clienthttp.get<any>(`${this.url_base}/${id}/probabilidad`);
   }
-
 }

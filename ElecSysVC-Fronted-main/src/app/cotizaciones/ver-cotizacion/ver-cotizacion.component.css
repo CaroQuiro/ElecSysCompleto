@@ -407,6 +407,52 @@ h2{
     background: #a31616;
 }
 
+/* contenedor */
+.acciones {
+  white-space: nowrap;
+}
+
+/* base de todos los botones */
+.btn-icon {
+  border: none;
+  background: #f5f7fa;
+  padding: 6px 10px;
+  margin: 0 3px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+/* hover general */
+.btn-icon:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+/* variantes de color */
+.btn-edit:hover {
+  background: #e3f2fd;
+}
+
+.btn-delete:hover {
+  background: #542e29;
+}
+
+.btn-save:hover {
+  background: #e8f5e9;
+}
+
+.btn-cancel:hover {
+  background: #fff3e0;
+}
+.material-icons {
+  font-size: 20px;
+  vertical-align: middle;
+}
+
+
+
 /* --- TOTALES --- */
 
 .totales-card{
@@ -530,6 +576,33 @@ h2{
   outline: none;
   border-color: #3498db;
   background: #fff;
+}
+
+/* Estilo para el botón de borrar cotización */
+.btn-borrar-todo {
+    background-color: #333 !important; /* Negro/Gris muy oscuro */
+    color: white;
+    border: none;
+    border-radius: 20px;
+    width: 200px;
+    height: 35px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-borrar-todo:hover {
+    background-color: #000 !important;
+    transform: scale(1.05);
+    font-weight: 800;
+}
+
+/* Estilo para inputs deshabilitados para que no se vean tan "apagados" */
+input:disabled, textarea:disabled, select:disabled {
+    background-color: #fdfdfd !important;
+    color: #555 !important;
+    cursor: not-allowed;
+    border: 1px solid #eee !important;
 }
 
 

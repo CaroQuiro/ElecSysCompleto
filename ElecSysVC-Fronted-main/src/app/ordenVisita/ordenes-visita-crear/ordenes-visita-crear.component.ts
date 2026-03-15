@@ -46,13 +46,15 @@ export class OrdenesVisitaCrearComponent {
     { actividad: '', observaciones: '', duracion: '' }
   ];
 
-  buscarCliente() {
-    if (this.textoBusquedaCliente.length < 2) return;
-    this.clienteService.buscarClienteQuery(this.textoBusquedaCliente).subscribe({
-      next: res => this.clientes = res,
-      error: () => this.clientes = []
-    });
+  buscarCliente(): void {
+  if (this.textoBusquedaCliente.length < 2) {
+    this.clientes = [];
+    return;
   }
+  this.clienteService.buscarClienteQuery(this.textoBusquedaCliente).subscribe(res => {
+    this.clientes = res.filter(c => c.estado === 'ACTIVO');
+  });
+}
 
   seleccionarCliente(c: EntidadCliente) {
     this.clienteSeleccionado = c;
