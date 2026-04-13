@@ -15,7 +15,7 @@
                     <div class="cliente-header">
                         <div class="cuenta-info">
                             <h3>Cuenta de cobro Actual</h3>
-                            <span class="codigo"># {{ cuentapagar?.id_cuenta_pagar }}</span>
+                            <span class="codigo"># {{ cuentapagar?.id_cuenta_pagar}}</span>
                         </div>
 
                         <div class="estado-info">
@@ -93,9 +93,8 @@
             <div class="card-section">
                 <div class="opciones-document" style="display: flex; justify-content: center; gap: 20px;">
                     <button *ngIf="esEditable" class="crear" type="button" (click)="actualizarCuenta()">Actualizar Cuenta</button>
-                    
+                    <button class="descargar" type="button" (click)="descargarPDF(idCuentaPorPagar)"> Descargar PDF </button>
                     <button class="footer" type="button" (click)="enviarEmail()" style="background-color: #f4a31a; color: white;">Enviar Reporte</button>
-
                     <button *ngIf="esEditable && esAdmin" class="btn-borrar-todo" type="button" (click)="borrarCuentaCompleta()">Borrar Cuenta</button>
                 </div>
             </div>

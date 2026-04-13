@@ -10,6 +10,7 @@ import { ServiceLugarService } from '../../lugar/service-lugar.service';
 import { AIUForm, CotizacionForm, DetalleCotizacionForm, RequestCotizacion } from '../Cotizaciones/request-cotizacion';
 import { ServiceCotizacionesService } from '../Cotizaciones/service-cotizaciones.service';
 import { Router } from '@angular/router';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-crear-cot',
@@ -47,8 +48,7 @@ export class CrearCotComponent {
   };
 
   constructor(private clienteService: ServiceClienteService, private lugarService: ServiceLugarService,
-    private cotizacionService: ServiceCotizacionesService, private route: Router
-  ) { }
+    private cotizacionService: ServiceCotizacionesService, private route: Router, private login: AuthService) { }
 
   buscarCliente() {
     if (this.textoBusquedaCliente.length < 2) return;
@@ -98,46 +98,46 @@ export class CrearCotComponent {
     );
   }
 
-  get ivaDirecto(): number{
-    if(!this.existIva) return 0;
+  get ivaDirecto(): number {
+    if (!this.existIva) return 0;
     return this.subtotal * 0.19;
   }
 
-  get TotalconIva(): number{
-    if(!this.existIva) return 0;
+  get TotalconIva(): number {
+    if (!this.existIva) return 0;
     return this.subtotal + this.ivaDirecto;
   }
 
   get administracion(): number {
-  if (this.existIva) return 0;
-  return this.subtotal * (this.aiuForm.administracion / 100);
-}
+    if (this.existIva) return 0;
+    return this.subtotal * (this.aiuForm.administracion / 100);
+  }
 
-get imprevistos(): number {
-  if (this.existIva) return 0;
-  return this.subtotal * (this.aiuForm.imprevistos / 100);
-}
+  get imprevistos(): number {
+    if (this.existIva) return 0;
+    return this.subtotal * (this.aiuForm.imprevistos / 100);
+  }
 
-get utilidad(): number {
-  if (this.existIva) return 0;
-  return this.subtotal * (this.aiuForm.utilidad / 100);
-}
+  get utilidad(): number {
+    if (this.existIva) return 0;
+    return this.subtotal * (this.aiuForm.utilidad / 100);
+  }
 
-get ivaSobreUtilidad(): number {
-  if (this.existIva) return 0;
-  return this.utilidad * 0.19;
-}
+  get ivaSobreUtilidad(): number {
+    if (this.existIva) return 0;
+    return this.utilidad * 0.19;
+  }
 
-get totalAIU(): number {
-  if (this.existIva) return 0;
-  return this.subtotal +
-         this.administracion +
-         this.imprevistos +
-         this.utilidad +
-         this.ivaSobreUtilidad;
-}
+  get totalAIU(): number {
+    if (this.existIva) return 0;
+    return this.subtotal +
+      this.administracion +
+      this.imprevistos +
+      this.utilidad +
+      this.ivaSobreUtilidad;
+  }
 
-guardarCotizacion() {
+  guardarCotizacion() {
     if (!this.validarClienteYLugar()) return;
     if (!this.validarDetalles()) return;
     if (!this.validarAIU()) return;
@@ -145,7 +145,7 @@ guardarCotizacion() {
     const request: RequestCotizacion = {
       cotizacion: {
         id_cotizacion: 2,
-        id_trabajador: 1,
+        id_trabajador: this.login.obtenerIDLogin() ?? 0,
         id_cliente: this.clienteSeleccionado.id_cliente,
         id_lugar: this.lugarSeleccionado.idLugar,
         fecha_realizacion: new Date().toISOString().split('T')[0],
@@ -157,7 +157,11 @@ guardarCotizacion() {
     };
 
     if (!this.existIva) {
-      request.aiudto = this.aiuForm;
+      request.aiudto = {
+        administracion: this.aiuForm.administracion / 100,
+        imprevistos: this.aiuForm.imprevistos / 100,
+        utilidad: this.aiuForm.utilidad / 100
+      };
     }
 
     this.cotizacionService.crearCotizacion(request).subscribe({
@@ -226,16 +230,16 @@ guardarCotizacion() {
   }
 
   autoResize(event: Event): void {
-  const textarea = event.target as HTMLTextAreaElement;
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
   }
 
-  navegarCliente(){
+  navegarCliente() {
     this.route.navigate(['clientes/crear']);
   }
 
-  navegarLugares(){
+  navegarLugares() {
     this.route.navigate(['lugares']);
   }
 }

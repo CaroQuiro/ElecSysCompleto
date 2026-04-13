@@ -61,10 +61,10 @@
                 <div class="header-detalle">
 
                     <div class="ref-group">
-                        <label>Referencia:</label>
-                        <input type="text" placeholder="Nombre o referencia del proyecto" name="referencia"
-                            [(ngModel)]="referencia" />
-                    </div>
+                            <label for="referencia">Referencia para el Archivo</label>
+                            <input id="referencia" type="text" placeholder="Ej: Cuentad de Cobro Casa bilbao "
+                                 class="input-ref" [(ngModel)]="cuentaform.referencia_pdf" name="referencia_pdf">
+                        </div>
 
                     <div class="resumen-cuenta">
                         <div class="resumen-box">
@@ -126,7 +126,7 @@
 
             <div class="card-section">
                 <div class="opciones-document">
-                    <button class="crear" type="button" (click)="guardarCuenta()">Guardar Cotizacion</button>
+                    <button class="crear" type="button" (click)="guardarCuenta()">Guardar Cuenta de cobro</button>
                 </div>
             </div>
         </form>

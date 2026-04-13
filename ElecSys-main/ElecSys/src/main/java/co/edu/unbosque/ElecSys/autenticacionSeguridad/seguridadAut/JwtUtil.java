@@ -28,11 +28,12 @@ public class JwtUtil {
     /**
      * Crea un nuevo token JWT con una validez de 1 hora para un usuario específico.
      */
-    public static String generarToken(String correo) {
+    public static String generarToken(String correo, String rol) {
         long diezHorasEnMilis = 36000000;
 
         return Jwts.builder()
                 .setSubject(correo)
+                .claim("rol", rol)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + diezHorasEnMilis)) // 1 hora
                 .signWith(getSigningKey())

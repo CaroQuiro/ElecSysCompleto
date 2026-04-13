@@ -26,7 +26,7 @@ export class VerCuentaComponent implements OnInit {
     private cuentaService: CuentaServiceService,
     private clienteService: ServiceClienteService,
     private authService: AuthService,
-    private ruta: ActivatedRoute, 
+    private ruta: ActivatedRoute,
     private route: Router
   ) { }
 
@@ -167,7 +167,26 @@ export class VerCuentaComponent implements OnInit {
     }
   }
 
-enviarEmail() {
+  descargarPDF(id: number): void {
+    this.cuentaService.descargarpdf(id).subscribe({
+      next: (pdf) => {
+        const url = window.URL.createObjectURL(pdf);
+        window.open(url);
+      }, error: err => {
+        console.error('ERROR COMPLETO:', err);
+        if (err.error instanceof Blob) {
+          err.error.text().then((text: string) => {
+            console.error('ERROR BACKEND:', text);
+            alert(text);
+          });
+        } else {
+          alert(JSON.stringify(err));
+        }
+      }
+    });
+  }
+
+  enviarEmail() {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.pdf';
@@ -179,9 +198,9 @@ enviarEmail() {
   }
 
   procesarEnvio(archivo: File) {
-  const fd = new FormData();
-  
-  const mensajeHtml = `
+    const fd = new FormData();
+
+    const mensajeHtml = `
     <div style="font-family: Arial, sans-serif; max-width: 600px; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
       <div style="background-color: #b80000; color: white; padding: 25px; text-align: center;">
         <h2 style="margin:0;">Cuenta de Cobro - ElecSys</h2>
@@ -204,16 +223,16 @@ enviarEmail() {
     </div>
   `;
 
-  fd.append('nombreUsuario', this.cliente!.nombre);
-  fd.append('correo', this.cliente!.correo);
-  fd.append('asunto', `Cuenta de Cobro #${this.cuentapagar.id_cuenta_pagar} - VC Eléctricos`);
-  fd.append('mensaje', mensajeHtml);
-  fd.append('archivo', archivo);
+    fd.append('nombreUsuario', this.cliente!.nombre);
+    fd.append('correo', this.cliente!.correo);
+    fd.append('asunto', `Cuenta de Cobro #${this.cuentapagar.id_cuenta_pagar} - VC Eléctricos`);
+    fd.append('mensaje', mensajeHtml);
+    fd.append('archivo', archivo);
 
-  this.notificacionService.enviarCorreo(fd).subscribe({
-    next: () => alert("Reporte enviado exitosamente al cliente."),
-    error: () => alert("Error al conectar con el servidor de correos.")
-  });
-}
+    this.notificacionService.enviarCorreo(fd).subscribe({
+      next: () => alert("Reporte enviado exitosamente al cliente."),
+      error: () => alert("Error al conectar con el servidor de correos.")
+    });
+  }
 
 }

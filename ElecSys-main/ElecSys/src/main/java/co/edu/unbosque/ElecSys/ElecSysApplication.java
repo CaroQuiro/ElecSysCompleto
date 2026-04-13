@@ -3,6 +3,7 @@ package co.edu.unbosque.ElecSys;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  * Punto de entrada principal de la aplicación ElecSys.
@@ -21,6 +22,9 @@ public class ElecSysApplication {
      */
 	public static void main(String[] args) {
 		SpringApplication.run(ElecSysApplication.class, args);
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		String hash = encoder.encode("152713"); // contraseña que quieras
+		System.out.println(hash);
 	}
 
 }

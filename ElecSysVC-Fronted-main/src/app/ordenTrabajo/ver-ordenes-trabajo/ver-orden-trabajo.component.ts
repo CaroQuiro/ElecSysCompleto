@@ -11,7 +11,6 @@ import { EntidadCliente } from '../../cliente/entidad-cliente';
 import { NotificacionService } from '../../notificacion/notificacion.service';
 import { AuthService } from '../../servicios/auth.service';
 
-
 @Component({
   selector: 'app-ver-orden-trabajo',
   standalone: true,
@@ -41,16 +40,16 @@ export class VerOrdenTrabajoComponent implements OnInit {
   }
 
   cargarDatos() {
-  this.esAdmin = this.authService.getUserRole() === 'ADMIN';
-  
-  this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
-    this.orden = data;
-    this.puedeEditar = (data.estado !== 'REALIZADA' && data.estado !== 'CANCELADA');
-    
-    this.clienteService.buscarClientePorId(data.id_cliente).subscribe(c => this.cliente = c);
-    this.recargarDetalles();
-  });
-}
+    this.esAdmin = this.authService.getUserRole() === 'ADMIN';
+
+    this.ordenService.buscarPorId(this.idOrden).subscribe(data => {
+      this.orden = data;
+      this.puedeEditar = (data.estado !== 'REALIZADA' && data.estado !== 'CANCELADA');
+
+      this.clienteService.buscarClientePorId(data.id_cliente).subscribe(c => this.cliente = c);
+      this.recargarDetalles();
+    });
+  }
 
   recargarDetalles() {
     this.ordenService.listarDetallesPorOrden(this.idOrden).subscribe(res => {
@@ -59,15 +58,15 @@ export class VerOrdenTrabajoComponent implements OnInit {
   }
 
   editarFila(d: DetalleTrabajoUI) { d.editando = true; }
-  
+
   cancelarFila(d: DetalleTrabajoUI, index: number) {
-  if (d.esNuevo) {
-    this.editDetalles.splice(index, 1);
-  } else {
-    d.editando = false;
-    this.recargarDetalles();
+    if (d.esNuevo) {
+      this.editDetalles.splice(index, 1);
+    } else {
+      d.editando = false;
+      this.recargarDetalles();
+    }
   }
-}
 
   guardarFila(d: DetalleTrabajoUI) {
     if (d.esNuevo) this.ordenService.agregarDetalle(this.idOrden, d).subscribe(() => this.recargarDetalles());
@@ -108,12 +107,12 @@ export class VerOrdenTrabajoComponent implements OnInit {
   }
 
   procesarEnvio(archivo: File) {
-  const fd = new FormData();
-  
-  const asunto = `Reporte de Servicio Técnico - Orden de Trabajo #${this.idOrden} - VC Eléctricos`;
+    const fd = new FormData();
 
-  // Usamos etiquetas HTML para asegurar los espacios y saltos de línea
-  const mensaje = `
+    const asunto = `Reporte de Servicio Técnico - Orden de Trabajo #${this.idOrden} - VC Eléctricos`;
+
+    // Usamos etiquetas HTML para asegurar los espacios y saltos de línea
+    const mensaje = `
     <p>Estimado(a) <strong>${this.cliente!.nombre}</strong>,</p>
 
     <p>Reciba un cordial saludo de parte de <strong>VC Eléctricos Construcciones S.A.S.</strong></p>
@@ -134,25 +133,43 @@ export class VerOrdenTrabajoComponent implements OnInit {
     VC Eléctricos Construcciones S.A.S.</p>
   `;
 
-  fd.append('nombreUsuario', this.cliente!.nombre);
-  fd.append('correo', this.cliente!.correo);
-  fd.append('asunto', asunto);
-  fd.append('mensaje', mensaje); // El backend recibirá este HTML
-  fd.append('archivo', archivo);
+    fd.append('nombreUsuario', this.cliente!.nombre);
+    fd.append('correo', this.cliente!.correo);
+    fd.append('asunto', asunto);
+    fd.append('mensaje', mensaje); // El backend recibirá este HTML
+    fd.append('archivo', archivo);
 
-  this.notificacionService.enviarCorreo(fd).subscribe(() => {
-    alert("El reporte ha sido enviado exitosamente al cliente.");
-  });
-}
+    this.notificacionService.enviarCorreo(fd).subscribe(() => {
+      alert("El reporte ha sido enviado exitosamente al cliente.");
+    });
+  }
 
   agregarFila() {
-  this.editDetalles.push({
-    actividad: '',
-    observaciones: '',
-    duracion: '',
-    editando: true,
-    esNuevo: true,
-    idOrden: this.idOrden // Vincula el detalle al ID de la orden actual
-  });
-}
+    this.editDetalles.push({
+      actividad: '',
+      observaciones: '',
+      duracion: '',
+      editando: true,
+      esNuevo: true,
+      idOrden: this.idOrden // Vincula el detalle al ID de la orden actual
+    });
+  }
+
+  descargarPDF(id: number): void {
+    this.ordenService.descargarPDF(id).subscribe({
+      next: (pdf) => {
+        const url = window.URL.createObjectURL(pdf);
+        window.open(url);
+      }, error: err => {
+        if (err.error instanceof Blob) {
+          err.error.text().then((text: any) => {
+            console.error("ERROR REAL:", text);
+            alert(text);
+          });
+        } else {
+          console.error(err);
+        }
+      }
+    });
+  }
 }

@@ -45,7 +45,7 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
                 trabajadorDTO.getDireccion(),
                 trabajadorDTO.getCorreo(),
                 trabajadorDTO.getTipo_usuario(),
-                trabajadorDTO.getPassword(),
+                passwordHash,
                 trabajadorDTO.getEstado()
         );
 
@@ -154,9 +154,8 @@ public class TrabajadorServiceImpl implements TrabajadorInterface{
         if (trabajadorDTO.getPassword() != null &&
                 !trabajadorDTO.getPassword().isBlank()) {
 
-            entidad.setPassword(
-                    trabajadorDTO.getPassword()
-            );
+            String passwordhash = encoder.encode(trabajadorDTO.getPassword());
+            entidad.setPassword( passwordhash);
         }
 
         trabajadorRepository.save(entidad);

@@ -16,6 +16,8 @@ export interface OrdenDeTrabajoDTO {
   id_trabajador: number;
   fecha_realizacion: string;
   estado: string; // PENDIENTE, EN_PROCESO, FINALIZADA
+  referencia_pdf?: string;
+  observaciones?: string;
 }
 
 /** Objeto para la creación masiva (Orden + Lista de Detalles) */

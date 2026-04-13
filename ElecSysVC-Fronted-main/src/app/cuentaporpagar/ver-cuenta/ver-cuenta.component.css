@@ -461,9 +461,19 @@ padding: auto;
     background: green;
 }
 
+.descargar{
+    background: red;
+}
+
 .crear:hover{
     width: 250px;
     background: rgb(62, 169, 62);
+    font-weight: 800;
+}
+
+.descargar:hover{
+    width: 250px;
+    background: rgb(145, 43, 43);
     font-weight: 800;
 }
 

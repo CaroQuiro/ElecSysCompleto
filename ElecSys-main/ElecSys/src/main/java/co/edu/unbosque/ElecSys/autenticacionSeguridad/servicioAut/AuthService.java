@@ -42,12 +42,15 @@ public class AuthService {
         String correoLimpio = dto.getCorreo().trim().toLowerCase();
         TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio).orElse(null);
 
+        //System.out.println(new BCryptPasswordEncoder().encode("JimmyDavidDeicy"));
+
         if (trabajador == null) return "Usuario no encontrado";
 
         if (trabajador.getEstado() == null || !trabajador.getEstado().equalsIgnoreCase("ACTIVO")) {
             return "Acceso denegado: Tu cuenta no se encuentra ACTIVA. Contacta al administrador.";
         }
-        if (!dto.getPassword().equals(trabajador.getPassword())) return "Contraseña incorrecta";
+        if (!encoder.matches(dto.getPassword(), trabajador.getPassword()))
+            return "Contraseña incorrecta";
 
         String codigo = generarCodigo();
         codigosTemporales.put(correoLimpio, codigo);
@@ -89,7 +92,7 @@ public class AuthService {
 
         codigosTemporales.remove(correoLimpio);
         TrabajadorEntidad trabajador = trabajadorRepository.findByCorreo(correoLimpio).orElse(null);
-        String token = JwtUtil.generarToken(correoLimpio);
+        String token = JwtUtil.generarToken(correoLimpio, trabajador.getTipo_usuario());
 
         return new LoginResponseDTO(token, trabajador.getId_trabajador(),trabajador.getNombre(),
                 trabajador.getTipo_usuario(), "Acceso concedido");

@@ -45,4 +45,7 @@ public class CuentaPorPagarEntidad {
 
     @Column(name = "estado")
     private String estado;
+
+    @Column(name = "referencia_pdf")
+    private String referencia_pdf;
 }

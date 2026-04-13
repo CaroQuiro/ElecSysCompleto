@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { CrearCuentaRequest, CuentaForm, DetalleCuentaForm } from '../Cuentas-Entidad/request-cuentadecobro';
 import { EntidadDetalleCuenta } from '../Cuentas-Entidad/DetalleCuentaEntidad';
 import { CuentaServiceService } from '../Cuentas-Entidad/cuenta-service.service';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-crear-cuenta',
@@ -20,7 +21,7 @@ export class CrearCuentaComponent {
 
   constructor(private clienteService: ServiceClienteService,
     private cuentaService: CuentaServiceService,
-    private route: Router) { }
+    private route: Router, private login: AuthService) { }
 
   cuentaform: CuentaForm = {
     id_trabajador: 1,
@@ -28,7 +29,8 @@ export class CrearCuentaComponent {
     nota: 'Favor consignar a la cuenta de ahorros banco Davivienda #477700032311 a nombre de VC ELECTRICOS CONSTRUCCIONES SAS con NIT. 900820830-1',
     fecha_realizacion: new Date().toISOString().split('T')[0],
     monto: 0,
-    estado: 'PENDIENTE'
+    estado: 'PENDIENTE',
+    referencia_pdf: ""
   }
 
 
@@ -62,8 +64,6 @@ export class CrearCuentaComponent {
     this.clienteSeleccionado = undefined!;
     this.textoBusqueda = '';
   }
-
-  referencia: string = '';
 
   detalles: DetalleCuentaForm[] = [];
 
@@ -105,10 +105,10 @@ export class CrearCuentaComponent {
   }
   const total = this.calcularTotal();
   this.cuentaform.monto = total;
+  this.cuentaform.id_trabajador = this.login.obtenerIDLogin() ?? 0;
 
   const request: CrearCuentaRequest = {
     cuentaPorPagarDTO: this.cuentaform,
-    referencia: this.referencia,
     detalleCuentaDTOS: this.mapearDetalles()
   };
 

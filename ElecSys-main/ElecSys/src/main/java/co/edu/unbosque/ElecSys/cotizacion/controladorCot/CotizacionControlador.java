@@ -195,8 +195,6 @@ public class CotizacionControlador {
                     totalPagar
             );
         }
-
-
         cotFull = service.agregarCotizacion(cotFull);
 
 
@@ -204,7 +202,6 @@ public class CotizacionControlador {
             d.setId_cotizacion(cotFull.getId_cotizacion());
             detalleService.agregarDetalleCot(d);
         }
-
 
         byte[] pdf;
 
@@ -319,6 +316,40 @@ public class CotizacionControlador {
         }
 
         return service.actualizarCot(id, dto);
+    }
+
+    // DESCARGAR PDF
+    @GetMapping ("/descargar-pdf/{id}")
+    public ResponseEntity<byte[]> descargarPDF( @PathVariable int id) throws IOException {
+        CotizacionDTO cotizacionDTO = service.buscarCotizacion(id);
+
+        if (cotizacionDTO == null){
+            throw new ResourceNotFoundException("No existe la cotización con ID: " + id);
+        }
+
+        ClienteDTO cliente = clienteService.buscarCliente(cotizacionDTO.getId_cliente());
+        LugarTrabajoDTO lugar = lugarService.buscarLugar(cotizacionDTO.getId_lugar());
+
+        List<DetalleCotizacionDTO> detalleCot = detalleService.listarDetallesCot()
+                .stream().filter(d -> d.getId_cotizacion() == id)
+                .toList();
+        if (detalleCot.isEmpty()){
+            throw new ResourceNotFoundException("No hay detalles asignados a la cotizacion: " + id);
+        }
+        byte[] pdf;
+
+        try{
+            pdf = pdfService.generarArchivo(cotizacionDTO, cliente, lugar, detalleCot);
+        }catch (Exception e){
+            throw new PdfGenerationException("Error al generar el PDF: " + e.getMessage());
+        }
+
+        String nombreArchivo = pdfService.descargarPDF(cotizacionDTO, pdf);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nombreArchivo)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
 

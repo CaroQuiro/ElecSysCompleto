@@ -10,6 +10,7 @@ import { OrdenVisitaService } from '../data/orden-visita.service';
 import { EntidadCliente } from '../../cliente/entidad-cliente';
 import { EntidadLugar } from '../../lugar/entidad-lugar';
 import { OrdenDeVisitaDTO, DetalleOrdenVisitaDTO, OrdenDeVisitaRequest } from '../data/orden-visita.models';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-ordenes-visita-crear',
@@ -23,6 +24,8 @@ export class OrdenesVisitaCrearComponent {
   private lugarService = inject(ServiceLugarService);
   private ordenService = inject(OrdenVisitaService);
   private router = inject(Router);
+
+  private login = inject(AuthService);
 
   // Búsqueda y selección
   textoBusquedaCliente = '';
@@ -90,6 +93,7 @@ export class OrdenesVisitaCrearComponent {
       return;
     }
 
+    this.ordenForm.idTrabajador = this.login.obtenerIDLogin() ?? 0;
     const request: OrdenDeVisitaRequest = {
       orden: this.ordenForm,
       detalles: this.detalles

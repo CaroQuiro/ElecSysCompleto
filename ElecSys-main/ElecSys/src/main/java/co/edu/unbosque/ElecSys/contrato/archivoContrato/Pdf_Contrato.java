@@ -1,20 +1,16 @@
 package co.edu.unbosque.ElecSys.contrato.archivoContrato;
 
+import co.edu.unbosque.ElecSys.ConfigArchivos.DescargaArchivo;
 import co.edu.unbosque.ElecSys.contrato.dtoCon.ContratoDTO;
-import co.edu.unbosque.ElecSys.contrato.dtoCon.ContratoRequest;
 import co.edu.unbosque.ElecSys.usuario.trabajador.dtoTra.TrabajadorDTO;
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 
 /**
  * Servicio encargado de la orquestación y generación de documentos PDF.
@@ -25,15 +21,17 @@ public class Pdf_Contrato {
 
     private MetodoCalculoFecha metodos = new MetodoCalculoFecha();
 
+    @Autowired
+    private DescargaArchivo descargaArchivo;
+
     /**
      * Coordina la creación del PDF inyectando datos en la plantilla y procesando el renderizado.
      * @param contratoDTO Datos del contrato guardado.
      * @param trabajador Información del empleado.
-     * @param encargado Información de quien firma por la empresa.
      * @param datos Información adicional (edad, estado civil, etc.).
      * @return Arreglo de bytes del PDF generado.
      */
-    public byte[] generarContrato(ContratoDTO contratoDTO, TrabajadorDTO trabajador, TrabajadorDTO encargado, ContratoRequest datos){
+    public byte[] generarContrato(ContratoDTO contratoDTO, TrabajadorDTO trabajador,  ContratoDTO datos){
         try(ByteArrayOutputStream out = new ByteArrayOutputStream()){
 
             String html = construirContratoHTML(contratoDTO, trabajador, datos);
@@ -64,7 +62,7 @@ public class Pdf_Contrato {
      */
     public String construirContratoHTML(ContratoDTO contratoDTO,
                                         TrabajadorDTO trabajador,
-                                        ContratoRequest datos){
+                                        ContratoDTO datos){
 
         try{
             String html = cargarPlantilla();
@@ -148,31 +146,6 @@ public class Pdf_Contrato {
     public String descargarPDF(ContratoDTO contratoDTO, TrabajadorDTO trabajador, byte[] pdf) throws IOException {
         String nombreArchivo = contratoDTO.getId_contrato()
                 + ".Contrato_" + trabajador.getNombre() + ".pdf";
-
-        String carpetaDescargas = System.getProperty("user.home") + File.separator + "Downloads";
-
-        Path carpetaContratos = Paths.get(carpetaDescargas, "Contratos");
-
-        int añoActual = LocalDate.now().getYear();
-        Path carpetaAnual = carpetaContratos.resolve("CONTRATOS " + añoActual);
-
-        if (!Files.exists(carpetaContratos)) {
-            Files.createDirectory(carpetaContratos);
-            System.out.println("Carpeta creada: " + carpetaContratos);
-        }
-        if (!Files.exists(carpetaAnual)) {
-            Files.createDirectory(carpetaAnual);
-            System.out.println("Subcarpeta anual creada: " + carpetaAnual);
-        }
-
-        Path rutaArchivo = carpetaAnual.resolve(nombreArchivo);
-
-        if (Files.exists(rutaArchivo)) {
-            System.out.println("Ya existe un archivo con el mismo nombre: " + rutaArchivo);
-        }
-
-        Files.write(rutaArchivo, pdf);
-        System.out.println("PDF generado y guardado en: " + rutaArchivo.toAbsolutePath());
-        return rutaArchivo.getFileName().toString();
+        return descargaArchivo.guardarArchivo(pdf, nombreArchivo, "2.Contratos", "Contrato");
     }
 }

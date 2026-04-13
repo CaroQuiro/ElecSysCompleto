@@ -38,7 +38,11 @@ public class ContratoServiceImpl implements ContratoInterface{
                 contrato.getId_trabajador_encargado(),
                 contrato.getCargo(),
                 contrato.getTipo_contrato(),
-                contrato.getEstado()
+                contrato.getEstado(),
+                contrato.getFecha_nacimiento(),
+                contrato.getLugar_nacimiento(),
+                contrato.getEdad(),
+                contrato.getEstadoCivil()
         );
         try {
             ContratoEntidad contratoGuardado = contratoRepository.save(nuevocontrato);
@@ -73,7 +77,11 @@ public class ContratoServiceImpl implements ContratoInterface{
                     contratos.getId_trabajador_encargado(),
                     contratos.getCargo(),
                     contratos.getTipo_contrato(),
-                    contratos.getEstado()
+                    contratos.getEstado(),
+                    contratos.getFecha_nacimiento(),
+                    contratos.getLugar_nacimiento(),
+                    contratos.getEdad(),
+                    contratos.getEstadoCivil()
             ));
         }
         return contratoDTOS;
@@ -101,7 +109,11 @@ public class ContratoServiceImpl implements ContratoInterface{
                 c.getId_trabajador_encargado(),
                 c.getCargo(),
                 c.getTipo_contrato(),
-                c.getEstado());
+                c.getEstado(),
+                c.getFecha_nacimiento(),
+                c.getLugar_nacimiento(),
+                c.getEdad(),
+                c.getEstadoCivil());
     }
 
 }

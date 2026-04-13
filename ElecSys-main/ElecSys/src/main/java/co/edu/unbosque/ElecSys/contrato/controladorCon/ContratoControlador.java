@@ -3,7 +3,6 @@ package co.edu.unbosque.ElecSys.contrato.controladorCon;
 import co.edu.unbosque.ElecSys.config.excepcion.ResourceNotFoundException;
 import co.edu.unbosque.ElecSys.contrato.archivoContrato.Pdf_Contrato;
 import co.edu.unbosque.ElecSys.contrato.dtoCon.ContratoDTO;
-import co.edu.unbosque.ElecSys.contrato.dtoCon.ContratoRequest;
 import co.edu.unbosque.ElecSys.contrato.servicioCon.ContratoServiceImpl;
 import co.edu.unbosque.ElecSys.usuario.trabajador.dtoTra.TrabajadorDTO;
 import co.edu.unbosque.ElecSys.usuario.trabajador.servicioTra.TrabajadorServiceImpl;
@@ -32,7 +31,6 @@ public class ContratoControlador {
     @Autowired
     private Pdf_Contrato pdfContrato;
 
-
     /**
      * Recibe la solicitud para crear un nuevo contrato, valida la mayoría de edad,
      * guarda en base de datos y genera el PDF de descarga inmediata.
@@ -40,14 +38,10 @@ public class ContratoControlador {
      * @return ResponseEntity con el archivo PDF en el cuerpo.
      */
     @PostMapping("/agregar")
-    public ResponseEntity<byte[]> agregarContrato(@RequestBody ContratoRequest solicitud) throws IOException {
+    public ResponseEntity<byte[]> agregarContrato(@RequestBody ContratoDTO solicitud) throws IOException {
 
         try {
             if (solicitud == null) {
-                throw new IllegalArgumentException("La solicitud es obligatoria");
-            }
-
-            if (solicitud.getContrato() == null) {
                 throw new IllegalArgumentException("El contrato es obligatorio");
             }
 
@@ -63,10 +57,8 @@ public class ContratoControlador {
                 throw new IllegalArgumentException("El estado civil es obligatorio");
             }
 
-            ContratoDTO dto = solicitud.getContrato();
 
-            TrabajadorDTO trabajador =
-                    trabajadorService.buscarTrabajador(dto.getId_trabajador());
+            TrabajadorDTO trabajador = trabajadorService.buscarTrabajador(solicitud.getId_trabajador());
 
             if (trabajador == null) {
                 throw new IllegalArgumentException("Trabajador no encontrado");
@@ -77,15 +69,15 @@ public class ContratoControlador {
             }
 
             TrabajadorDTO encargado =
-                    trabajadorService.buscarTrabajador(dto.getId_trabajador_encargado());
+                    trabajadorService.buscarTrabajador(solicitud.getId_trabajador_encargado());
 
             if (encargado == null) {
                 throw new IllegalArgumentException("Encargado no encontrado");
             }
 
-            ContratoDTO contratoGuardado = contratoService.agregarContrato(dto);
+            ContratoDTO contratoGuardado = contratoService.agregarContrato(solicitud);
 
-            byte[] pdf = pdfContrato.generarContrato(contratoGuardado, trabajador, encargado, solicitud);
+            byte[] pdf = pdfContrato.generarContrato(contratoGuardado, trabajador, solicitud);
 
             String nombreArchivo = pdfContrato.descargarPDF(contratoGuardado, trabajador, pdf);
 
@@ -130,6 +122,32 @@ public class ContratoControlador {
         }
 
         return ResponseEntity.ok(dto);
+    }
+
+    @GetMapping("/descargar-pdf/{id}")
+    public ResponseEntity<byte[]> descargarPDF(@PathVariable int id) throws IOException {
+        ContratoDTO contratoDTO = contratoService.buscarContrato(id);
+
+        if (contratoDTO == null) {
+            throw new ResourceNotFoundException("No existe el contrato con ID: " + id);
+        }
+
+        TrabajadorDTO trabajador =
+                trabajadorService.buscarTrabajador(contratoDTO.getId_trabajador());
+
+        TrabajadorDTO encargado =
+                trabajadorService.buscarTrabajador(contratoDTO.getId_trabajador_encargado());
+
+        byte[] pdf = pdfContrato.generarContrato(
+                contratoDTO,
+                trabajador, contratoDTO);
+
+        String nombreArchivo = pdfContrato.descargarPDF(contratoDTO, trabajador, pdf);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nombreArchivo)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
 }

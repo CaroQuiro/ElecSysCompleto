@@ -28,6 +28,4 @@ public class DetalleOrdenTrabajoEntidad {
 
     @Column(name = "duracion", nullable = false)
     private String duracion;
-
-
 }

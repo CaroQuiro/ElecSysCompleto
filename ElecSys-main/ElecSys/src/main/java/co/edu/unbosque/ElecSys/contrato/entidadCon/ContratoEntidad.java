@@ -51,4 +51,16 @@ public class ContratoEntidad {
 
     @Column(name = "estado")
     private String estado;
+
+    @Column(name = "fecha_nacimiento")
+    private LocalDate fecha_nacimiento;
+
+    @Column(name = "lugar_nacimiento")
+    private String lugar_nacimiento;
+
+    @Column(name = "edad")
+    private int edad;
+
+    @Column(name = "estadocivil")
+    private String estadoCivil;
 }

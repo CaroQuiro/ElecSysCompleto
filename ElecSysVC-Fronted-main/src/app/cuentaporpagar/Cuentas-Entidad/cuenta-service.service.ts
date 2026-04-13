@@ -33,6 +33,10 @@ export class CuentaServiceService {
     return this.clienthttp.put(`${this.url_base}/actualizar/${idCuenta}/detalle-cuenta/${idDetalle}`, dto, {responseType: 'text'});
   }
 
+  descargarpdf(id: number){
+    return this.clienthttp.get(`${this.url_base}/descargar-pdf/${id}` , {responseType: 'blob'});
+  }
+
   crearDetalleCuenta(idCuenta: number, dto: any){
     return this.clienthttp.post(`${this.url_base}/Crear/${idCuenta}/detalle`, dto, {responseType: 'text'});
   }

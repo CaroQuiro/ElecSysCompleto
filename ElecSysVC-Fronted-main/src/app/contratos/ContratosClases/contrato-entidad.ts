@@ -8,6 +8,10 @@ export class ContratoEntidad {
     cargo!: string;
     tipo_contrato!: string;
     estado!: string;
+    fecha_nacimiento!: Date | null;
+    lugar_nacimiento!: string;
+    edad!: number;
+    estadoCivil!: string;
 }
 
 export class TrabajadorEntidad{

@@ -51,6 +51,10 @@ export class ServiceCotizacionesService {
     .pipe(tap(() => this._refreshNeeded$.next()));
   }
 
+  descargarpdf(id: number){
+    return this.clienthttp.get(`${this.url_base}/descargar-pdf/${id}` , {responseType: 'blob'});
+  }
+
   borrarDetalleCotizacion(idCot: number, idDetalle: number){
     return this.clienthttp.delete(`${this.url_base}/borrar/${idCot}/detalle/${idDetalle}` , {responseType: 'text' })
     .pipe(tap(() => this._refreshNeeded$.next()));

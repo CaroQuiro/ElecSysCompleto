@@ -59,8 +59,7 @@ public class ContenidoArchivo_Cuentas {
         // Línea divisoria
         LineSeparator line = new LineSeparator();
         documento.add(new Chunk(line));
-
-        documento.add(new Paragraph(" "));
+//
 
         DateTimeFormatter formatter = DateTimeFormatter.
                                         ofPattern("dd 'de' MMMM 'del' yyyy",
@@ -90,8 +89,8 @@ public class ContenidoArchivo_Cuentas {
 
         Paragraph titulo = new Paragraph("CUENTA DE COBRO", tituloFont);
         titulo.setAlignment(Element.ALIGN_CENTER);
-        titulo.setSpacingBefore(8);
-        titulo.setSpacingAfter(12);
+        titulo.setSpacingBefore(5);
+        titulo.setSpacingAfter(8);
         document.add(titulo);
 
         Font bold = new Font(Font.FontFamily.HELVETICA, 10, Font.BOLD);
@@ -101,9 +100,8 @@ public class ContenidoArchivo_Cuentas {
         senor.setSpacingAfter(10);
         document.add(senor);
 
-        Paragraph client = new Paragraph(cliente.getId_cliente());
+        Paragraph client = new Paragraph("NIT / CC: " + cliente.getId_cliente());
         client.setAlignment(Element.ALIGN_CENTER);
-        client.setSpacingAfter(4);
         document.add(client);
 
         Paragraph nombreCliente = new Paragraph(cliente.getNombre(), bold);
@@ -270,25 +268,6 @@ public class ContenidoArchivo_Cuentas {
         tablaFirma.addCell(celdaCargo);
 
         document.add(tablaFirma);
-    }
-
-    /**
-     * Agrega el pie de página con los datos de contacto corporativos de VC Eléctricos.
-     * @param documento El documento PDF.
-     * @throws DocumentException Si falla la adición del párrafo de cierre.
-     */
-    public void pieDePagina(Document documento) throws DocumentException {
-        Font fontPie = new Font(Font.FontFamily.HELVETICA, 8);
-
-        Paragraph pie = new Paragraph(
-                "Dirección. Cll 143 # 149 B – 15\n"
-                        + "Suba – Bilbao\n"
-                        + "Cel. 311 868 14 05 – 535 73 38\n"
-                        + "vcelectricos@hotmail.com\n\n",
-                fontPie
-        );
-        pie.setAlignment(Element.ALIGN_CENTER);
-        documento.add(pie);
     }
 
 }

@@ -369,3 +369,37 @@ padding: auto;
     font-weight: 800;
 }
 
+/* CSS de referencia */
+.ref-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 15px;
+  max-width: 400px;
+}
+
+.ref-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.input-ref {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+/* Hover */
+.input-ref:hover {
+  border-color: #999;
+}
+
+/* Focus (clave visual pro) */
+.input-ref:focus {
+  outline: none;
+  border-color: #b30000;
+  box-shadow: 0 0 0 2px rgba(179, 0, 0, 0.15);
+}
+

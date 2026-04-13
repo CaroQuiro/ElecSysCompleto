@@ -112,14 +112,14 @@
                     </div>
                     <div class="porcentajes" *ngIf="!existIva">
                         <label>% Administración</label>
-                        <input type="number" step="0.01" min="0" max="1" [(ngModel)]="aiuForm.administracion"
+                        <input type="number" step="0.01" min="1" max="19" [(ngModel)]="aiuForm.administracion"
                             name="administracion">
 
                         <label>% Imprevistos</label>
-                        <input type="number" step="0.01" min="0" max="1" [(ngModel)]="aiuForm.imprevistos" name="imprevistos">
+                        <input type="number" step="0.01" min="1" max="19" [(ngModel)]="aiuForm.imprevistos" name="imprevistos">
 
                         <label>% Utilidad</label>
-                        <input type="number" step="0.01" min="0" max="1" [(ngModel)]="aiuForm.utilidad" name="utilidad">
+                        <input type="number" step="0.01" min="1" max="19" [(ngModel)]="aiuForm.utilidad" name="utilidad">
                     </div>
                 </div>
             </div>

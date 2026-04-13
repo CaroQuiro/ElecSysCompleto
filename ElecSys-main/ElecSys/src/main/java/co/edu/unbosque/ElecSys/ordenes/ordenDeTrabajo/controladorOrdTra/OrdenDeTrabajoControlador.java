@@ -1,16 +1,27 @@
 package co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.controladorOrdTra;
 
 import co.edu.unbosque.ElecSys.config.excepcion.InvalidFieldException;
+import co.edu.unbosque.ElecSys.config.excepcion.PdfGenerationException;
 import co.edu.unbosque.ElecSys.config.excepcion.ResourceNotFoundException;
+import co.edu.unbosque.ElecSys.lugarTrabajo.dtoLug.LugarTrabajoDTO;
+import co.edu.unbosque.ElecSys.lugarTrabajo.servicioLug.LugarTrabajoService;
+import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.Archivo.PDF_Orden_Trabajo;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.dtoOrdTra.OrdenDeTrabajoDTO;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.dtoOrdTra.OrdenDeTrabajoRequest;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.detalleOrdenTrabajo.dtoDetOrdTra.DetalleOrdenTrabajoDTO;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.detalleOrdenTrabajo.servicioDetOrdTra.DetalleOrdenTrabajoService;
 import co.edu.unbosque.ElecSys.ordenes.ordenDeTrabajo.servicioOrdTra.OrdenDeTrabajoService;
+import co.edu.unbosque.ElecSys.usuario.cliente.dtoClie.ClienteDTO;
 import co.edu.unbosque.ElecSys.usuario.cliente.servicioClie.ClienteServiceImpl;
+import co.edu.unbosque.ElecSys.usuario.trabajador.dtoTra.TrabajadorDTO;
+import co.edu.unbosque.ElecSys.usuario.trabajador.servicioTra.TrabajadorServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -32,6 +43,15 @@ public class OrdenDeTrabajoControlador {
 
     @Autowired
     private ClienteServiceImpl clienteService;
+
+    @Autowired
+    private LugarTrabajoService lugarservice;
+
+    @Autowired
+    private TrabajadorServiceImpl trabajadorService;
+
+    @Autowired
+    private PDF_Orden_Trabajo pdfOrdenTrabajo;
 
     /**
      * Recupera todas las órdenes de trabajo registradas en el sistema.
@@ -67,7 +87,11 @@ public class OrdenDeTrabajoControlador {
      * @throws InvalidFieldException Si la solicitud es nula, el cliente no es apto o faltan actividades en los detalles.
      */
     @PostMapping("/agregar")
-    public String agregarOrdenDeTrabajo(@RequestBody OrdenDeTrabajoRequest request) {
+    public ResponseEntity<byte[]> agregarOrdenDeTrabajo(@RequestBody OrdenDeTrabajoRequest request) throws IOException {
+
+        TrabajadorDTO trabajador = trabajadorService.buscarTrabajador(request.getOrden().getId_trabajador());
+        ClienteDTO clienteEncon = clienteService.buscarCliente(request.getOrden().getId_cliente());
+        LugarTrabajoDTO lugar = lugarservice.buscarLugar(request.getOrden().getId_lugar());
         if (request == null || request.getOrden() == null)
             throw new InvalidFieldException("La solicitud no contiene datos.");
 
@@ -79,6 +103,7 @@ public class OrdenDeTrabajoControlador {
         OrdenDeTrabajoDTO ordenDTO = request.getOrden();
 
         int idOrdenGenerado = ordenDeTrabajoService.agregarOrdenTrabajo(ordenDTO);
+        ordenDTO.setId_orden(idOrdenGenerado);
 
         List<DetalleOrdenTrabajoDTO> detalles = request.getDetalles();
         if (detalles != null) {
@@ -90,8 +115,21 @@ public class OrdenDeTrabajoControlador {
                 detalleOrdenTrabajoService.agregarDetalleOrdTra(d);
             }
         }
+        byte[] pdf;
 
-        return "Orden de Trabajo #" + idOrdenGenerado + " y detalles creados correctamente.";
+        try{
+            pdf = pdfOrdenTrabajo.generarArchivo(ordenDTO, clienteEncon, lugar, detalles, trabajador);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        String nombreArchivo = pdfOrdenTrabajo.descargarPDFOrden( idOrdenGenerado ,ordenDTO, pdf);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nombreArchivo)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 
     /**
@@ -230,6 +268,39 @@ public class OrdenDeTrabajoControlador {
                     "No existe el detalle con ID: " + idDetalle);
 
         return detalleOrdenTrabajoService.borrarDetalleOrdTra(idDetalle);
+    }
+
+    @GetMapping("/descargarOrden-pdf/{id}")
+    public ResponseEntity<byte[]> descargarPDF(@PathVariable int id) throws IOException {
+        OrdenDeTrabajoDTO orden = ordenDeTrabajoService.buscarOrdenTrabajo(id);
+
+        if (orden == null){
+            throw new ResourceNotFoundException("No existe la orden de trabajo con ID: " + id);
+        }
+
+        ClienteDTO cliente = clienteService.buscarCliente(orden.getId_cliente());
+        LugarTrabajoDTO lugar = lugarservice.buscarLugar(orden.getId_lugar());
+
+        List<DetalleOrdenTrabajoDTO> detalleOrden = detalleOrdenTrabajoService.listarDetallesOrdTra()
+                .stream().filter(d -> d.getIdOrden() == id).toList();
+
+        TrabajadorDTO trabajador = trabajadorService.buscarTrabajador(orden.getId_trabajador());
+
+        byte[] pdf;
+
+        try{
+            pdf = pdfOrdenTrabajo.generarArchivo(orden, cliente, lugar, detalleOrden, trabajador);
+        }catch (Exception e){
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+
+        String nombreArchivo = pdfOrdenTrabajo.descargarPDFOrden(0,orden, pdf);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nombreArchivo)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
     }
 }
 

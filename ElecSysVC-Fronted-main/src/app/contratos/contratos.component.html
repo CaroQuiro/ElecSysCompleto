@@ -88,7 +88,7 @@
                     <div class="grid-2">
                         <div class="form-group">
                             <label>Trabajador</label>
-                            <select [(ngModel)]="nuevoContrato.contrato.id_trabajador">
+                            <select [(ngModel)]="nuevoContrato.id_trabajador">
                                 <option [ngValue]="0">Seleccione...</option>
                                 <option *ngFor="let t of trabajadores" [ngValue]="t.id_trabajador">{{t.nombre}}</option>
                             </select>
@@ -111,13 +111,13 @@
                 <div class="seccion-form">
                     <h3>2. Detalle Laboral</h3>
                     <div class="grid-2">
-                        <div class="form-group"><label>Cargo</label><input type="text" [(ngModel)]="nuevoContrato.contrato.cargo"></div>
-                        <div class="form-group"><label>Sueldo</label><input type="text" [value]="formatearSueldo(nuevoContrato.contrato.sueldo)" (input)="actualizarSueldo($event)"></div>
-                        <div class="form-group"><label>Expedición</label><input type="date" [(ngModel)]="nuevoContrato.contrato.fecha_expedicion"></div>
-                        <div class="form-group"><label>Inicio Labores</label><input type="date" [(ngModel)]="nuevoContrato.contrato.fecha_iniciacion"></div>
+                        <div class="form-group"><label>Cargo</label><input type="text" [(ngModel)]="nuevoContrato.cargo"></div>
+                        <div class="form-group"><label>Sueldo</label><input type="text" [value]="formatearSueldo(nuevoContrato.sueldo)" (input)="actualizarSueldo($event)"></div>
+                        <div class="form-group"><label>Expedición</label><input type="date" [(ngModel)]="nuevoContrato.fecha_expedicion"></div>
+                        <div class="form-group"><label>Inicio Labores</label><input type="date" [(ngModel)]="nuevoContrato.fecha_iniciacion"></div>
                         <div class="form-group">
                             <label>Tipo Contrato</label>
-                            <select [(ngModel)]="nuevoContrato.contrato.tipo_contrato">
+                            <select [(ngModel)]="nuevoContrato.tipo_contrato">
                                 <option value="">Seleccione...</option>
                                 <option value="Indefinido">Indefinido</option>
                                 <option value="Temporal">Temporal</option>

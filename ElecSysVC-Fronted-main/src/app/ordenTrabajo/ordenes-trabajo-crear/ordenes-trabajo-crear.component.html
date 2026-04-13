@@ -22,9 +22,10 @@
                 <div class="search-box">
                     <div class="barra">
                         <i class="fas fa-search"></i>
-                        <input type="text" [(ngModel)]="textoBusquedaCliente" (input)="buscarCliente()" placeholder="Escriba el nombre del cliente...">
+                        <input type="text" [(ngModel)]="textoBusquedaCliente" (input)="buscarCliente()"
+                            placeholder="Escriba el nombre del cliente...">
                     </div>
-                    
+
                     <table class="tabla-resultados" *ngIf="clientes.length > 0">
                         <tbody>
                             <tr *ngFor="let c of clientes" (click)="seleccionarCliente(c)">
@@ -50,7 +51,8 @@
             <div class="card-section">
                 <h2><i class="fas fa-map-marker-alt"></i> Sede del Trabajo</h2>
                 <div class="barra full-width">
-                    <input type="text" [(ngModel)]="textoBusquedaLugar" (input)="buscarLugar()" placeholder="Buscar ubicación...">
+                    <input type="text" [(ngModel)]="textoBusquedaLugar" (input)="buscarLugar()"
+                        placeholder="Buscar ubicación...">
                 </div>
 
                 <table class="tabla-resultados" *ngIf="lugares.length > 0">
@@ -86,6 +88,11 @@
 
         <div class="card-section">
             <h2><i class="fas fa-clipboard-list"></i> Labores Técnicas a Realizar</h2>
+            <div class="ref-group">
+                <label for="referencia">Referencia para el Archivo</label>
+                <input id="referencia" type="text" placeholder="Ej: Orden de Trabajo Casa bilbao "
+                    [(ngModel)]="ordenForm.referencia_pdf" class="input-ref">
+            </div>
             <table class="tabla-detalle">
                 <thead>
                     <tr>
@@ -97,7 +104,8 @@
                 </thead>
                 <tbody>
                     <tr *ngFor="let d of detalles; let i = index">
-                        <td><input type="text" [(ngModel)]="d.actividad" placeholder="Ej: Mantenimiento de transformador"></td>
+                        <td><input type="text" [(ngModel)]="d.actividad"
+                                placeholder="Ej: Mantenimiento de transformador"></td>
                         <td><input type="text" [(ngModel)]="d.observaciones" placeholder="Materiales o notas..."></td>
                         <td><input type="text" [(ngModel)]="d.duracion" placeholder="0h 00m"></td>
                         <td class="text-center">
@@ -111,6 +119,19 @@
             <button class="btn-add-task" (click)="agregarDetalle()">
                 <i class="fas fa-plus-circle"></i> Añadir Nueva Labor
             </button>
+        </div>
+
+        <div class="card-section">
+            <h2><i class="fas fa-comment-alt"></i> Observaciones Generales</h2>
+
+            <div class="obs-group">
+                <textarea [(ngModel)]="ordenForm.observaciones" rows="4"
+                    placeholder="Escribe aquí detalles importantes del trabajo realizado, recomendaciones o novedades..."
+                    class="input-obs">
+        </textarea>
+
+                <small class="hint">Máximo recomendado: 500 caracteres</small>
+            </div>
         </div>
 
         <div class="actions-footer">

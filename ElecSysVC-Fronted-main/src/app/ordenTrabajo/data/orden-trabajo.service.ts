@@ -20,8 +20,8 @@ export class OrdenTrabajoService {
     return this.http.get<OrdenDeTrabajoDTO>(`${this.apiUrl}/buscar/${id}`);
   }
 
-  agregarOrden(request: OrdenDeTrabajoRequest): Observable<string> {
-    return this.http.post(`${this.apiUrl}/agregar`, request, { responseType: 'text' });
+  agregarOrden(request: OrdenDeTrabajoRequest) {
+    return this.http.post(`${this.apiUrl}/agregar`, request, { responseType: 'blob' });
   }
 
   actualizarOrden(id: number, orden: OrdenDeTrabajoDTO): Observable<string> {
@@ -30,6 +30,10 @@ export class OrdenTrabajoService {
 
   borrarOrden(id: number): Observable<string> {
     return this.http.delete(`${this.apiUrl}/borrar/${id}`, { responseType: 'text' });
+  }
+
+  descargarPDF(id: number){
+    return this.http.get(`${this.apiUrl}/descargarOrden-pdf/${id}` , {responseType: 'blob'});
   }
 
   // --- GESTIÓN DE DETALLES (ACTIVIDADES) ---

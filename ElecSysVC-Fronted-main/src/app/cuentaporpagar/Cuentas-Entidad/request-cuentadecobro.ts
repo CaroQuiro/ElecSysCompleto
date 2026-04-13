@@ -7,11 +7,11 @@ export interface CuentaForm {
   fecha_realizacion: string;
   monto: number;
   estado: string;
+  referencia_pdf?: string;
 }
 
 export interface CrearCuentaRequest {
   cuentaPorPagarDTO: CuentaForm;
-  referencia: string;
   detalleCuentaDTOS: EntidadDetalleCuenta[];
 }
 

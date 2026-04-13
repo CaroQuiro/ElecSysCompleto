@@ -12,6 +12,7 @@ import { EntidadCliente } from '../../cliente/entidad-cliente';
 import { EntidadLugar } from '../../lugar/entidad-lugar';
 import { OrdenDeTrabajoDTO, DetalleOrdenTrabajoDTO, OrdenDeTrabajoRequest } from '../data/orden-trabajo.models';
 import { OrdenDeVisitaDTO } from '../../ordenVisita/data/orden-visita.models';
+import { AuthService } from '../../servicios/auth.service';
 
 @Component({
   selector: 'app-ordenes-trabajo-crear',
@@ -27,6 +28,8 @@ export class OrdenesTrabajoCrearComponent implements OnInit {
   private ordenTrabajoService = inject(OrdenTrabajoService);
   private ordenVisitaService = inject(OrdenVisitaService);
   private router = inject(Router);
+
+  private login = inject(AuthService);
 
   // Datos para listas desplegables y búsquedas
   ordenesVisita: OrdenDeVisitaDTO[] = [];
@@ -46,7 +49,9 @@ export class OrdenesTrabajoCrearComponent implements OnInit {
     id_trabajador: 1, // Nota: Este ID debería venir del servicio de autenticación/usuario
     fecha_realizacion: new Date().toISOString().split('T')[0],
     estado: 'PENDIENTE',
-    id_orden_visita: null // Inicializado en null para evitar error de llave foránea (0)
+    id_orden_visita: null,
+    referencia_pdf: "",
+    observaciones: "" // Inicializado en null para evitar error de llave foránea (0)
   };
 
   // Detalles iniciales de la labor
@@ -159,15 +164,19 @@ export class OrdenesTrabajoCrearComponent implements OnInit {
         this.ordenForm.id_orden_visita = null;
     }
 
+    this.ordenForm.id_trabajador = this.login.obtenerIDLogin() ?? 0;
+
     const request: OrdenDeTrabajoRequest = { 
       orden: this.ordenForm, 
       detalles: this.detalles 
     };
 
     this.ordenTrabajoService.agregarOrden(request).subscribe({
-      next: (res) => {
-        alert(res); // Mensaje de éxito del backend
+      next: (pdf) => {
+        const url = window.URL.createObjectURL(pdf);
+        alert('Orden de trabajo Creada Correctamente');
         this.router.navigate(['/ordenes-trabajo']);
+        window.open(url);
       },
       error: (err) => {
         console.error("Error crítico al guardar la orden de trabajo:", err);

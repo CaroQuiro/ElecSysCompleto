@@ -21,41 +21,6 @@ import java.text.DecimalFormatSymbols;
 public class ContenidoArchivo {
 
     /**
-     * Genera el encabezado del archivo incluyendo el nombre de la empresa y el número de cotización.
-     * * @param documento El objeto Document de iText en el que se escribe.
-     * @param cotizacionDTO DTO que contiene el ID de la cotización.
-     * @throws DocumentException Si ocurre un error al agregar elementos al documento.
-     */
-    public void encabezadoArchivo(Document documento, CotizacionDTO cotizacionDTO) throws DocumentException {
-        Font fontTitulo = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-        Font fontNormal = new Font(Font.FontFamily.HELVETICA, 10, Font.NORMAL);
-
-        // Crear una tabla con dos columnas
-        PdfPTable encabezado = new PdfPTable(2);
-        encabezado.setWidthPercentage(100); // ancho total
-        encabezado.setWidths(new float[]{70, 30}); // proporciones
-
-        PdfPCell celdaEmpresa = new PdfPCell(new Phrase("VC ELECTRICOS CONSTRUCCIONES S.A.S.", fontTitulo));
-        celdaEmpresa.setBorder(Rectangle.NO_BORDER);
-        celdaEmpresa.setHorizontalAlignment(Element.ALIGN_LEFT);
-        encabezado.addCell(celdaEmpresa);
-
-        // Celda derecha: Número de cotización
-        PdfPCell celdaNumero = new PdfPCell(new Phrase("Cotización No. " + cotizacionDTO.getId_cotizacion(), fontNormal));
-        celdaNumero.setBorder(Rectangle.NO_BORDER);
-        celdaNumero.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        encabezado.addCell(celdaNumero);
-
-        // Agregar la tabla al documento
-        documento.add(encabezado);
-
-        // Línea divisoria
-        LineSeparator linea = new LineSeparator();
-        linea.setOffset(-2);
-        documento.add(new Chunk(linea));
-    }
-
-    /**
      * Agrega la información del destinatario, fecha, logo de la empresa y referencia de la cotización.
      * * @param documento El documento PDF en construcción.
      * @param cotizacionDTO Datos de la cotización (fecha, referencia).
@@ -149,8 +114,8 @@ public class ContenidoArchivo {
         tabla.setSpacingBefore(20f); // espacio antes de la tabla
         tabla.setSpacingAfter(10f);
 
-// 🎨 COLOR DE ENCABEZADO PERSONALIZADO (gris)
-        BaseColor headerColor = new BaseColor(164, 0, 0);
+
+        BaseColor headerColor = new BaseColor(183, 0, 0);
 
         String[] headers = {"Ítem", "Descripción", "Cantidad", "Valor Unitario", "Subtotal"};
         for (String h : headers) {
@@ -174,9 +139,9 @@ public class ContenidoArchivo {
             // Descripción (alineada a la izquierda)
             PdfPCell descCell = new PdfPCell(new Phrase(detalle.getDescripcion(), fontBody));
             descCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            descCell.setVerticalAlignment(Element.ALIGN_TOP); // 🔥 clave
+            descCell.setVerticalAlignment(Element.ALIGN_TOP);
             descCell.setPadding(6);
-            descCell.setNoWrap(false); // 🔥 permite salto bonito
+            descCell.setNoWrap(false);
             tabla.addCell(descCell);
 
             // Cantidad
@@ -214,8 +179,8 @@ public class ContenidoArchivo {
         PdfPTable tabla = new PdfPTable(2);
         tabla.setWidthPercentage(40); //
         tabla.setHorizontalAlignment(Element.ALIGN_RIGHT);
-        tabla.setSpacingBefore(10f);
-        tabla.setWidths(new float[]{65f, 35f}); //  mejora visual
+        tabla.setSpacingBefore(8f);
+        tabla.setWidths(new float[]{60f, 40f}); //  mejora visual
 
         Font fBold = new Font(Font.FontFamily.HELVETICA, 9, Font.BOLD);
         Font fGray = new Font(Font.FontFamily.HELVETICA, 9, Font.NORMAL, new BaseColor(60,60,60));
@@ -252,7 +217,7 @@ public class ContenidoArchivo {
     private void addRow(PdfPTable tabla, String label, BigDecimal value,
                         Font fBold, Font fGray, boolean esTotal) {
 
-        BaseColor rojoCorporativo = new BaseColor(164, 0, 0);
+        BaseColor rojoCorporativo = new BaseColor(183, 0, 0);
         BaseColor grisBorde = new BaseColor(220,220,220);
 
         PdfPCell c1 = new PdfPCell(new Phrase(label, esTotal ?
@@ -388,25 +353,6 @@ public class ContenidoArchivo {
         tablaFirma.addCell(celdaCargo);
 
         documento.add(tablaFirma);
-    }
-
-    /**
-     * Agrega el pie de página con información de contacto y dirección de la empresa.
-     * * @param documento El documento PDF.
-     * @throws DocumentException Si falla la inserción del pie de página.
-     */
-    public void pieDePagina(Document documento) throws DocumentException {
-        Font fontPie = new Font(Font.FontFamily.HELVETICA, 8);
-
-        Paragraph pie = new Paragraph(
-                "Dirección. Cll 143 # 149 B – 15\n"
-                        + "Suba – Bilbao\n"
-                        + "Cel. 311 868 14 05 – 535 73 38\n"
-                        + "vcelectricos@hotmail.com\n\n",
-                fontPie
-        );
-        pie.setAlignment(Element.ALIGN_CENTER);
-        documento.add(pie);
     }
 
 }

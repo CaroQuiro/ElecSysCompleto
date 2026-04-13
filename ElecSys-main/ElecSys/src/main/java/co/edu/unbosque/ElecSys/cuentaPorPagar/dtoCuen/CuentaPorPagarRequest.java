@@ -13,7 +13,6 @@ import java.util.List;
 public class CuentaPorPagarRequest {
 
     private CuentaPorPagarDTO cuentaPorPagarDTO;
-    private String referencia;
     private List<Detalle_CuentaDTO> detalleCuentaDTOS;
 
 }

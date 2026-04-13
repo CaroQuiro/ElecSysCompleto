@@ -231,7 +231,7 @@ export class VerCotizacionComponent {
       valor_unitario: det.valor_unitario
     };
 
-    const peticion = det.esNuevo 
+    const peticion = det.esNuevo
       ? this.serviceCotizacion.crearDetalleCotizacion(this.idCotizacion, dto)
       : this.serviceCotizacion.actualizarDetalleCotizacion(this.idCotizacion, det.id_detalle_cotizacion, dto);
 
@@ -240,19 +240,19 @@ export class VerCotizacionComponent {
         alert(det.esNuevo ? 'Detalle Creado' : 'Detalle Actualizado');
         det.editando = false;
         det.esNuevo = false;
-        
+
         // 1. Recargamos los detalles para tener los IDs nuevos
         this.recargarDetalles();
-        
+
         // 2. IMPORTANTE: Llamamos a actualizar la cotización global 
         // para que el TOTAL_PAGAR en la BD se refresque con los nuevos ítems
-        this.actualizarCotizacionSilenciosa(); 
+        this.actualizarCotizacionSilenciosa();
       }
     });
-}
+  }
 
-// Nuevo método para actualizar totales sin saltar a la lista
-private actualizarCotizacionSilenciosa(): void {
+  // Nuevo método para actualizar totales sin saltar a la lista
+  private actualizarCotizacionSilenciosa(): void {
     const esAIU = !this.existIva;
     const dto: EntidadCotizaciones = {
       ...this.baseCotizacion(),
@@ -265,7 +265,7 @@ private actualizarCotizacionSilenciosa(): void {
     };
 
     this.serviceCotizacion.actualizarCotizacion(this.idCotizacion, dto).subscribe();
-}
+  }
 
   eliminarFila(det: DetalleUI, index: number) {
 
@@ -281,7 +281,7 @@ private actualizarCotizacionSilenciosa(): void {
         alert('Detalle Eliminado Exitosamente');
         this.editdetallecotizacion = [];
         this.recargarDetalles();
-        this.actualizarCotizacionSilenciosa(); 
+        this.actualizarCotizacionSilenciosa();
       });
   }
 
@@ -409,6 +409,7 @@ private actualizarCotizacionSilenciosa(): void {
         next: () => {
           alert('Cotización Actualizada correctamente');
           this.cotizacion = { ...this.cotizacion, ...dto };
+          this.descargarPDF(this.idCotizacion);
           this.route.navigate(['cotizaciones']);
         },
         error: err => {
@@ -419,9 +420,22 @@ private actualizarCotizacionSilenciosa(): void {
   }
 
   autoResize(event: Event): void {
-  const textarea = event.target as HTMLTextAreaElement;
-  textarea.style.height = 'auto';
-  textarea.style.height = textarea.scrollHeight + 'px';
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto';
+    textarea.style.height = textarea.scrollHeight + 'px';
+  }
+
+
+  descargarPDF(id: number): void {
+    this.serviceCotizacion.descargarpdf(id).subscribe({
+      next: (pdf) => {
+        const url = window.URL.createObjectURL(pdf);
+        window.open(url);
+      }, error: err => {
+        console.error('Error al descargar el PDF:', err);
+        alert('No se pudo generar el PDF en este momento.');
+      }
+    });
   }
 
   enviarEmail() {
@@ -466,7 +480,7 @@ private actualizarCotizacionSilenciosa(): void {
         </p>
       </div>
     `;
-    
+
     // Datos extraídos de los objetos 'cliente' y 'cotizacion' que ya tienes en el componente
     formData.append('nombreUsuario', this.cliente.nombre);
     formData.append('correo', this.cliente.correo);
@@ -475,33 +489,33 @@ private actualizarCotizacionSilenciosa(): void {
     formData.append('archivo', archivo);
 
     this.notificacionService.enviarCorreo(formData).subscribe({
-    next: (res: any) => {
-      alert(res.mensaje); // Ahora usamos el mensaje que viene del JSON
-    },
-    error: (err) => {
-      // Si sigue saliendo error, imprime esto en consola para saber QUÉ es
-      console.log("Status del error:", err.status);
-      console.log("Cuerpo del error:", err.error);
-      alert('Error al enviar el correo. Revisa la consola.');
-    }
-  });
+      next: (res: any) => {
+        alert(res.mensaje); // Ahora usamos el mensaje que viene del JSON
+      },
+      error: (err) => {
+        // Si sigue saliendo error, imprime esto en consola para saber QUÉ es
+        console.log("Status del error:", err.status);
+        console.log("Cuerpo del error:", err.error);
+        alert('Error al enviar el correo. Revisa la consola.');
+      }
+    });
   }
 
   consultarProbabilidad() {
-  this.serviceCotizacion.obtenerProbabilidad(this.idCotizacion).subscribe({
-    next: (res) => {
-      this.probabilidadCalculada = res.probabilidad_aceptacion || 0.01; 
-    },
-    error: (err) => {
-      console.error('El usuario no tiene permiso para ver la IA:', err);
-      this.probabilidadCalculada = 0;
-    }
-  });
-}
+    this.serviceCotizacion.obtenerProbabilidad(this.idCotizacion).subscribe({
+      next: (res) => {
+        this.probabilidadCalculada = res.probabilidad_aceptacion || 0.01;
+      },
+      error: (err) => {
+        console.error('El usuario no tiene permiso para ver la IA:', err);
+        this.probabilidadCalculada = 0;
+      }
+    });
+  }
 
   get esAdmin(): boolean {
-      return this.authService.getUserRole().toUpperCase() === 'ADMIN';
-    }
+    return this.authService.getUserRole().toUpperCase() === 'ADMIN';
+  }
 
   get esEditable(): boolean {
     return this.cotizacion?.estado === 'PENDIENTE';

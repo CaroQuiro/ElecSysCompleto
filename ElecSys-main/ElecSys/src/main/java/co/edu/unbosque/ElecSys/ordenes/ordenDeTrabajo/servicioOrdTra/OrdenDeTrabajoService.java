@@ -38,6 +38,8 @@ public class OrdenDeTrabajoService implements OrdenDeTrabajoInterface{
             orden.setIdTrabajador(dto.getId_trabajador());
             orden.setFechaRealizacion(dto.getFecha_realizacion());
             orden.setEstado(dto.getEstado());
+            orden.setReferenciaPdf(dto.getReferencia_pdf());
+            orden.setObservaciones(dto.getObservaciones());
 
             OrdenDeTrabajoEntidad guardada = ordenTrabajoRepository.save(orden);
 
@@ -74,6 +76,8 @@ public class OrdenDeTrabajoService implements OrdenDeTrabajoInterface{
             orden.setIdTrabajador(ordenNueva.getId_trabajador());
             orden.setFechaRealizacion(ordenNueva.getFecha_realizacion());
             orden.setEstado(ordenNueva.getEstado());
+            orden.setReferenciaPdf(ordenNueva.getReferencia_pdf());
+            orden.setObservaciones(ordenNueva.getObservaciones());
 
             ordenTrabajoRepository.save(orden);
 
@@ -159,7 +163,9 @@ public class OrdenDeTrabajoService implements OrdenDeTrabajoInterface{
                 entidad.getIdCliente(),
                 entidad.getIdTrabajador(),
                 entidad.getFechaRealizacion(),
-                entidad.getEstado()
+                entidad.getEstado(),
+                entidad.getReferenciaPdf(),
+                entidad.getObservaciones()
         );
     }
 

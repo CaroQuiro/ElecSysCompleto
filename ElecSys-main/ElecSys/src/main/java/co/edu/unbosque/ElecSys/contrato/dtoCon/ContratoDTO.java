@@ -27,4 +27,8 @@ public class ContratoDTO {
     private String cargo;
     private String tipo_contrato;
     private String estado;
+    private LocalDate fecha_nacimiento;
+    private String lugar_nacimiento;
+    private int edad;
+    private String estadoCivil;
 }

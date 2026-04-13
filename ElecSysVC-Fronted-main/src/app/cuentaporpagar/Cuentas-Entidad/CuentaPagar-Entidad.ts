@@ -7,5 +7,6 @@ export class EntidadCuentasPagar{
     monto!: number;
     estado!: string;
     id_cliente!: number;
+    referencia_pdf?: string;
 }
 

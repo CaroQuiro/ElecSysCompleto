@@ -36,7 +36,8 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
           cuenta.getNota(),
           cuenta.getFecha_realizacion(),
           cuenta.getMonto(),
-          cuenta.getEstado()
+          cuenta.getEstado(),
+                cuenta.getReferencia_pdf()
         );
         try{
             CuentaPorPagarEntidad cuentaGuardada = cuentasPorPagarRepository.save(nuevaCuenta);
@@ -83,7 +84,7 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
                     cuentas.getNota(),
                     cuentas.getFecha_realizacion(),
                     cuentas.getMonto(),
-                    cuentas.getEstado()
+                    cuentas.getEstado(), cuentas.getReferencia_pdf()
             ));
         }
 
@@ -152,7 +153,8 @@ public class CuentaPorPagarImplService implements CuentaPorPagarInterface{
                 c.getNota(),
                 c.getFecha_realizacion(),
                 c.getMonto(),
-                c.getEstado()
+                c.getEstado(),
+                c.getReferencia_pdf()
         );
     }
 

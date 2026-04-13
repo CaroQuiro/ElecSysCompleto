@@ -19,4 +19,5 @@ public class CuentaPorPagarDTO {
     private LocalDate fecha_realizacion;
     private BigDecimal monto;
     private String estado;
+    private String referencia_pdf;
 }

@@ -4,7 +4,41 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6d43819-b866-4cdb-b77c-a13be1d4e669" name="Changes" comment="" />
+    <list default="true" id="c6d43819-b866-4cdb-b77c-a13be1d4e669" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ContratosClases/contrato-entidad.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ContratosClases/contrato-entidad.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ContratosClases/contrato-request.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ContratosClases/contrato-service.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ContratosClases/contrato-service.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/contratos.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/contratos.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/contratos.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/contratos.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/contratos/ver-contratos/ver-contratos.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/Cotizaciones/service-cotizaciones.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/Cotizaciones/service-cotizaciones.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/crear-cot/crear-cot.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/crear-cot/crear-cot.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/crear-cot/crear-cot.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/crear-cot/crear-cot.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/ver-cotizacion/ver-cotizacion.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/ver-cotizacion/ver-cotizacion.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/ver-cotizacion/ver-cotizacion.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cotizaciones/ver-cotizacion/ver-cotizacion.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/CuentaPagar-Entidad.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/CuentaPagar-Entidad.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/cuenta-service.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/cuenta-service.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/request-cuentadecobro.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/Cuentas-Entidad/request-cuentadecobro.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/crear-cuenta/crear-cuenta.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/cuentaporpagar/ver-cuenta/ver-cuenta.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/data/orden-trabajo.models.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/data/orden-trabajo.models.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/data/orden-trabajo.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/data/orden-trabajo.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ordenes-trabajo-crear/ordenes-trabajo-crear.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.css" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenTrabajo/ver-ordenes-trabajo/ver-orden-trabajo.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenVisita/ordenes-visita-crear/ordenes-visita-crear.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/ordenVisita/ordenes-visita-crear/ordenes-visita-crear.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/servicios/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../../ElecSysVC-Fronted-main/src/app/servicios/auth.service.ts" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -22,8 +56,20 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;icarvajals&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/CaroQuiro/ElecSysCompleto.git&quot;,
+    &quot;accountId&quot;: &quot;4621dbd0-5248-4273-89e5-33ef4728fa2c&quot;
+  }
+}</component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 7
 }</component>
@@ -47,7 +93,7 @@
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/carol/OneDrive/Documents/ElecSys-main/ElecSys/src/main/java/co/edu/unbosque/ElecSys&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Github/ElecSysCompletoV4/ElecSys-main/ElecSys&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
@@ -110,6 +156,13 @@
         <item itemvalue="JUnit.ElecSysApplicationTests.contextLoads" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-26cb7f24e5b0-intellij.indexing.shared.core-IU-253.29346.138" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

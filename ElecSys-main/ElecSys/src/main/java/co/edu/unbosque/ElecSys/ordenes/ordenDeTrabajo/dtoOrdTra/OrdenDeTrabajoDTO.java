@@ -18,5 +18,7 @@ public class OrdenDeTrabajoDTO {
     private Integer id_trabajador;
     private Date fecha_realizacion;
     private String estado;
+    private String referencia_pdf;
+    private String observaciones;
 
 }

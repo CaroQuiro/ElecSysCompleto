@@ -89,7 +89,7 @@ public class CuentaPorPagarControlador {
 
         CuentaPorPagarDTO cuentaActual = new CuentaPorPagarDTO(
                 0,cuenta.getId_trabajador(), cuenta.getId_cliente(), cuenta.getNota(),
-                cuenta.getFecha_realizacion(), cuenta.getMonto(), cuenta.getEstado());
+                cuenta.getFecha_realizacion(), cuenta.getMonto(), cuenta.getEstado(), cuenta.getReferencia_pdf());
 
         CuentaPorPagarDTO cuentaAguardar = cuentaPorPagarService.agregarCuentaPagar(cuentaActual);
 
@@ -105,7 +105,7 @@ public class CuentaPorPagarControlador {
             throw new PdfGenerationException("Error al generar el PDF: " + e.getMessage());
         }
 
-        String nombreArchivo = pdfService.descargarCuentaPDF(cuentaAguardar, solitud.getReferencia(), pdf);
+        String nombreArchivo = pdfService.descargarCuentaPDF(cuentaAguardar, pdf);
 
         return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename="+nombreArchivo)
                 .contentType(MediaType.APPLICATION_PDF).body(pdf);
@@ -203,6 +203,39 @@ public class CuentaPorPagarControlador {
         String mensaje = cuentaPorPagarService.actualizarCuenta(id, dto);
         return ResponseEntity.ok(mensaje);
     }
+
+    @GetMapping("descargar-pdf/{id}")
+    public ResponseEntity<byte[]> descargarpdfCuenta(@PathVariable int id) throws IOException {
+        CuentaPorPagarDTO cuentaPorPagarDTO = cuentaPorPagarService.buscarCuenta(id);
+
+        if (cuentaPorPagarDTO == null){
+            throw new ResourceNotFoundException("No existe la Cuenta de cobro con ID: " + id);
+        }
+
+        ClienteDTO cliente = clienteService.buscarCliente(cuentaPorPagarDTO.getId_cliente());
+
+        List<Detalle_CuentaDTO> detallesCuenta = detalleCuentaService.listarDetallesCuentas()
+                .stream().filter(d -> d.getId_cuenta_pagar() == id).toList();
+
+        if (detallesCuenta.isEmpty()){
+            throw new ResourceNotFoundException("No hay detalles asignados a la Cuenta de cobro: " + id);
+        }
+
+        byte[] pdf;
+
+        try{
+            pdf = pdfService.generarArchivoCuenta(cuentaPorPagarDTO, cliente, detallesCuenta);
+        }catch (Exception e){
+            throw new PdfGenerationException("Error al generar el PDF: " + e.getMessage());
+        }
+
+        String nombreArchivo = pdfService.descargarCuentaPDF(cuentaPorPagarDTO,pdf);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + nombreArchivo)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+     }
 
     /**
      * Busca una cuenta de cobro específica por su ID.

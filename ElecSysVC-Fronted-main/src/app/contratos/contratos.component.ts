@@ -5,7 +5,6 @@ import { ContratoServiceService } from './ContratosClases/contrato-service.servi
 import { Router } from '@angular/router';
 import { ContratoEntidad, TrabajadorEntidad } from './ContratosClases/contrato-entidad';
 import { CommonModule } from '@angular/common';
-import { requestContrato } from './ContratosClases/contrato-request';
 import { FormsModule } from '@angular/forms';
 import { ModalContratoService } from './ContratosClases/modal-contrato.service';
 import { VerContratosComponent } from "./ver-contratos/ver-contratos.component";
@@ -37,7 +36,7 @@ export class ContratosComponent implements OnInit {
   filtroActivo: string = 'TODAS';
   cantTodas = 0; cantActivos = 0; cantVencidos = 0;
 
-  nuevoContrato: requestContrato = this.inicializarContrato();
+  nuevoContrato: ContratoEntidad = this.inicializarContrato();
 
   constructor(
     private contratoService: ContratoServiceService,
@@ -52,9 +51,8 @@ export class ContratosComponent implements OnInit {
     this.escucharPeticionesDeMenu();
   }
 
-  private inicializarContrato(): requestContrato {
+  private inicializarContrato(): ContratoEntidad {
     return {
-      contrato: {
         id_contrato: 0,
         id_trabajador: 0,
         sueldo: 0,
@@ -63,12 +61,11 @@ export class ContratosComponent implements OnInit {
         id_trabajador_encargado: 0,
         cargo: '',
         tipo_contrato: '',
-        estado: 'ACTIVO'
-      },
-      fecha_nacimiento: null,
-      lugar_nacimiento: '',
-      edad: null as any, // Evitamos que sea 0 por defecto
-      estadoCivil: ''
+        estado: 'ACTIVO',
+        fecha_nacimiento: null,
+        lugar_nacimiento: '',
+        edad: null as any, // Evitamos que sea 0 por defecto
+        estadoCivil: ''
     };
   }
 
@@ -129,17 +126,19 @@ export class ContratosComponent implements OnInit {
     }
     this.nuevoContrato = this.inicializarContrato();
     // ASIGNACIÓN AUTOMÁTICA DEL RESPONSABLE
-    this.nuevoContrato.contrato.id_trabajador_encargado = Number(this.authService.getUserId());
+    this.nuevoContrato.id_trabajador_encargado = Number(this.authService.getUserId());
     this.mostrarFlotanteContrato = true;
   }
 
   cerrarFlotanteContrato() { this.mostrarFlotanteContrato = false; }
 
   guardarContrato(): void {
-    if (!this.nuevoContrato.contrato.id_trabajador || !this.nuevoContrato.edad || !this.nuevoContrato.estadoCivil) {
+    if (!this.nuevoContrato.id_trabajador || !this.nuevoContrato.edad || !this.nuevoContrato.estadoCivil) {
       alert("Error: Verifique que la edad sea mayor a 18 y todos los campos estén llenos.");
       return;
     }
+
+    this.nuevoContrato.id_trabajador_encargado = this.authService.obtenerIDLogin() ?? 0;
 
     this.contratoService.crearContrato(this.nuevoContrato).subscribe({
       next: (pdf) => {
@@ -182,7 +181,7 @@ export class ContratosComponent implements OnInit {
 
   actualizarSueldo(event: any) {
     let valor = event.target.value.replace(/[^0-9]/g, '');
-    this.nuevoContrato.contrato.sueldo = Number(valor);
+    this.nuevoContrato.sueldo = Number(valor);
   }
 
   escucharPeticionesDeMenu() {

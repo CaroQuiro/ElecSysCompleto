@@ -36,4 +36,10 @@ public class OrdenDeTrabajoEntidad {
 
     @Column(name = "estado")
     private String estado;
+
+    @Column(name = "referencia_pdf")
+    private String referenciaPdf;
+
+    @Column(name = "observaciones")
+    private String observaciones;
 }

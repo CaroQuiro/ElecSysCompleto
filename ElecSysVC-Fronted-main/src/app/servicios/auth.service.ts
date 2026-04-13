@@ -40,6 +40,11 @@ getUserName(): string { return sessionStorage.getItem('user_name') || 'Usuario';
 getUserRole(): string { return sessionStorage.getItem('user_role') || 'Trabajador'; }
 getUserId(): string | null { return sessionStorage.getItem('user_id'); }
 
+obtenerIDLogin(): number | null{
+  const id = sessionStorage.getItem('user_id');
+  return id ? Number(id) : null;
+}
+
   // Obtener el correo del usuario logueado en cualquier parte del app
   getUsuarioActual() {
     return this.currentUserSubject.value;

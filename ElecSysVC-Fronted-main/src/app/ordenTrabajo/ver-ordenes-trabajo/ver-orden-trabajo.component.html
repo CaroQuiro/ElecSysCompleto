@@ -8,7 +8,7 @@
             <p>Visualice y gestione los detalles técnicos, estados y reportes de la orden.</p>
 
             <p *ngIf="!puedeEditar" class="alerta-bloqueo">
-                <i class="fas fa-lock"></i> Esta orden se encuentra en estado <strong>{{orden.estado}}</strong>. 
+                <i class="fas fa-lock"></i> Esta orden se encuentra en estado <strong>{{orden.estado}}</strong>.
                 El registro se ha archivado y no permite modificaciones.
             </p>
 
@@ -20,7 +20,8 @@
 
                 <div class="selector-wrapper">
                     <label class="label-estado">Estado del Trabajo</label>
-                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden" [disabled]="!puedeEditar">
+                    <select class="select-estado" [(ngModel)]="orden.estado" name="estadoOrden"
+                        [disabled]="!puedeEditar">
                         <option value="PENDIENTE">PENDIENTE</option>
                         <option value="EN_PROCESO">EN PROCESO</option>
                         <option value="REALIZADA">REALIZADA</option>
@@ -31,7 +32,7 @@
 
             <div class="card-section detalle-proyecto">
                 <h2><i class="fas fa-tasks"></i> Labores Técnicas Detalladas</h2>
-                
+
                 <table class="tabla-detalle">
                     <thead>
                         <tr>
@@ -44,21 +45,22 @@
                     <tbody>
                         <tr *ngFor="let d of editDetalles; let i = index">
                             <td>
-                                <input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando" 
-                                       [name]="'act'+i" class="input-table">
+                                <input type="text" [(ngModel)]="d.actividad" [disabled]="!d.editando" [name]="'act'+i"
+                                    class="input-table">
                             </td>
                             <td>
-                                <input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando" 
-                                       [name]="'obs'+i" class="input-table">
+                                <input type="text" [(ngModel)]="d.observaciones" [disabled]="!d.editando"
+                                    [name]="'obs'+i" class="input-table">
                             </td>
                             <td>
-                                <input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando" 
-                                       [name]="'dur'+i" class="input-table">
+                                <input type="text" [(ngModel)]="d.duracion" [disabled]="!d.editando" [name]="'dur'+i"
+                                    class="input-table">
                             </td>
                             <td class="acciones-celda" *ngIf="puedeEditar">
                                 <ng-container *ngIf="!d.editando">
                                     <button type="button" class="btn-edit-row" (click)="editarFila(d)">✏️</button>
-                                    <button type="button" class="btn-delete-row" (click)="eliminarFila(d, i)">🗑️</button>
+                                    <button type="button" class="btn-delete-row"
+                                        (click)="eliminarFila(d, i)">🗑️</button>
                                 </ng-container>
                                 <ng-container *ngIf="d.editando">
                                     <button type="button" class="btn-save-row" (click)="guardarFila(d)">💾</button>
@@ -74,24 +76,36 @@
             </div>
 
             <div class="card-section">
+                <h2><i class="fas fa-comment-alt"></i> Observaciones Generales</h2>
+
+                <div class="obs-group">
+                    <textarea [(ngModel)]="orden.observaciones" rows="4"
+                        placeholder="Escribe aquí detalles importantes del trabajo realizado, recomendaciones o novedades..."
+                        class="input-obs" name="observaciones">
+        </textarea>
+
+                    <small class="hint">Máximo recomendado: 500 caracteres</small>
+                </div>
+            </div>
+
+            <div class="card-section">
                 <div class="opciones-document">
-                    <button *ngIf="puedeEditar" class="btn-footer crear" type="button" (click)="actualizarOrden()"> 
-                        <i class="fas fa-save"></i> Actualizar Orden 
-                    </button>
-                    
-                    <button class="btn-footer enviar" type="button" (click)="enviarEmail()"> 
-                        <i class="fas fa-envelope"></i> Enviar Reporte 
+                    <button *ngIf="puedeEditar" class="btn-footer crear" type="button" (click)="actualizarOrden()">
+                        <i class="fas fa-save"></i> Actualizar Orden
                     </button>
 
-                    <button class="btn-footer descargar placeholder-btn" type="button" title="Módulo en desarrollo"> 
-                        <i class="fas fa-file-pdf"></i> Generar PDF 
+                    <button class="btn-footer enviar" type="button" (click)="enviarEmail()">
+                        <i class="fas fa-envelope"></i> Enviar Reporte
                     </button>
 
-                    <button *ngIf="esAdmin && puedeEditar" 
-                            class="btn-footer borrar" 
-                            type="button" 
-                            (click)="borrarOrden()"> 
-                        <i class="fas fa-trash-alt"></i> Borrar Orden 
+                    <button class="btn-footer descargar placeholder-btn" type="button" title="Módulo en desarrollo"
+                        (click)="descargarPDF(idOrden)">
+                        <i class="fas fa-file-pdf"></i> Generar PDF
+                    </button>
+
+                    <button *ngIf="esAdmin && puedeEditar" class="btn-footer borrar" type="button"
+                        (click)="borrarOrden()">
+                        <i class="fas fa-trash-alt"></i> Borrar Orden
                     </button>
                 </div>
             </div>
