@@ -14,7 +14,7 @@ debe tener: sklearn, fastapi, pydantic, pandas, uvicorn y joblib
 
 
 
-se ejecuta:  uvicorn main:app --reload --port 800
+se ejecuta:  uvicorn main:app --reload --port 8000
 
 
 
