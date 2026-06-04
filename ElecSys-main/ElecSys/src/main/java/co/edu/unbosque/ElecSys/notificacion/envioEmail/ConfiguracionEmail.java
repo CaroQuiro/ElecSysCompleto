@@ -31,8 +31,8 @@ public class ConfiguracionEmail {
      * Constructor que inicializa las credenciales de envío y las propiedades base del sistema.
      */
     public ConfiguracionEmail() {
-        this.email = "ao818872@gmail.com";
-        this.contrasena = "kuldvbpkgeuyvwfb";
+        this.email = "";
+        this.contrasena = "";
         this.mProperties = new Properties();
     }
 
